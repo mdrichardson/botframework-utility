@@ -9,6 +9,7 @@ interface IBOTFRAMEWORK_UTILITY {
     MicrosoftAppPassword: string,
     ResourceGroupName: string,
     Location: string,
+    CodeLanguage: string,
     [index: string]: string,
 }
 
@@ -71,3 +72,8 @@ export async function setBotEnvVariables(botEnvVariables: Partial<IBOTFRAMEWORK_
     const envString = JSON.stringify(currentBotEnvVariables);
     process.env.BOTFRAMEWORK_UTILITY = envString;
 }
+
+export async function getLanguage(): Promise<string> {
+    const cSharp = await vscode.workspace.findFiles('*.cs', null, 1);
+    return cSharp ? 'Csharp' : 'Node';
+} 
