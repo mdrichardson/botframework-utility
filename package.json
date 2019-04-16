@@ -25,7 +25,16 @@
 				"command": "extension.currentTest",
 				"title": "BotFramework: Run Current Test"
 			}
-		]
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
+					"command": "extension.openEmulatorLocalhost",
+					"group": "@botframework-utility"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -43,6 +52,7 @@
 	},
 	"dependencies": {
 		"dotenv": "^7.0.0",
+		"fuzzy-matching": "^0.4.3",
 		"open": "^6.1.0"
 	}
 }
