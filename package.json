@@ -21,6 +21,10 @@
 			{
 				"command": "extension.openEmulatorLocalhost",
 				"title": "BotFramework: Open Emulator (localhost)"
+            },
+            {
+				"command": "extension.deploymentResourceGroup",
+				"title": "BotFramework: Deployment > 1. Create Resource Group"
 			},
 			{
 				"command": "extension.currentTest",

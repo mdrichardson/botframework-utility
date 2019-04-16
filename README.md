@@ -8,6 +8,7 @@
 
 ### Future
 
+* Deployment CLI helper
 * Launch other endpoints by reading settings from `.env` and `appsettings.json`
 
 ## Extension Settings
