@@ -10,6 +10,7 @@ interface IBOTFRAMEWORK_UTILITY {
     ResourceGroupName: string,
     Location: string,
     CodeLanguage: string,
+    BotName: string,
     [index: string]: string,
 }
 
@@ -51,7 +52,9 @@ function normalizeEnvKeys(key: string): string {
         'MicrosoftAppId',
         'MicrosoftAppPassword',
         'ResourceGroupName',
-        'Location'
+        'Location',
+        'CodeLanguage',
+        'BotName'
     ]);
     const result = fm.get(key);
     return result.distance >= minAcceptableDistance ? result.value : key;

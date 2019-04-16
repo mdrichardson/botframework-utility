@@ -21,14 +21,18 @@
 			{
 				"command": "extension.openEmulatorLocalhost",
 				"title": "BotFramework: Open Emulator (localhost)"
-            },
-            {
+			},
+			{
 				"command": "extension.deploymentCreateResourceGroup",
 				"title": "BotFramework: Deployment > 1. Create Resource Group"
 			},
-            {
+			{
 				"command": "extension.deploymentCreateWebApp",
 				"title": "BotFramework: Deployment > 2. Create Web App"
+			},
+			{
+				"command": "extension.deploymentPublish",
+				"title": "BotFramework: Deployment > 3. Publish"
 			},
 			{
 				"command": "extension.currentTest",
@@ -61,6 +65,7 @@
 	},
 	"dependencies": {
 		"dotenv": "^7.0.0",
-		"fuzzy-matching": "^0.4.3"
+		"fuzzy-matching": "^0.4.3",
+		"zip-a-folder": "0.0.7"
 	}
 }
