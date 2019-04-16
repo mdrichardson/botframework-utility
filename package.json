@@ -2,6 +2,7 @@
 	"name": "botframework-utility",
 	"displayName": "BotFramework Utility",
 	"description": "Helper utilities to assist in a more efficient bot development lifecycle",
+	"publisher": "mdrichardson",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.33.0"
@@ -52,7 +53,6 @@
 	},
 	"dependencies": {
 		"dotenv": "^7.0.0",
-		"fuzzy-matching": "^0.4.3",
-		"open": "^6.1.0"
+		"fuzzy-matching": "^0.4.3"
 	}
 }
