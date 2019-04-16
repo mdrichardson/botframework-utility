@@ -1,0 +1,48 @@
+{
+	"name": "botframework-utility",
+	"displayName": "BotFramework Utility",
+	"description": "Helper utilities to assist in a more efficient bot development lifecycle",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.33.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"workspaceContains:**/*.bot",
+		"workspaceContains:**/appsettings.json",
+		"workspaceContains:**/.env"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.openEmulatorLocalhost",
+				"title": "BotFramework: Open Emulator (localhost)"
+			},
+			{
+				"command": "extension.currentTest",
+				"title": "BotFramework: Run Current Test"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"tslint": "^5.12.1",
+		"@types/node": "^10.12.21",
+		"@types/mocha": "^2.2.42"
+	},
+	"dependencies": {
+		"dotenv": "^7.0.0",
+		"open": "^6.1.0"
+	}
+}
