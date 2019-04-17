@@ -59,7 +59,7 @@ const commands: ICommands = {
     },
     async deploymentPublish(): Promise<void> {
         vscode.window.showInformationMessage('Creating Zip File');
-        const root = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
+        const root = utilities.getRoot();
         await zip.zip(root, `${root}/update.zip`);
         vscode.window.showInformationMessage('Done Creating Zip File');
 
@@ -89,16 +89,28 @@ const commands: ICommands = {
             const csprojFile = csproj[0].fsPath;
             executeAzCliCommand(`az webapp config appsettings set --resource-group ${settings.ResourceGroupName} --name ${settings.BotName} --settings SCM_DO_BUILD_DEPLOYMENT=false`);
             executeAzCliCommand(`az webapp config appsettings set --resource-group ${settings.ResourceGroupName} --name ${settings.BotName} --settings SCM_SCRIPT_GENERATOR_ARGS="--aspNetCore ${csprojFile}"`);
+            executeAzCliCommand(`az webapp deployment source config-zip --resource-group ${settings.ResourceGroupName} --name ${settings.BotName} --src "update.zip"`);
         }
         // TODO: Test C# Publish.Make it work for Node. Add the actual publish commands. Delete zip file.
     },
     async currentTest(): Promise<void> {
-        await utilities.getLanguage();
+        const terminal = vscode.window.createTerminal();
+        (<any>terminal).onDidWriteData(data => {
+            console.log(`DATA: ${data}`);
+        })
+        terminal.show(true);
+        terminal.sendText(`az --help`)
     }
 }
 
-function executeAzCliCommand(command: string): void {
+function executeAzCliCommand(command: string, commandCompleteRegex?: RegExp, commandCompleteTitle: string = 'Command'): void {
     const terminal = vscode.window.createTerminal();
+    (<any>terminal).onDidWriteData(data => {
+        console.log(`DATA: ${data}`);
+        if (commandCompleteRegex) {
+            vscode.window.showInformationMessage(`${commandCompleteTitle} finished.`);
+        }
+    });
     terminal.show(true);
     terminal.sendText(command);
 }

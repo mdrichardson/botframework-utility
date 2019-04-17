@@ -67,16 +67,43 @@ export async function getBotEnvVariables(): Promise<IBOTFRAMEWORK_UTILITY> {
 }
 
 export async function setBotEnvVariables(botEnvVariables: Partial<IBOTFRAMEWORK_UTILITY>): Promise<void> {
+    // Add new variables to vsCode env
     const currentBotEnvVariables = await getBotEnvVariables();
+    let changes = 0;
     for (const key in botEnvVariables) {
         const normalizedKey = normalizeEnvKeys(key);
-        currentBotEnvVariables[normalizedKey] = botEnvVariables[key] || '';
+        if (!currentBotEnvVariables[normalizedKey]) {
+            changes += 1;
+            currentBotEnvVariables[normalizedKey] = botEnvVariables[key] || '';
+        }        
     }
-    const envString = JSON.stringify(currentBotEnvVariables);
-    process.env.BOTFRAMEWORK_UTILITY = envString;
+    if (changes) {
+        const envString = JSON.stringify(currentBotEnvVariables, null, 2);
+        process.env.BOTFRAMEWORK_UTILITY = envString;
+        // Save to .env and appsettings.json
+        const root = getRoot();
+        if (await getLanguage() === 'Csharp') {
+            fs.writeFile(`${root}/appsettings.json`, envString, (err) => {
+                if (err) return Promise.reject('Unable to write');
+                return Promise.resolve();
+            });
+        } else {
+            let envString = '';
+            for (const key in currentBotEnvVariables) {
+                // put in .env format: Key="value"
+                envString += `${key}=\"${currentBotEnvVariables[key]}\"\n`;
+            }
+            fs.writeFileSync(`${root}/.env`, envString);
+        }
+    }
 }
 
 export async function getLanguage(): Promise<string> {
     const cSharp = await vscode.workspace.findFiles('*.cs', null, 1);
-    return cSharp ? 'Csharp' : 'Node';
-} 
+    const lang = cSharp ? 'Csharp' : 'Node';
+    return lang;
+}
+
+export function getRoot(): string {
+    return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
+}

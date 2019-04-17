@@ -4,7 +4,7 @@
 
 ### Current
 
-* Right-click `.env` or `appsettings.json` files to launch Bot Framework Emulator `localhost` endpoing
+* Right-click `.env` or `appsettings.json` files to launch Bot Framework Emulator `localhost` endpoint
 
 ### Future
 
