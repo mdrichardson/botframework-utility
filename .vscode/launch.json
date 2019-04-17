@@ -10,7 +10,7 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
-                "C:\\Users\\v-micric\\Documents\\Code\\VS Code Extension\\test folder",
+                "C:\\Users\\v-micric\\Documents\\Code\\VS Code Extension\\botframework-utility\\test folder",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [
