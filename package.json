@@ -23,6 +23,10 @@
 				"title": "BotFramework: Open Emulator (localhost)"
 			},
 			{
+				"command": "extension.createAppRegistration",
+				"title": "BotFramework: Deployment > 1. Create App Registration"
+			},
+			{
 				"command": "extension.deploymentCreateResourceGroup",
 				"title": "BotFramework: Deployment > 1. Create Resource Group"
 			},
@@ -59,11 +63,19 @@
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
+		"eslint": "^5.16.0",
+		"eslint-config-standard": "^12.0.0",
+		"eslint-plugin-import": "^2.17.2",
+		"eslint-plugin-node": "^8.0.1",
+		"eslint-plugin-promise": "^4.1.1",
+		"eslint-plugin-standard": "^4.0.0",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
 		"vscode": "^1.1.33"
 	},
 	"dependencies": {
+		"@typescript-eslint/eslint-plugin": "^1.6.0",
+		"@typescript-eslint/parser": "^1.6.0",
 		"dotenv": "^7.0.0",
 		"fuzzy-matching": "^0.4.3",
 		"zip-a-folder": "0.0.7"
