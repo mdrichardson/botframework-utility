@@ -11,6 +11,11 @@
 * Deployment CLI helper
 * Launch other endpoints by reading settings from `.env` and `appsettings.json`
 
+## Prerequisites
+
+* **Deployment**
+  * Your VS Code terminal cannot be Bash. It doesn't play well with `az cli` on some commands.
+
 ## Extension Settings
 
 None, currently

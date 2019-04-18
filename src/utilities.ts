@@ -19,7 +19,7 @@ export function createEmulatorUri(url: string, domain: string = 'livechat', acti
     return vscode.Uri.parse(`bfemulator://${domain}.${action}?botUrl=${url}`);
 }
 
-async function getBotSettings(): Promise<Partial<IBOTFRAMEWORK_UTILITY>> {
+export async function loadBotSettings(): Promise<void> {
     const dotenvFile = await vscode.workspace.findFiles(`**/*${constants.settingsFiles.Node}`, null, 1);
     const appsettingsJsonFile = await vscode.workspace.findFiles(`**/${constants.settingsFiles.Csharp}`, null, 1);
     let botSettings: Partial<IBOTFRAMEWORK_UTILITY> = {};
@@ -31,7 +31,7 @@ async function getBotSettings(): Promise<Partial<IBOTFRAMEWORK_UTILITY>> {
             botSettings[normalizedKey] = json[key];
         }
     } 
-    else if (appsettingsJsonFile[0]) {
+    if (appsettingsJsonFile[0]) {
         const raw = String(fs.readFileSync(appsettingsJsonFile[0].fsPath));
         const json = JSON.parse(raw);
         for (const key in json) {
@@ -41,7 +41,6 @@ async function getBotSettings(): Promise<Partial<IBOTFRAMEWORK_UTILITY>> {
     }
     // Save results to process.env
     setBotEnvVariables(botSettings);
-    return botSettings;
 }
 
 // Ensure that keys retrieved from .env and appsettings.json are normalized to constants
@@ -55,7 +54,6 @@ function normalizeEnvKeys(key: string): string {
 }
 
 export async function getBotEnvVariables(): Promise<IBOTFRAMEWORK_UTILITY> {
-    await getBotSettings();
     const envString = process.env.BOTFRAMEWORK_UTILITY || '{}';
     return JSON.parse(envString);
 }
@@ -108,7 +106,7 @@ export async function getIfNotExist(variable:string, prompt: string) {
         value = await getLanguage();
     } else {
         let settings = await getBotEnvVariables();
-        if (!settings[variable]) {
+        if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ prompt: prompt }) || '';
         } else { return; }
     }

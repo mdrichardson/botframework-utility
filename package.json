@@ -1,7 +1,7 @@
 {
 	"name": "botframework-utility",
 	"displayName": "BotFramework Utility",
-	"description": "Helper utilities to assist in a more efficient bot development lifecycle",
+	"description": "Helper utilities to assist in a more efficient bot development life cycle",
 	"publisher": "mdrichardson",
 	"version": "0.0.1",
 	"engines": {
