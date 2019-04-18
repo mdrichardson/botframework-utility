@@ -121,17 +121,15 @@ export async function promptForVariableIfNotExist(variable: string, prompt: stri
     await setBotVariable({ [variable]: value });
 }
 
-export async function getDeploymentTemplateIfNotExist(templateName: string): Promise<string> {
-    const existingTemplate = await vscode.workspace.findFiles(`**/${ templateName }`, null, 1)[0];
+export async function getDeploymentTemplate(templateName: string): Promise<string> {
+    const existingTemplate = (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0];
     const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
-    let file;
     if (!existingTemplate) {
         if (!deploymentTemplatesFolderExists) {
             await fs.mkdirSync(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
         }
-        file = await axios.get(constants.urls[templateName]);
-        await fs.writeFileSync(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, file.data);
-    }
-    console.log(file);
-    return '';
+        const file = await axios.get(constants.urls[templateName]);
+        await fs.writeFileSync(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
+    };
+    return (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0].fsPath;
 }

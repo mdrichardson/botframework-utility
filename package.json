@@ -27,16 +27,8 @@
 				"title": "BotFramework: Deployment > 1. Create App Registration"
 			},
 			{
-				"command": "extension.deploymentCreateResourceGroup",
-				"title": "BotFramework: Deployment > 1. Create Resource Group"
-			},
-			{
-				"command": "extension.deploymentCreateWebApp",
-				"title": "BotFramework: Deployment > 2. Create Web App"
-			},
-			{
-				"command": "extension.deploymentPublish",
-				"title": "BotFramework: Deployment > 3. Publish"
+				"command": "extension.deploymentCreateResourcesNewResourceGroup",
+				"title": "BotFramework: Deployment > 2. Create Azure Resources (new Resource Group)"
 			},
 			{
 				"command": "extension.currentTest",

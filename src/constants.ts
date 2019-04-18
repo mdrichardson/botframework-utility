@@ -37,6 +37,7 @@ export const regexForVariables = {
 
 export const regexForDispose = {
     WebappCreate: /"appId":.*".{36}",/g,
+    CreateAzureResources: /"provisioningState": "Succeeded",/g
 };
 
 export const deploymentTemplates = {
