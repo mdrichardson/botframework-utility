@@ -19,8 +19,12 @@ const commands: Commands = {
         let settings = await utilities.getEnvBotVariables();
 
         if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
-            vscode.window.showInformationMessage(`You already have an App Registration.`);
-            return;
+            // Allow user to delete appId and pass from .env/appsettings.json
+            settings = await utilities.getAndSyncLocalAndEnvVariables();
+            if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
+                vscode.window.showInformationMessage(`You already have an App Registration.`);
+                return;
+            }
         }
 
         // Prep Variables
@@ -30,7 +34,7 @@ const commands: Commands = {
         settings = await utilities.getEnvBotVariables();
 
         const command = `az ad app create --display-name "${ settings.BotName }" --password "${ settings.MicrosoftAppPassword }" --available-to-other-tenants`;
-        const regex = /"appId":.*".{36}",/g;
+        const regex = constants.regexForDispose.WebappCreate;
 
         vscode.window.showInformationMessage('Creating App Registration');
         await executeAzCliCommand(command, regex, 'App Registration Creation');
@@ -105,8 +109,8 @@ const commands: Commands = {
 
 async function regexToEnvVariables(data: string): Promise<void> {
     const regexPatterns = [
-        constants.regex.MicrosoftAppId,
-        constants.regex.MicrosoftAppPassword
+        constants.regexForVariables.MicrosoftAppId,
+        constants.regexForVariables.MicrosoftAppPassword
     ];
 
     let matches = {};

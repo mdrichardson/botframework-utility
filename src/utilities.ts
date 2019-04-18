@@ -40,7 +40,7 @@ export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
     return botSettings;
 }
 
-export async function getEnvBotVariables(): Promise<BotVariables> {
+export async function getEnvBotVariables(): Promise<Partial<BotVariables>> {
     const envString = process.env.BOTFRAMEWORK_UTILITY || '{}';
     return JSON.parse(envString);
 }
@@ -126,7 +126,7 @@ export async function getIfNotExist(variable: string, prompt: string): Promise<v
     if (variable === constants.envVars.CodeLanguage) {
         value = await getLanguage();
     } else {
-        let settings = await getEnvBotVariables();
+        let settings = (await getEnvBotVariables() as BotVariables);
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ prompt: prompt }) || '';
         } else { return; }
