@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as constants from './constants';
 
 const dotenv = require('dotenv');
 const FuzzyMatching = require('fuzzy-matching');
 
-interface IBOTFRAMEWORK_UTILITY {
+export interface IBOTFRAMEWORK_UTILITY {
     MicrosoftAppId: string,
     MicrosoftAppPassword: string,
     ResourceGroupName: string,
@@ -19,8 +20,8 @@ export function createEmulatorUri(url: string, domain: string = 'livechat', acti
 }
 
 async function getBotSettings(): Promise<Partial<IBOTFRAMEWORK_UTILITY>> {
-    const dotenvFile = await vscode.workspace.findFiles(`**/*.env`, null, 1);
-    const appsettingsJsonFile = await vscode.workspace.findFiles(`**/appsettings.json`, null, 1);
+    const dotenvFile = await vscode.workspace.findFiles(`**/*${constants.settingsFiles.Node}`, null, 1);
+    const appsettingsJsonFile = await vscode.workspace.findFiles(`**/${constants.settingsFiles.Csharp}`, null, 1);
     let botSettings: Partial<IBOTFRAMEWORK_UTILITY> = {};
     // Read settings from file
     if (dotenvFile[0]) {
@@ -48,14 +49,7 @@ async function getBotSettings(): Promise<Partial<IBOTFRAMEWORK_UTILITY>> {
 function normalizeEnvKeys(key: string): string {
     const minAcceptableDistance = 0.3; // appId vs. MicrosoftAppId = 0.36 distance
     // Acceptable keys - Everything else is ignored
-    const fm = new FuzzyMatching([
-        'MicrosoftAppId',
-        'MicrosoftAppPassword',
-        'ResourceGroupName',
-        'Location',
-        'CodeLanguage',
-        'BotName'
-    ]);
+    const fm = new FuzzyMatching(Object.keys(constants.envVars));
     const result = fm.get(key);
     return result.distance >= minAcceptableDistance ? result.value : key;
 }
@@ -82,8 +76,8 @@ export async function setBotEnvVariables(botEnvVariables: Partial<IBOTFRAMEWORK_
         process.env.BOTFRAMEWORK_UTILITY = envString;
         // Save to .env and appsettings.json
         const root = getRoot();
-        if (await getLanguage() === 'Csharp') {
-            fs.writeFile(`${root}/appsettings.json`, envString, (err) => {
+        if (await getLanguage() === constants.sdkLanguages.Csharp) {
+            fs.writeFile(`${root}/${constants.settingsFiles.Csharp}`, envString, (err) => {
                 if (err) return Promise.reject('Unable to write');
                 return Promise.resolve();
             });
@@ -93,17 +87,30 @@ export async function setBotEnvVariables(botEnvVariables: Partial<IBOTFRAMEWORK_
                 // put in .env format: Key="value"
                 envString += `${key}=\"${currentBotEnvVariables[key]}\"\n`;
             }
-            fs.writeFileSync(`${root}/.env`, envString);
+            fs.writeFileSync(`${root}/${constants.settingsFiles.Node}`, envString);
         }
     }
 }
 
 export async function getLanguage(): Promise<string> {
     const cSharp = await vscode.workspace.findFiles('*.cs', null, 1);
-    const lang = cSharp ? 'Csharp' : 'Node';
+    const lang = cSharp ? constants.sdkLanguages.Csharp : constants.sdkLanguages.Node;
     return lang;
 }
 
 export function getRoot(): string {
     return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
+}
+
+export async function getIfNotExist(variable:string, prompt: string) {
+    let value;
+    if (variable === constants.envVars.CodeLanguage) {
+        value = await getLanguage();
+    } else {
+        let settings = await getBotEnvVariables();
+        if (!settings[variable]) {
+            value = await vscode.window.showInputBox({ prompt: prompt }) || '';
+        } else { return; }
+    }
+    await setBotEnvVariables({ [variable]: value });
 }

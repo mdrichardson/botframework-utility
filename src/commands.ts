@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as utilities from './utilities';
+import * as constants from './constants';
 
 const zip = require('zip-a-folder');
 
@@ -15,43 +16,22 @@ const commands: ICommands = {
     },
     async deploymentCreateResourceGroup(): Promise<void> {
         // Prep variables
-        let settings = await utilities.getBotEnvVariables();
-        if (!settings.ResourceGroupName) {
-            const rgName = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Name' }) || '';
-            await utilities.setBotEnvVariables({ ResourceGroupName: rgName });
-        }
-        if (!settings.Location) {
-            const location = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Location (ex: westus, westus2, eastus)' }) || '';
-            await utilities.setBotEnvVariables({ Location: location });
-        }
+        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await utilities.getIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
         // Open terminal and execute AZ CLI Command
-        settings = await utilities.getBotEnvVariables();
+        const settings = await utilities.getBotEnvVariables();
         executeAzCliCommand(`az group create --name ${settings.ResourceGroupName} --location ${settings.Location} --verbose`);
         vscode.window.showInformationMessage('Creating Resource Group');
     },
     async deploymentCreateWebApp(): Promise<void> {
         // Prep variables
-        let settings = await utilities.getBotEnvVariables();
-
-        if (!settings.BotName) {
-            const botName = await vscode.window.showInputBox({ prompt: 'Enter a name for your bot' }) || '';
-            await utilities.setBotEnvVariables({ BotName: botName });
-        }
-        if (!settings.ResourceGroupName) {
-            const rgName = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Name - Resource Group MUST EXIST!' }) || '';
-            await utilities.setBotEnvVariables({ ResourceGroupName: rgName });
-        }
-        if (!settings.Location) {
-            const location = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Location (ex: westus, westus2, eastus)' }) || '';
-            await utilities.setBotEnvVariables({ Location: location });
-        }
-        if (!settings.CodeLangugage) {
-            const language = await utilities.getLanguage();
-            await utilities.setBotEnvVariables({ CodeLanguage: language });
-        }
+        await utilities.getIfNotExist(constants.envVars.BotName, constants.envVarPrompts.);
+        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await utilities.getIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+        await utilities.getIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
         // Open terminal and execute AZ CLI Command
-        settings = await utilities.getBotEnvVariables();
+        const settings = await utilities.getBotEnvVariables();
         const command = `az bot create --kind webapp --name ${settings.BotName} --location ${settings.Location} --version v4 ` +
                         `--lang ${settings.CodeLanguage} --verbose --resource-group ${settings.ResourceGroupName}`
         executeAzCliCommand(command);
@@ -63,26 +43,10 @@ const commands: ICommands = {
         await zip.zip(root, `${root}/update.zip`);
         vscode.window.showInformationMessage('Done Creating Zip File');
 
-        let settings = await utilities.getBotEnvVariables();
+        await utilities.getIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
 
-        if (!settings.ResourceGroupName) {
-            const rgName = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Name - Resource Group MUST EXIST!' }) || '';
-            await utilities.setBotEnvVariables({ ResourceGroupName: rgName });
-        }
-        if (!settings.Location) {
-            const location = await vscode.window.showInputBox({ prompt: 'Enter your Resource Group Location (ex: westus, westus2, eastus)' }) || '';
-            await utilities.setBotEnvVariables({ Location: location });
-        }
-        if (!settings.CodeLangugage) {
-            const language = await utilities.getLanguage();
-            await utilities.setBotEnvVariables({ CodeLanguage: language });
-        }
-        if (!settings.BotName) {
-            const botName = await vscode.window.showInputBox({ prompt: 'Enter a name for your bot' }) || '';
-            await utilities.setBotEnvVariables({ BotName: botName });
-        }
-
-        settings = await utilities.getBotEnvVariables();
+        const settings = await utilities.getBotEnvVariables();
 
         if (settings.CodeLanguage === 'Csharp') {
             const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
