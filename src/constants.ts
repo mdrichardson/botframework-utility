@@ -38,3 +38,13 @@ export const regexForVariables = {
 export const regexForDispose = {
     WebappCreate: /"appId":.*".{36}",/g,
 };
+
+export const deploymentTemplates = {
+    'template-with-new-rg.json': 'template-with-new-rg.json',
+    'template-with-preexisting-rg.json': 'template-with-preexisting-rg.json',
+};
+
+export const urls = {
+    'template-with-new-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/deploymentTemplates/template-with-new-rg.json',
+    'template-with-preexisting-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/deploymentTemplates/template-with-preexisting-rg.json',
+};

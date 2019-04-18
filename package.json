@@ -76,6 +76,7 @@
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^1.6.0",
 		"@typescript-eslint/parser": "^1.6.0",
+		"axios": "^0.18.0",
 		"dotenv": "^7.0.0",
 		"fuzzy-matching": "^0.4.3",
 		"zip-a-folder": "0.0.7"

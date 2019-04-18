@@ -4,6 +4,7 @@ import * as constants from './constants';
 
 import dotenv = require('dotenv');
 import FuzzyMatching = require('fuzzy-matching');
+import axios from 'axios';
 
 export interface BotVariables {
     MicrosoftAppId: string;
@@ -107,7 +108,7 @@ export function getWorkspaceRoot(): string {
     return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
 }
 
-export async function getIfNotExist(variable: string, prompt: string): Promise<void> {
+export async function promptForVariableIfNotExist(variable: string, prompt: string): Promise<void> {
     let value;
     if (variable === constants.envVars.CodeLanguage) {
         value = await getLanguage();
@@ -118,4 +119,19 @@ export async function getIfNotExist(variable: string, prompt: string): Promise<v
         } else { return; }
     }
     await setBotVariable({ [variable]: value });
+}
+
+export async function getDeploymentTemplateIfNotExist(templateName: string): Promise<string> {
+    const existingTemplate = await vscode.workspace.findFiles(`**/${ templateName }`, null, 1)[0];
+    const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
+    let file;
+    if (!existingTemplate) {
+        if (!deploymentTemplatesFolderExists) {
+            await fs.mkdirSync(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
+        }
+        file = await axios.get(constants.urls[templateName]);
+        await fs.writeFileSync(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, file.data);
+    }
+    console.log(file);
+    return '';
 }

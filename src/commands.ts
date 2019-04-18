@@ -24,8 +24,8 @@ const commands: Commands = {
         }
 
         // Prep Variables
-        await utilities.getIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.getIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated);
+        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated);
 
         settings = await utilities.getEnvBotVariables();
 
@@ -40,8 +40,8 @@ const commands: Commands = {
     },
     async deploymentCreateResourceGroup(): Promise<void> {
         // Prep variables
-        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupNameBeingCreated);
-        await utilities.getIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupNameBeingCreated);
+        await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
         // Open terminal and execute AZ CLI Command
         const settings = await utilities.getEnvBotVariables();
         const command = `az group create --name "${ settings.ResourceGroupName }" --location "${ settings.Location }" --verbose`;
@@ -50,10 +50,10 @@ const commands: Commands = {
     },
     async deploymentCreateWebApp(): Promise<void> {
         // Prep variables
-        await utilities.getIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
-        await utilities.getIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
-        await utilities.getIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
+        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+        await utilities.promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
         // Open terminal and execute AZ CLI Command
         const settings = await utilities.getEnvBotVariables();
@@ -64,9 +64,9 @@ const commands: Commands = {
     },
     async deploymentPublish(): Promise<void> {
 
-        await utilities.getIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.getIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
-        await utilities.getIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
+        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await utilities.promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
         vscode.window.showInformationMessage('Creating Zip File');
         const root = utilities.getWorkspaceRoot();
@@ -94,12 +94,7 @@ const commands: Commands = {
         // TODO: Make it work for Node. Add the actual publish commands. Delete zip file.
     },
     async currentTest(): Promise<void> {
-        await regexToEnvVariables(`
-        "appId": "d23d9a36-1c1c-4fe9-9ad7-9f8eb7664ce0",
-        "appPassword": "^B|v}OyJWNn])4grKy#syjpi@",
-        "endpoint": "https://vmicrictest.azurewebsites.net/api/messages",
-        "id": "vmicricTEST"
-      `);
+        await utilities.getDeploymentTemplateIfNotExist(constants.deploymentTemplates["template-with-new-rg.json"]);
     }
 };
 
