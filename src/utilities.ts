@@ -45,23 +45,9 @@ export async function getEnvBotVariables(): Promise<Partial<BotVariables>> {
     return JSON.parse(envString);
 }
 
-export async function getAndSyncLocalAndEnvVariables(): Promise<Partial<BotVariables>> {
-    const currentBotEnvVariables = await getEnvBotVariables();
-    const currentBotLocalVariables = await getLocalBotVariables();
-    const mergedVariables = {};
-    for (const key in currentBotEnvVariables) {
-        mergedVariables[normalizeEnvKeys(key)] = currentBotEnvVariables[key];
-    };
-    for (const key in currentBotLocalVariables) {
-        mergedVariables[normalizeEnvKeys(key)] = currentBotLocalVariables[key];
-    };
-    await setFullBotVariables(mergedVariables);
-    return mergedVariables;
-}
-
 export async function setBotVariable(variablesToAdd: Partial<BotVariables>): Promise<void> {
     // Add new variables to vsCode env
-    const currentBotVariables = await getAndSyncLocalAndEnvVariables();
+    const currentBotVariables = await getEnvBotVariables();
     let changes = 0;
     for (const key in variablesToAdd) {
         const normalizedKey = normalizeEnvKeys(key);
@@ -76,13 +62,13 @@ export async function setBotVariable(variablesToAdd: Partial<BotVariables>): Pro
     }
 }
 
-async function setFullBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
-    await setEnvBotVariables(fullBotVariables);
-    await setLocalBotVariables(fullBotVariables);
+export async function setEnvBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
+    process.env.BOTFRAMEWORK_UTILITY = JSON.stringify(fullBotVariables, null, 2);
 }
 
-async function setEnvBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
-    process.env.BOTFRAMEWORK_UTILITY = JSON.stringify(fullBotVariables, null, 2);
+export async function syncLocalBotVariablesToEnv(): Promise<void> {
+    const localVariables = await getLocalBotVariables();
+    await setEnvBotVariables(localVariables);
 }
 
 // Save to .env and appsettings.json

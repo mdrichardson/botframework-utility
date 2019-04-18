@@ -8,13 +8,22 @@ import * as utilities from './utilities';
 // your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<void> {    
     // Load appsettings.json/.env into env variables
-    await utilities.getAndSyncLocalAndEnvVariables();
+    await utilities.syncLocalBotVariablesToEnv();
 
     // Load commands from commands.ts
     for (const key in commands) {
         const command = vscode.commands.registerCommand(`extension.${ key }`, commands[key]);
         context.subscriptions.push(command);
     };
+
+    const envWatcher = vscode.workspace.createFileSystemWatcher('**/.env', true, false, true);
+    envWatcher.onDidChange(async (): Promise<void> => {
+        await utilities.syncLocalBotVariablesToEnv();
+    });
+    const appsettingsJsonWatcher = vscode.workspace.createFileSystemWatcher('**/appsettings.json', true, false, true);
+    appsettingsJsonWatcher.onDidChange(async (): Promise<void> => {
+        await utilities.syncLocalBotVariablesToEnv();
+    });
     
     console.log('BotFramework Utility is now active!');
 };

@@ -19,12 +19,8 @@ const commands: Commands = {
         let settings = await utilities.getEnvBotVariables();
 
         if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
-            // Allow user to delete appId and pass from .env/appsettings.json
-            settings = await utilities.getAndSyncLocalAndEnvVariables();
-            if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
-                vscode.window.showInformationMessage(`You already have an App Registration.`);
-                return;
-            }
+            vscode.window.showInformationMessage(`You already have an App Registration.`);
+            return;
         }
 
         // Prep Variables
