@@ -40,7 +40,11 @@ export const regexForVariables = {
 
 export const regexForDispose = {
     WebappCreate: /"appId":.*".{36}",/g,
-    CreateAzureResources: /"provisioningState": "Succeeded",/g
+    CreateAzureResources: /"provisioningState": "Succeeded",/g,
+    // Prep Pub: There's no success message, so we need to handle success and failure
+    PreparePublish: />\[0K\[89G/g,
+    PreparePublishFailed: /(?:found in)/g,
+    Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g
 };
 
 export const deploymentTemplates = {

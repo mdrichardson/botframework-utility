@@ -12,7 +12,7 @@
     "plugins": ["@typescript-eslint"],
     "rules": {
         "semi": [2, "always"],
-        "indent": [2, 4],
+        "indent": [1, 4, { "SwitchCase": 1 }],
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-use-before-define": 0,
         "no-return-await": 0,

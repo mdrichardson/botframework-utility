@@ -56,26 +56,33 @@ const commands: Commands = {
 
         const settings = await utilities.getEnvBotVariables();
 
+        let csprojFile;
         if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
             const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
-            const csprojFile = csproj[0].fsPath.split('\\').pop();
-
-            const scmCommand = `az webapp config appsettings set --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --settings SCM_DO_BUILD_DEPLOYMENT=false`;
-            const generatorCommand = `az webapp config appsettings set --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --settings SCM_SCRIPT_GENERATOR_ARGS="--aspNetCore ${ csprojFile }"`;
-            const prepareDeployCommand = `az bot prepare-deploy --lang Csharp --code-dir "." --proj-file-path "${ csprojFile }"`;
-            const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "update.zip"`;
-
-            await executeAzCliCommand(scmCommand, /"name":.*"SCM_DO_BUILD_DEPLOYMENT",[\s\S]*"slotSetting":.*false,/g, 'SET SCM_DO_BUILD_DEPLOYMENT');
-            await executeAzCliCommand(generatorCommand, /"name":.*"SCM_SCRIPT_GENERATOR_ARGS",[\s\S]*"slotSetting":.*false,[\s\S]*"value":.*"--aspNetCore/g, 'SET SCM_SCRIPT_GENERATOR');
-            await executeAzCliCommand(prepareDeployCommand, /.*/, "Deployment Prep");
-            await executeAzCliCommand(publishCommand, /"complete": true,[\s\S]*"deployer": "Push-Deployer",[\s\S]*"progress": ""/g, 'Zip Deployment');
-        } else {
-
+            csprojFile = csproj[0].fsPath.split('\\').pop();
         }
-        // TODO: Make it work for Node. Add the actual publish commands. Delete zip file.
+
+        const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
+        const prepareDeployCommand = `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
+        const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "update.zip"`;
+
+        await executeAzCliCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
+        vscode.window.showInformationMessage('Deploying');
+        await executeAzCliCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
+        // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
     async currentTest(): Promise<void> {
-        await utilities.getDeploymentTemplate(constants.deploymentTemplates["template-with-new-rg.json"]);
+        const settings = await utilities.getEnvBotVariables();
+
+        let csprojFile;
+        if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
+            const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
+            csprojFile = csproj[0].fsPath.split('\\').pop();
+        }
+
+        const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
+        const prepareDeployCommand = `az bot prepare-deploy --lang Node --code-dir "."`;
+        await executeAzCliCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
     }
 };
 
@@ -113,6 +120,7 @@ async function deploymentCreateResources(newResourceGroup: boolean, newServicePl
     const command = `az ${ azCommand } --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" ${ groupArg }`+
         `--parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+
         `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam } ${ servicePlanParam }`;
+
     vscode.window.showInformationMessage('Creating Azure Resources');
     await executeAzCliCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
 };
@@ -137,18 +145,41 @@ async function regexToEnvVariables(data: string): Promise<void> {
     }
 }
 
-async function executeAzCliCommand(command: string, commandCompleteRegex?: RegExp, commandCompleteTitle: string = 'Command'): Promise<void> {
-    const terminal = vscode.window.createTerminal();
-    await (terminal as any).onDidWriteData(async (data): Promise<void> => {
-        console.log(`DATA: ${ data }`);
-        await regexToEnvVariables(data);
-        if (commandCompleteRegex && commandCompleteRegex.test(data)) {
-            vscode.window.showInformationMessage(`${ commandCompleteTitle } finished successfully. Terminal Closed`);
-            terminal.dispose();
+async function executeAzCliCommand(
+    command: string,
+    commandCompleteRegex?: RegExp,
+    commandTitle: string = 'Command',
+    commandFailedRegex?: RegExp): Promise<void> {
+    // Force all commands to use single terminal type, for better control
+    let terminalPath;
+    switch (process.platform) {
+        case 'win32':
+            terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
+            break;
+        case 'darwin':
+            terminalPath = '/bin/bash';
+            break;
+        default:
+            terminalPath = 'sh';
+    }
+    const terminal = await vscode.window.createTerminal(undefined, terminalPath);
+    let listenForData = true;
+    (terminal as any).onDidWriteData(async (data): Promise<void> => {
+        if (listenForData) {
+            await regexToEnvVariables(data);
+            if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
+                vscode.window.showErrorMessage(`${ commandTitle } failed.`);
+                // Ensure we don't call a success message
+                terminal.dispose();
+                listenForData = false;
+            } else if (data.trim() && commandCompleteRegex && commandCompleteRegex.test(data)) {
+                vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
+                terminal.dispose();
+            }
         }
     });
     terminal.show(true);
-    terminal.sendText(command);
+    terminal.sendText(command, true);
 }
 
 export { commands };

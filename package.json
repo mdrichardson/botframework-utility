@@ -20,31 +20,37 @@
 		"commands": [
 			{
 				"command": "extension.openEmulatorLocalhost",
-                "category": "Bot > Emulator",
+				"category": "Bot > Emulator",
 				"title": "Open Emulator (localhost)"
 			},
 			{
 				"command": "extension.createAppRegistration",
-                "category": "Bot > Deploy",
+				"category": "Bot > Deploy",
 				"title": "1. Create App Registration"
 			},
 			{
 				"command": "extension.deploymentCreateResourcesNewResourceGroup",
-                "category": "Bot > Deploy",
+				"category": "Bot > Deploy",
 				"title": "2A. Create AZ Resources (new Res. Group)"
 			},
 			{
-                "command": "extension.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
-                "category": "Bot > Deploy",
+				"command": "extension.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
+				"category": "Bot > Deploy",
 				"title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
 			},
 			{
-                "command": "extension.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
-                "category": "Bot > Deploy",
+				"command": "extension.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
+				"category": "Bot > Deploy",
 				"title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
 			},
 			{
+				"command": "extension.deploymentPublish",
+				"category": "Bot > Deploy",
+				"title": "3. Deploy/Publish"
+			},
+			{
 				"command": "extension.currentTest",
+				"category": "Bot > DEV",
 				"title": "Run Current Test"
 			}
 		],
