@@ -62,7 +62,17 @@
 					"group": "@botframework-utility"
 				}
 			]
-		}
+        },
+        "configuration": {
+            "type": "object",
+            "title": "Botframework Utility",
+            "properties": {
+                "botframework-utility.customTerminalForAzCommands": {
+                    "type": "string",
+                    "description": "Path to custom terminal for AZ CLI commands"
+                }
+            }
+        }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

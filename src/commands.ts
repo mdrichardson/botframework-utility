@@ -72,17 +72,8 @@ const commands: Commands = {
         // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
     async currentTest(): Promise<void> {
-        const settings = await utilities.getEnvBotVariables();
-
-        let csprojFile;
-        if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
-            const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
-            csprojFile = csproj[0].fsPath.split('\\').pop();
-        }
-
-        const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
-        const prepareDeployCommand = `az bot prepare-deploy --lang Node --code-dir "."`;
-        await executeAzCliCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
+        const test = vscode.workspace.getConfiguration('botframework-utility').get('customTerminalForAzCommandsPath');
+        console.log(JSON.stringify(test));
     }
 };
 
@@ -151,17 +142,20 @@ async function executeAzCliCommand(
     commandTitle: string = 'Command',
     commandFailedRegex?: RegExp): Promise<void> {
     // Force all commands to use single terminal type, for better control
-    let terminalPath;
-    switch (process.platform) {
-        case 'win32':
-            terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
-            break;
-        case 'darwin':
-            terminalPath = '/bin/bash';
-            break;
-        default:
-            terminalPath = 'sh';
-    }
+    const userTerminalPath = (vscode.workspace.getConfiguration('botframework-utility').get('customTerminalForAzCommandsPath') as string);
+    let terminalPath = userTerminalPath ? userTerminalPath : undefined;
+    if (command.toLowerCase().startsWith('az') && !userTerminalPath) {
+        switch (process.platform) {
+            case 'win32':
+                terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
+                break;
+            case 'darwin':
+                terminalPath = '/bin/bash';
+                break;
+            default:
+                terminalPath = 'sh';
+        }
+    };
     const terminal = await vscode.window.createTerminal(undefined, terminalPath);
     let listenForData = true;
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
