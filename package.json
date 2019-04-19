@@ -72,7 +72,15 @@
 					"description": "Path to custom terminal for AZ CLI commands"
 				}
 			}
-		}
+        },
+        "keybindings": [
+            {
+                "command": "extension.openEmulatorLocalhost",
+                "key": "ctrl+alt+shift+e",
+                "mac": "cmd+alt+shift+e",
+                "when": "debugType != xyz"
+            }
+        ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
