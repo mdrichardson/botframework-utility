@@ -62,17 +62,17 @@
 					"group": "@botframework-utility"
 				}
 			]
-        },
-        "configuration": {
-            "type": "object",
-            "title": "Botframework Utility",
-            "properties": {
-                "botframework-utility.customTerminalForAzCommands": {
-                    "type": "string",
-                    "description": "Path to custom terminal for AZ CLI commands"
-                }
-            }
-        }
+		},
+		"configuration": {
+			"type": "object",
+			"title": "Botframework Utility",
+			"properties": {
+				"botframework-utility.customTerminalForAzCommands": {
+					"type": "string",
+					"description": "Path to custom terminal for AZ CLI commands"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -97,6 +97,7 @@
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^1.6.0",
 		"@typescript-eslint/parser": "^1.6.0",
+		"archiver": "^3.0.0",
 		"axios": "^0.18.0",
 		"dotenv": "^7.0.0",
 		"fuzzy-matching": "^0.4.3",

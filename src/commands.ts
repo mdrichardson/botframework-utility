@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import * as utilities from './utilities';
 import * as constants from './constants';
 
-import zip = require('zip-a-folder');
-
 export interface Commands {
     [index: string]: () => void | Promise<void>;
 }
@@ -49,10 +47,7 @@ const commands: Commands = {
         await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
         await utilities.promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
-        vscode.window.showInformationMessage('Creating Zip File');
-        const root = utilities.getWorkspaceRoot();
-        await zip.zip(root, `${ root }/update.zip`);
-        vscode.window.showInformationMessage('Done Creating Zip File');
+        await utilities.createUpdateZip();
 
         const settings = await utilities.getEnvBotVariables();
 
@@ -72,8 +67,8 @@ const commands: Commands = {
         // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
     async currentTest(): Promise<void> {
-        const test = vscode.workspace.getConfiguration('botframework-utility').get('customTerminalForAzCommandsPath');
-        console.log(JSON.stringify(test));
+        await utilities.createUpdateZip();
+        console.log('complete');
     }
 };
 
