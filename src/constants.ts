@@ -6,7 +6,8 @@ export const envVars: BotVariables = {
     ResourceGroupName: 'ResourceGroupName',
     Location: 'Location',
     CodeLanguage: 'CodeLanguage',
-    BotName: 'BotName'
+    BotName: 'BotName',
+    ServicePlanName: 'ServicePlanName',
 };
 
 export const envVarPrompts = {
@@ -18,6 +19,8 @@ export const envVarPrompts = {
     Location: 'Enter your Resource Group Location (ex: westus, westus2, eastus)',
     CodeLanguage: 'What language is your code in? [Node / Csharp]',
     BotName: 'Enter a name for your bot',
+    ServicePlanName: 'Enter your existing Service Plan\'s Name',
+    ServicePlanNameBeingCreated: 'Enter a name for your Service Plan'
 };
 
 export const sdkLanguages = {
@@ -41,6 +44,7 @@ export const regexForDispose = {
 };
 
 export const deploymentTemplates = {
+    // Must use quotes since keys contain "-"
     'template-with-new-rg.json': 'template-with-new-rg.json',
     'template-with-preexisting-rg.json': 'template-with-preexisting-rg.json',
 };

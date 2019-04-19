@@ -19,7 +19,7 @@ const commands: Commands = {
         let settings = await utilities.getEnvBotVariables();
 
         if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
-            vscode.window.showInformationMessage(`You already have an App Registration.`);
+            vscode.window.showInformationMessage(`You already have an App Registration. Delete appId/appPass.`);
             return;
         }
 
@@ -33,47 +33,15 @@ const commands: Commands = {
         vscode.window.showInformationMessage('Creating App Registration');
         await executeAzCliCommand(command, constants.regexForDispose.WebappCreate, 'App Registration Creation');
     },
+    // Can't pass args to menu commands, so we'll call the "parent" deployment function
     async deploymentCreateResourcesNewResourceGroup(): Promise<void> {
-        await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
-        await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppId, constants.envVarPrompts.MicrosoftAppId);
-        await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword);
-        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupNameBeingCreated);
-
-        const deploymentTemplate = await utilities.getDeploymentTemplate(constants.deploymentTemplates["template-with-new-rg.json"]);
-
-        const settings = await utilities.getEnvBotVariables();
-
-        const command = `az deployment create --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" `+
-            `--location "${ settings.Location }" --parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+
-            `botSku=F0 newAppServicePlanName="${ settings.BotName }-plan" newWebAppName="${ settings.BotName }" groupName="${ settings.ResourceGroupName }" ` +
-            `groupLocation="${ settings.Location }" newAppServicePlanLocation="${ settings.Location }"`;
-        vscode.window.showInformationMessage('Creating Azure Resources');
-        await executeAzCliCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
+        await deploymentCreateResources(true, true);
     },
-    async deploymentCreateResourceGroup(): Promise<void> {
-        // Prep variables
-        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupNameBeingCreated);
-        await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
-        // Open terminal and execute AZ CLI Command
-        const settings = await utilities.getEnvBotVariables();
-        const command = `az group create --name "${ settings.ResourceGroupName }" --location "${ settings.Location }" --verbose`;
-        await executeAzCliCommand(command, /"provisioningState": "Succeeded"/g, 'Resource Group Creation');
-        vscode.window.showInformationMessage('Creating Resource Group');
+    async deploymentCreateResourcesExistingResourceGroupExistingServicePlan(): Promise<void> {
+        await deploymentCreateResources(false, false);
     },
-    async deploymentCreateWebApp(): Promise<void> {
-        // Prep variables
-        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
-        await utilities.promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
-
-        // Open terminal and execute AZ CLI Command
-        const settings = await utilities.getEnvBotVariables();
-        const command = `az bot create --kind webapp --name "${ settings.BotName }" --location "${ settings.Location }" --version v4 ` +
-                        `--lang "${ settings.CodeLanguage }" --verbose --resource-group "${ settings.ResourceGroupName }"`;
-        await executeAzCliCommand(command, /"appId":[\s\S]*"appPassword":/g, 'Web App Creation');
-        vscode.window.showInformationMessage('Creating Web App');
+    async deploymentCreateResourcesExistingResourceGroupNewServicePlan(): Promise<void> {
+        await deploymentCreateResources(false, true);
     },
     async deploymentPublish(): Promise<void> {
 
@@ -109,6 +77,44 @@ const commands: Commands = {
     async currentTest(): Promise<void> {
         await utilities.getDeploymentTemplate(constants.deploymentTemplates["template-with-new-rg.json"]);
     }
+};
+
+async function deploymentCreateResources(newResourceGroup: boolean, newServicePlan: boolean): Promise<void> {
+    // TODO: Allow for *all* variables (various locations...)
+    // Force creation of new service plan if creating new resource group
+    newServicePlan = newResourceGroup ? true : newServicePlan;
+
+    await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+    await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppId, constants.envVarPrompts.MicrosoftAppId);
+    await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword);
+    await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+    await utilities.promptForVariableIfNotExist(constants.envVars.ServicePlanName, constants.envVarPrompts.ServicePlanName);
+
+    const rgPrompt = newResourceGroup ? constants.envVarPrompts.ResourceGroupNameBeingCreated : constants.envVarPrompts.ResourceGroupName;
+    await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt);
+
+    const planPrompt = newServicePlan ? constants.envVarPrompts.ServicePlanNameBeingCreated : constants.envVarPrompts.ServicePlanName;
+    await utilities.promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt);
+
+    const settings = await utilities.getEnvBotVariables();
+
+    const azCommand = newResourceGroup ? `deployment create --location ${ settings.Location }` : 'group deployment create';
+    
+    const templateName = newResourceGroup ? constants.deploymentTemplates["template-with-new-rg.json"] : constants.deploymentTemplates["template-with-preexisting-rg.json"];
+    const deploymentTemplate = await utilities.getDeploymentTemplate(templateName);
+
+    const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }"` : '';
+    const groupArg = newResourceGroup ? '' : `--resource-group "${ settings.ResourceGroupName }" `;
+
+    const servicePlanParam = newServicePlan ? 
+        `newAppServicePlanName="${ settings.ServicePlanName }" appServicePlanLocation="${ settings.Location }"` : 
+        `existingAppServicePlan="${ settings.ServicePlanName }" appServicePlanLocation="${ settings.Location }"`;
+
+    const command = `az ${ azCommand } --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" ${ groupArg }`+
+        `--parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+
+        `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam } ${ servicePlanParam }`;
+    vscode.window.showInformationMessage('Creating Azure Resources');
+    await executeAzCliCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
 };
 
 async function regexToEnvVariables(data: string): Promise<void> {

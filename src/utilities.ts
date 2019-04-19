@@ -13,6 +13,7 @@ export interface BotVariables {
     Location: string;
     CodeLanguage: string;
     BotName: string;
+    ServicePlanName: string;
     [index: string]: string;
 }
 

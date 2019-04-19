@@ -20,19 +20,32 @@
 		"commands": [
 			{
 				"command": "extension.openEmulatorLocalhost",
-				"title": "BotFramework: Open Emulator (localhost)"
+                "category": "Bot > Emulator",
+				"title": "Open Emulator (localhost)"
 			},
 			{
 				"command": "extension.createAppRegistration",
-				"title": "BotFramework: Deployment > 1. Create App Registration"
+                "category": "Bot > Deploy",
+				"title": "1. Create App Registration"
 			},
 			{
 				"command": "extension.deploymentCreateResourcesNewResourceGroup",
-				"title": "BotFramework: Deployment > 2. Create Azure Resources (new Resource Group)"
+                "category": "Bot > Deploy",
+				"title": "2A. Create AZ Resources (new Res. Group)"
+			},
+			{
+                "command": "extension.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
+                "category": "Bot > Deploy",
+				"title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
+			},
+			{
+                "command": "extension.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
+                "category": "Bot > Deploy",
+				"title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
 			},
 			{
 				"command": "extension.currentTest",
-				"title": "BotFramework: Run Current Test"
+				"title": "Run Current Test"
 			}
 		],
 		"menus": {
