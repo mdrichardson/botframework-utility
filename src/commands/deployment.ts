@@ -20,7 +20,7 @@ const deploymentCommands: Commands = {
             return;
         }
 
-        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName, constants.regexForValidations.WordsOnly);
         await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated, constants.regexForValidations.MicrosoftAppPassword);
 
         settings = await getEnvBotVariables();
@@ -42,8 +42,8 @@ const deploymentCommands: Commands = {
     },
     async deploymentPublish(): Promise<void> {
 
-        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName, constants.regexForValidations.WordsOnly);
+        await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName, constants.regexForValidations.ResourceGroups);
         await promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
         await createUpdateZip();
@@ -72,17 +72,17 @@ async function deploymentCreateResources(newResourceGroup: boolean, newServicePl
     // Force creation of new service plan if creating new resource group
     newServicePlan = newResourceGroup ? true : newServicePlan;
 
-    await promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+    await promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location, constants.regexForValidations.Location);
     await promptForVariableIfNotExist(constants.envVars.MicrosoftAppId, constants.envVarPrompts.MicrosoftAppId);
-    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword);
-    await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, constants.envVarPrompts.ServicePlanName);
+    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword, constants.regexForValidations.MicrosoftAppPassword);
+    await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName, constants.regexForValidations.WordsOnly);
+    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, constants.envVarPrompts.ServicePlanName, constants.regexForValidations.WordsOnly);
 
     const rgPrompt = newResourceGroup ? constants.envVarPrompts.ResourceGroupNameBeingCreated : constants.envVarPrompts.ResourceGroupName;
-    await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt);
+    await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt, constants.regexForValidations.ResourceGroups);
 
     const planPrompt = newServicePlan ? constants.envVarPrompts.ServicePlanNameBeingCreated : constants.envVarPrompts.ServicePlanName;
-    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt);
+    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt, constants.regexForValidations.WordsOnly);
 
     const settings = await getEnvBotVariables();
 

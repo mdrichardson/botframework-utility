@@ -115,7 +115,16 @@ async function inputIsValid(value: string, validator: RegExp): Promise<boolean> 
     if (value.match(validator)) {
         return true;
     } else {
-        await vscode.window.showErrorMessage(`Invalid Input. Valid RegEx: ${ validator }`);
+        await vscode.window.showErrorMessage(`Invalid Input. See log for details`);
+        console.log(`INVALID INPUT. VALID REGEXP:\n${ validator }`);
         return false;
     }
+}
+
+// Returns /^(item1|item2)$/ if includeCaratAtStart and includeDollarAtEnd are true
+export function arrayToRegex(array: string[], includeCaratAtStart: boolean = true, includeDollarAtEnd: boolean = true): RegExp {
+    const carat = includeCaratAtStart ? '^' : '';
+    const dollar = includeDollarAtEnd ? '$' : '';
+    const joinedRegionCodes = array.reduce((prev, curr): string => `${ prev }|${ curr }`);
+    return new RegExp(`${ carat }(${ joinedRegionCodes })${ dollar }`);
 }

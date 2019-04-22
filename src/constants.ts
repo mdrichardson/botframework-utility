@@ -1,4 +1,47 @@
 import { BotVariables } from './interfaces';
+import { arrayToRegex } from './utilities';
+
+const azureRegionCodes = [
+    'australiaeast',
+    'australiacentral',
+    'australiacentral2',
+    'australiasoutheast',
+    'eastasia',
+    'southeastasia',
+    'eastus',
+    'eastus2',
+    'southcentralus',
+    'westcentralus',
+    'westus',
+    'westus2',
+    'brazilsouth',
+    'centralus',
+    'northcentralus',
+    'japanwest',
+    'japaneast',
+    'southindia',
+    'centralindia',
+    'westindia',
+    'canadacentral',
+    'canadaeast',
+    'koreacentral',
+    'koreasouth',
+    'germanycentral',
+    'germanynortheast',
+    'northeurope',
+    'westeurope',
+    'uksouth',
+    'ukwest',
+    'francecentral',
+    'francesouth',
+    'virginia',
+    'usgovvirginia',
+    'usgoviowa',
+    'usdodeast',
+    'usdodcentral',
+    'usgovtexas',
+    'usgovarizona'
+];
 
 export const envVars: BotVariables = {
     MicrosoftAppId: 'MicrosoftAppId',
@@ -48,7 +91,10 @@ export const regexForDispose = {
 };
 
 export const regexForValidations = {
-    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/
+    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
+    Location: arrayToRegex(azureRegionCodes),
+    ResourceGroups: /^[\w\.\-)(]+(?<!\.)$/,
+    WordsOnly: /^\w{4,}$/,
 };
 
 export const deploymentTemplates = {
