@@ -1,30 +1,35 @@
 import * as vscode from 'vscode';
-import * as utilities from './utilities';
-import * as constants from './constants';
 
-export interface Commands {
-    [index: string]: () => void | Promise<void>;
-}
+import * as constants from './constants';
+import { Commands } from './interfaces';
+import {
+    createEmulatorUri,
+    createUpdateZip,
+    getDeploymentTemplate,
+    getEnvBotVariables,
+    promptForVariableIfNotExist,
+    setBotVariable
+} from './utilities';
 
 const commands: Commands = {
     openEmulatorLocalhost(): void {
         vscode.window.showInformationMessage('Opening Emulator at localhost');
-        var uri = utilities.createEmulatorUri(`http://localhost:3978/api/messages`);
+        var uri = createEmulatorUri(`http://localhost:3978/api/messages`);
         vscode.env.openExternal(uri);
     },
     async createAppRegistration(): Promise<void> {
 
-        let settings = await utilities.getEnvBotVariables();
+        let settings = await getEnvBotVariables();
 
         if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
             vscode.window.showInformationMessage(`You already have an App Registration. Delete appId/appPass.`);
             return;
         }
 
-        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated);
+        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated);
 
-        settings = await utilities.getEnvBotVariables();
+        settings = await getEnvBotVariables();
 
         const command = `az ad app create --display-name "${ settings.BotName }" --password "${ settings.MicrosoftAppPassword }" --available-to-other-tenants`;
 
@@ -43,13 +48,13 @@ const commands: Commands = {
     },
     async deploymentPublish(): Promise<void> {
 
-        await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
-        await utilities.promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
+        await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+        await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, constants.envVarPrompts.ResourceGroupName);
+        await promptForVariableIfNotExist(constants.envVars.CodeLanguage, constants.envVarPrompts.CodeLanguage);
 
-        await utilities.createUpdateZip();
+        await createUpdateZip();
 
-        const settings = await utilities.getEnvBotVariables();
+        const settings = await getEnvBotVariables();
 
         let csprojFile;
         if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
@@ -67,7 +72,7 @@ const commands: Commands = {
         // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
     async currentTest(): Promise<void> {
-        await utilities.createUpdateZip();
+        await createUpdateZip();
         console.log('complete');
     }
 };
@@ -77,24 +82,24 @@ async function deploymentCreateResources(newResourceGroup: boolean, newServicePl
     // Force creation of new service plan if creating new resource group
     newServicePlan = newResourceGroup ? true : newServicePlan;
 
-    await utilities.promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
-    await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppId, constants.envVarPrompts.MicrosoftAppId);
-    await utilities.promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword);
-    await utilities.promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-    await utilities.promptForVariableIfNotExist(constants.envVars.ServicePlanName, constants.envVarPrompts.ServicePlanName);
+    await promptForVariableIfNotExist(constants.envVars.Location, constants.envVarPrompts.Location);
+    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppId, constants.envVarPrompts.MicrosoftAppId);
+    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPassword);
+    await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
+    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, constants.envVarPrompts.ServicePlanName);
 
     const rgPrompt = newResourceGroup ? constants.envVarPrompts.ResourceGroupNameBeingCreated : constants.envVarPrompts.ResourceGroupName;
-    await utilities.promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt);
+    await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt);
 
     const planPrompt = newServicePlan ? constants.envVarPrompts.ServicePlanNameBeingCreated : constants.envVarPrompts.ServicePlanName;
-    await utilities.promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt);
+    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt);
 
-    const settings = await utilities.getEnvBotVariables();
+    const settings = await getEnvBotVariables();
 
     const azCommand = newResourceGroup ? `deployment create --location ${ settings.Location }` : 'group deployment create';
     
     const templateName = newResourceGroup ? constants.deploymentTemplates["template-with-new-rg.json"] : constants.deploymentTemplates["template-with-preexisting-rg.json"];
-    const deploymentTemplate = await utilities.getDeploymentTemplate(templateName);
+    const deploymentTemplate = await getDeploymentTemplate(templateName);
 
     const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }"` : '';
     const groupArg = newResourceGroup ? '' : `--resource-group "${ settings.ResourceGroupName }" `;
@@ -127,7 +132,7 @@ async function regexToEnvVariables(data: string): Promise<void> {
     });
 
     if (matches) {
-        await utilities.setBotVariable(matches);
+        await setBotVariable(matches);
     }
 }
 

@@ -1,4 +1,4 @@
-import { BotVariables } from './utilities';
+import { BotVariables } from './interfaces';
 
 export const envVars: BotVariables = {
     MicrosoftAppId: 'MicrosoftAppId',
