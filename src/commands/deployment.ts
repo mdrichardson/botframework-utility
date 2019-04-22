@@ -1,22 +1,16 @@
 import * as vscode from 'vscode';
 
-import * as constants from './constants';
-import { Commands } from './interfaces';
+import { Commands } from '../interfaces';
+import * as constants from '../constants';
 import {
-    createEmulatorUri,
     createUpdateZip,
     getDeploymentTemplate,
     getEnvBotVariables,
     promptForVariableIfNotExist,
     setBotVariable
-} from './utilities';
+} from '../utilities';
 
-const commands: Commands = {
-    openEmulatorLocalhost(): void {
-        vscode.window.showInformationMessage('Opening Emulator at localhost');
-        var uri = createEmulatorUri(`http://localhost:3978/api/messages`);
-        vscode.env.openExternal(uri);
-    },
+const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {
 
         let settings = await getEnvBotVariables();
@@ -71,10 +65,6 @@ const commands: Commands = {
         await executeAzCliCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
         // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
-    async currentTest(): Promise<void> {
-        await createUpdateZip();
-        console.log('complete');
-    }
 };
 
 async function deploymentCreateResources(newResourceGroup: boolean, newServicePlan: boolean): Promise<void> {
@@ -176,4 +166,4 @@ async function executeAzCliCommand(
     terminal.sendText(command, true);
 }
 
-export { commands };
+export { deploymentCommands };
