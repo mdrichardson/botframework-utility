@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Commands } from '../interfaces';
 
 import * as constants from '../constants';

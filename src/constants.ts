@@ -44,19 +44,19 @@ const azureRegionCodes = [
 ];
 
 export const envVars: BotVariables = {
+    BotName: 'BotName',
+    CodeLanguage: 'CodeLanguage',
+    Location: 'Location',
     MicrosoftAppId: 'MicrosoftAppId',
     MicrosoftAppPassword: 'MicrosoftAppPassword',
     ResourceGroupName: 'ResourceGroupName',
-    Location: 'Location',
-    CodeLanguage: 'CodeLanguage',
-    BotName: 'BotName',
     ServicePlanName: 'ServicePlanName',
 };
 
 export const regexForValidations = {
     GUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
     Location: arrayToRegex(azureRegionCodes),
+    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
     ResourceGroups: /^[\w\.\-)(]+(?<!\.)$/,
     WordsOnly: /^\w{4,}$/,
 };
@@ -90,12 +90,12 @@ export const regexForVariables = {
 };
 
 export const regexForDispose = {
-    WebappCreate: /"appId":.*".{36}",/g,
     CreateAzureResources: /"provisioningState": "Succeeded",/g,
     // Prep Pub: There's no success message, so we need to handle success and failure
     PreparePublish: />\[0K\[89G/g,
     PreparePublishFailed: /(?:found in)/g,
-    Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g
+    Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g,
+    WebappCreate: /"appId":.*".{36}",/g,
 };
 
 export const deploymentTemplates = {

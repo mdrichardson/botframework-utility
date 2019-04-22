@@ -1,9 +1,10 @@
+import * as constants from '../constants';
 import * as vscode from 'vscode';
+
 import dotenv = require('dotenv');
 import fs = require('fs');
 
 import { BotVariables, PromptAndValidator } from '../interfaces';
-import * as constants from '../constants';
 import FuzzyMatching = require('fuzzy-matching');
 
 export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {

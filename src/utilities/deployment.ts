@@ -1,9 +1,10 @@
-import * as vscode from 'vscode';
+import * as constants from '../constants';
 import * as fs from 'fs';
+import * as vscode from 'vscode';
+
 import axios from 'axios';
 import archiver = require('archiver');
 
-import * as constants from '../constants';
 import { getWorkspaceRoot } from './variables';
 
 export async function getDeploymentTemplate(templateName: string): Promise<string> {

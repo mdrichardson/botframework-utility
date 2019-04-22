@@ -1,7 +1,6 @@
+import * as constants from '../constants';
 import * as vscode from 'vscode';
 
-import { Commands } from '../interfaces';
-import * as constants from '../constants';
 import {
     createUpdateZip,
     getDeploymentTemplate,
@@ -9,6 +8,8 @@ import {
     promptForVariableIfNotExist,
     setBotVariable
 } from '../utilities';
+
+import { Commands } from '../interfaces';
 
 const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {
