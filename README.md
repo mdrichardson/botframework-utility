@@ -24,6 +24,15 @@
 
 * Custom Terminal for Az Commands: Path to custom terminal to use when executing AZ CLI commands
 
+## Build
+
+Since this isn't currently in public release, you'll have to build it yourself.
+
+1. `npm i -g vsce`
+2. Clone the repo
+3. From the root of the cloned repo: `vsce package`
+4. In VS Code, Extensions > Install from VSIX > Select the VSIX generated from the `vsce package` command.
+
 ## Known Issues
 
 None, currently
