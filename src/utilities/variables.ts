@@ -94,7 +94,7 @@ export function getWorkspaceRoot(): string {
     return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
 }
 
-export async function promptForVariableIfNotExist(variable: string, prompt: string): Promise<void> {
+export async function promptForVariableIfNotExist(variable: string, prompt: string, validator?: RegExp): Promise<void> {
     let value;
     if (variable === constants.envVars.CodeLanguage) {
         value = await getLanguage();
@@ -102,7 +102,20 @@ export async function promptForVariableIfNotExist(variable: string, prompt: stri
         let settings = (await getEnvBotVariables() as BotVariables);
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ prompt: prompt }) || '';
+            if (validator && !(await inputIsValid(value, validator))) {
+                promptForVariableIfNotExist(variable, prompt, validator);
+                return;
+            }         
         } else { return; }
     }
     await setBotVariable({ [variable]: value });
+}
+
+async function inputIsValid(value: string, validator: RegExp): Promise<boolean> {
+    if (value.match(validator)) {
+        return true;
+    } else {
+        await vscode.window.showErrorMessage(`Invalid Input. Valid RegEx: ${ validator }`);
+        return false;
+    }
 }

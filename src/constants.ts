@@ -47,6 +47,10 @@ export const regexForDispose = {
     Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g
 };
 
+export const regexForValidations = {
+    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/
+};
+
 export const deploymentTemplates = {
     // Must use quotes since keys contain "-"
     'template-with-new-rg.json': 'template-with-new-rg.json',

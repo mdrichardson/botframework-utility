@@ -21,7 +21,7 @@ const deploymentCommands: Commands = {
         }
 
         await promptForVariableIfNotExist(constants.envVars.BotName, constants.envVarPrompts.BotName);
-        await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated);
+        await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword, constants.envVarPrompts.MicrosoftAppPasswordBeingCreated, constants.regexForValidations.MicrosoftAppPassword);
 
         settings = await getEnvBotVariables();
 
