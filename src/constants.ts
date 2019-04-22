@@ -1,4 +1,4 @@
-import { BotVariables } from './interfaces';
+import { BotVariables, EnvVarPrompts } from './interfaces';
 import { arrayToRegex } from './utilities';
 
 const azureRegionCodes = [
@@ -53,17 +53,25 @@ export const envVars: BotVariables = {
     ServicePlanName: 'ServicePlanName',
 };
 
-export const envVarPrompts = {
-    MicrosoftAppId: 'Enter your Microsoft App Id',
-    MicrosoftAppPassword: 'Enter your Microsoft App Password',
-    MicrosoftAppPasswordBeingCreated: 'Create an App Password - At least: 16 chars, 1 lower, 1 upper, 1 num',
-    ResourceGroupName: 'Enter your Resource Group Name - Resource Group MUST EXIST!',
-    ResourceGroupNameBeingCreated: 'Enter a Name for Your Resource Group',
-    Location: 'Enter your Resource Group Location (ex: westus, westus2, eastus)',
-    CodeLanguage: 'What language is your code in? [Node / Csharp]',
-    BotName: 'Enter a name for your bot',
-    ServicePlanName: 'Enter your existing Service Plan\'s Name',
-    ServicePlanNameBeingCreated: 'Enter a name for your Service Plan'
+export const regexForValidations = {
+    GUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
+    Location: arrayToRegex(azureRegionCodes),
+    ResourceGroups: /^[\w\.\-)(]+(?<!\.)$/,
+    WordsOnly: /^\w{4,}$/,
+};
+
+export const envVarPrompts: EnvVarPrompts = {
+    BotName: { prompt: 'Enter a name for your bot', validator: regexForValidations.WordsOnly },
+    CodeLanguage: { prompt: 'What language is your code in? [Node / Csharp]', validator: undefined },
+    Location: { prompt: 'Enter your Resource Group Location (ex: westus, westus2, eastus)', validator: regexForValidations.Location },
+    MicrosoftAppId: { prompt: 'Enter your Microsoft App Id', validator: regexForValidations.GUID},
+    MicrosoftAppPassword: { prompt: 'Enter your Microsoft App Password', validator: regexForValidations.MicrosoftAppPassword },
+    MicrosoftAppPasswordBeingCreated: { prompt: 'Create an App Password - At least: 16 chars, 1 lower, 1 upper, 1 num', validator: regexForValidations.MicrosoftAppPassword },
+    ResourceGroupName: { prompt: 'Enter your Resource Group Name - Resource Group MUST EXIST!', validator: regexForValidations.ResourceGroups },
+    ResourceGroupNameBeingCreated: { prompt: 'Enter a Name for Your Resource Group', validator: regexForValidations.ResourceGroups },
+    ServicePlanName: { prompt: 'Enter your existing Service Plan\'s Name', validator: regexForValidations.WordsOnly },
+    ServicePlanNameBeingCreated: { prompt: 'Enter a name for your Service Plan', validator: regexForValidations.WordsOnly },
 };
 
 export const sdkLanguages = {
@@ -88,13 +96,6 @@ export const regexForDispose = {
     PreparePublish: />\[0K\[89G/g,
     PreparePublishFailed: /(?:found in)/g,
     Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g
-};
-
-export const regexForValidations = {
-    MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
-    Location: arrayToRegex(azureRegionCodes),
-    ResourceGroups: /^[\w\.\-)(]+(?<!\.)$/,
-    WordsOnly: /^\w{4,}$/,
 };
 
 export const deploymentTemplates = {

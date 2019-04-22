@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import dotenv = require('dotenv');
 import fs = require('fs');
 
-import { BotVariables } from '../interfaces';
+import { BotVariables, PromptAndValidator } from '../interfaces';
 import * as constants from '../constants';
 import FuzzyMatching = require('fuzzy-matching');
 
@@ -94,11 +94,19 @@ export function getWorkspaceRoot(): string {
     return vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : __dirname;
 }
 
-export async function promptForVariableIfNotExist(variable: string, prompt: string, validator?: RegExp): Promise<void> {
+export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp): Promise<void> {
     let value;
     if (variable === constants.envVars.CodeLanguage) {
         value = await getLanguage();
     } else {
+        // If prompt and validator not included, try to get them from constants
+        if (!prompt && !validator) {
+            const promptAndValidator = getPromptAndValidator(variable);
+            if (promptAndValidator) {
+                prompt = promptAndValidator.prompt;
+                validator = promptAndValidator.validator;
+            }
+        }
         let settings = (await getEnvBotVariables() as BotVariables);
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ prompt: prompt }) || '';
@@ -109,6 +117,10 @@ export async function promptForVariableIfNotExist(variable: string, prompt: stri
         } else { return; }
     }
     await setBotVariable({ [variable]: value });
+}
+
+function getPromptAndValidator(variable: string): PromptAndValidator|null {
+    return constants.envVarPrompts[variable] ? { prompt: constants.envVarPrompts[variable].prompt, validator: constants.envVarPrompts[variable].validator } : null;
 }
 
 async function inputIsValid(value: string, validator: RegExp): Promise<boolean> {
