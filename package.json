@@ -1,7 +1,11 @@
 {
 	"name": "botframework-utility",
 	"displayName": "BotFramework Utility",
-	"description": "Helper utilities to assist in a more efficient bot development life cycle",
+    "description": "Helper utilities to assist in a more efficient bot development life cycle",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mdrichardson/botframework-utility"
+    },
 	"publisher": "mdrichardson",
 	"version": "0.0.1",
 	"engines": {
