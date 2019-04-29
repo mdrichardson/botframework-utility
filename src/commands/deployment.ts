@@ -7,7 +7,7 @@ import {
     getEnvBotVariables,
     promptForVariableIfNotExist,
     setBotVariable
-} from '../utilities';
+} from '../utilities/index';
 
 import { Commands } from '../interfaces';
 
@@ -29,17 +29,17 @@ const deploymentCommands: Commands = {
         const command = `az ad app create --display-name "${ settings.BotName }" --password "${ settings.MicrosoftAppPassword }" --available-to-other-tenants`;
 
         vscode.window.showInformationMessage('Creating App Registration');
-        await executeAzCliCommand(command, constants.regexForDispose.WebappCreate, 'App Registration Creation');
+        await executeTerminalCommand(command, constants.regexForDispose.WebappCreate, 'App Registration Creation');
     },
     // Can't pass args to menu commands, so we'll call the "parent" deployment function
-    async deploymentCreateResourcesNewResourceGroup(): Promise<void> {
-        await deploymentCreateResources(true, true);
-    },
     async deploymentCreateResourcesExistingResourceGroupExistingServicePlan(): Promise<void> {
         await deploymentCreateResources(false, false);
     },
     async deploymentCreateResourcesExistingResourceGroupNewServicePlan(): Promise<void> {
         await deploymentCreateResources(false, true);
+    },
+    async deploymentCreateResourcesNewResourceGroup(): Promise<void> {
+        await deploymentCreateResources(true, true);
     },
     async deploymentPublish(): Promise<void> {
 
@@ -61,9 +61,9 @@ const deploymentCommands: Commands = {
         const prepareDeployCommand = `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
         const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "update.zip"`;
 
-        await executeAzCliCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
+        await executeTerminalCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
         vscode.window.showInformationMessage('Deploying');
-        await executeAzCliCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
+        await executeTerminalCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
         // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
 };
@@ -104,8 +104,8 @@ async function deploymentCreateResources(newResourceGroup: boolean, newServicePl
         `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam } ${ servicePlanParam }`;
 
     vscode.window.showInformationMessage('Creating Azure Resources');
-    await executeAzCliCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
-};
+    await executeTerminalCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
+}
 
 async function regexToEnvVariables(data: string): Promise<void> {
     const regexPatterns = [
@@ -127,7 +127,7 @@ async function regexToEnvVariables(data: string): Promise<void> {
     }
 }
 
-async function executeAzCliCommand(
+export async function executeTerminalCommand(
     command: string,
     commandCompleteRegex?: RegExp,
     commandTitle: string = 'Command',
@@ -146,7 +146,7 @@ async function executeAzCliCommand(
             default:
                 terminalPath = 'sh';
         }
-    };
+    }
     const terminal = await vscode.window.createTerminal(undefined, terminalPath);
     let listenForData = true;
     (terminal as any).onDidWriteData(async (data): Promise<void> => {

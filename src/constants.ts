@@ -1,5 +1,5 @@
 import { BotVariables, EnvVarPrompts } from './interfaces';
-import { arrayToRegex } from './utilities';
+import { arrayToRegex } from './utilities/variables';
 
 const azureRegionCodes = [
     'australiaeast',
@@ -91,6 +91,7 @@ export const regexForVariables = {
 
 export const regexForDispose = {
     CreateAzureResources: /"provisioningState": "Succeeded",/g,
+    Emulator: /Adding extension JSON/g,
     // Prep Pub: There's no success message, so we need to handle success and failure
     PreparePublish: />\[0K\[89G/g,
     PreparePublishFailed: /(?:found in)/g,

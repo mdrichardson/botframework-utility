@@ -16,7 +16,7 @@ export async function getDeploymentTemplate(templateName: string): Promise<strin
         }
         const file = await axios.get(constants.urls[templateName]);
         await fs.writeFileSync(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
-    };
+    }
     return (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0].fsPath;
 }
 

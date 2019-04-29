@@ -97,6 +97,8 @@
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
+		"@typescript-eslint/eslint-plugin": "^1.7.0",
+		"@typescript-eslint/parser": "^1.7.0",
 		"eslint": "^5.16.0",
 		"eslint-config-standard": "^12.0.0",
 		"eslint-plugin-import": "^2.17.2",
@@ -111,8 +113,6 @@
 		"webpack-cli": "^3.3.1"
 	},
 	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "^1.6.0",
-		"@typescript-eslint/parser": "^1.6.0",
 		"archiver": "^3.0.0",
 		"axios": "^0.18.0",
 		"dotenv": "^7.0.0",

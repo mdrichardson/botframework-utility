@@ -17,7 +17,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         for (const key in commandSet) {
             const command = vscode.commands.registerCommand(`extension.${ key }`, commandSet[key]);
             context.subscriptions.push(command);
-        };
+        }
     });    
 
     // Watch .env and appsettings.json for changes
@@ -31,6 +31,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     });
     
     console.log('BotFramework Utility is now active!');
-};
+}
 
 export function deactivate(): void {}
