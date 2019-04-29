@@ -24,8 +24,7 @@ export async function createUpdateZip(): Promise<void> {
     vscode.window.showInformationMessage('Creating Zip File');
     const root = getWorkspaceRoot();
     await deleteUpdateZip();
-    // await zip.zip(root, `${ root }/update.zip`);
-    const output = fs.createWriteStream(`${ root }\\update.zip`);
+    const output = fs.createWriteStream(`${ root }\\code.zip`);
     const archive = archiver('zip', { zlib: { level: 1 }});
 
     let dots = 0;
@@ -52,7 +51,7 @@ export async function createUpdateZip(): Promise<void> {
                 }
                 updateCount++;
             })
-            .glob('**', { ignore: ['**\\update.zip']})
+            .glob('**', { ignore: ['**\\code.zip']})
             .finalize();
     });
 }
@@ -60,7 +59,7 @@ export async function createUpdateZip(): Promise<void> {
 export async function deleteUpdateZip(): Promise<void> {
     const root = getWorkspaceRoot();
     try {
-        await fs.unlinkSync(`${ root }/update.zip`);
+        await fs.unlinkSync(`${ root }/code.zip`);
     } catch (err) {
         return;
     }

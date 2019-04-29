@@ -59,12 +59,11 @@ const deploymentCommands: Commands = {
 
         const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
         const prepareDeployCommand = `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
-        const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "update.zip"`;
+        const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "code.zip"`;
 
         await executeTerminalCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
         vscode.window.showInformationMessage('Deploying');
         await executeTerminalCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
-        // TODO: Exclude update.zip in zip file. Higher zip compression? Delete zip file.
     },
 };
 
