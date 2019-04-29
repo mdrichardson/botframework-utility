@@ -19,6 +19,7 @@
 
 * **Deployment**
   * Your VS Code terminal cannot be Bash. It doesn't play well with `az cli` on some commands. Currently, this extension launches all `az` commands in an OS-specific prompt, but can be overridden from Settings > Extension > Botframework Utility > Custom Terminal for Az Commands
+  * Be sure to stay on the latest version of [AZ CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest). This will not support older versions.
 
 ## Extension Settings
 

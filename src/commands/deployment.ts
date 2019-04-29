@@ -154,7 +154,6 @@ export async function executeTerminalCommand(
             if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
                 vscode.window.showErrorMessage(`${ commandTitle } failed.`);
                 // Ensure we don't call a success message
-                terminal.dispose();
                 listenForData = false;
             } else if (data.trim() && commandCompleteRegex && commandCompleteRegex.test(data)) {
                 vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
