@@ -54,6 +54,7 @@ export const envVars: BotVariables = {
 };
 
 export const regexForValidations = {
+    CodeLanguage: /^(?:Csharp|Node|Typescript)$/,
     GUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     Location: arrayToRegex(azureRegionCodes),
     MicrosoftAppPassword: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{16,}$/,
@@ -63,7 +64,7 @@ export const regexForValidations = {
 
 export const envVarPrompts: EnvVarPrompts = {
     BotName: { prompt: 'Enter a name for your bot', validator: regexForValidations.WordsOnly },
-    CodeLanguage: { prompt: 'What language is your code in? [Node / Csharp]', validator: undefined },
+    CodeLanguage: { prompt: 'What language is your code in? [Csharp / Node / Typescript]', validator: regexForValidations.CodeLanguage },
     Location: { prompt: 'Enter your Resource Group Location (ex: westus, westus2, eastus)', validator: regexForValidations.Location },
     MicrosoftAppId: { prompt: 'Enter your Microsoft App Id', validator: regexForValidations.GUID},
     MicrosoftAppPassword: { prompt: 'Enter your Microsoft App Password', validator: regexForValidations.MicrosoftAppPassword },
@@ -76,7 +77,8 @@ export const envVarPrompts: EnvVarPrompts = {
 
 export const sdkLanguages = {
     Csharp: 'Csharp',
-    Node: 'Node'
+    Node: 'Node',
+    Typescript: 'Typescript'
 };
 
 export const settingsFiles = {

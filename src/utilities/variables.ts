@@ -86,8 +86,14 @@ function normalizeEnvKeys(key: string): string {
 }
 
 export async function getLanguage(): Promise<string> {
+    let lang;
     const cSharp = await vscode.workspace.findFiles('*.cs', null, 1);
-    const lang = cSharp ? constants.sdkLanguages.Csharp : constants.sdkLanguages.Node;
+    if (cSharp) {
+        lang = constants.sdkLanguages.Csharp;
+    } else {
+        const typeScript = await vscode.workspace.findFiles('src/*.ts', null, 1);
+        lang = typeScript ? constants.sdkLanguages.Typescript : constants.sdkLanguages.Node;
+    }
     return lang;
 }
 
