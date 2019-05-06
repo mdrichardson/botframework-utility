@@ -1,35 +1,14 @@
 import * as constants from '../constants';
 import * as vscode from 'vscode';
-import { BotVariables } from '../interfaces';
 import { getWorkspaceRoot } from '../utilities';
 import fs = require('fs');
 const fsP = fs.promises;
 
-export async function newEnvFile(language: string = constants.sdkLanguages.Csharp, variables: Partial<BotVariables>): Promise<void> {
-    const root = await getWorkspaceRoot();
-    try {
-        await fsP.unlink(`${ root }\\${ constants.settingsFiles[language] }`);
-    } catch (err) {
-        console.log(err);
-    }
-    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
-    const envString = JSON.stringify(variables, null, 2);
-    if (language == constants.sdkLanguages.Csharp) {
-        await fsP.writeFile(`${ root }\\${ constants.settingsFiles.Csharp }`, envString);
-    } else {
-        let envString = '';
-        for (const key in variables) {
-            // put in .env format: Key="value"
-            envString += `${ key }=\"${ variables[key] }\"\n`;
-        }
-        await fsP.writeFile(`${ root }\\${ constants.settingsFiles.Node }`, envString);
-    }
-}
-
 export async function testTerminalCommand(
     command: string,
     commandCompleteRegex?: RegExp,
-    commandFailedRegex?: RegExp): Promise<boolean|object> {
+    commandFailedRegex?: RegExp,
+    timeout?: number): Promise<boolean|object> {
     const terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
     const terminal = await vscode.window.createTerminal(undefined, terminalPath);
 
@@ -47,11 +26,21 @@ export async function testTerminalCommand(
             commandComplete = true;
         });
     
+        let totalTime = 0;
         while (!commandComplete) {
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
+            totalTime += 1000;
+            if (timeout && totalTime >= timeout) {
+                commandComplete = true;
+            }
         }
     
-        const res = (await fsP.readFile(`${ root }\\${ constants.testing.TerminalOutput }`, { encoding: 'utf16le', flag: 'r' })).toString();
+        let res;
+        try {
+            res = (await fsP.readFile(`${ root }\\${ constants.testing.TerminalOutput }`, { encoding: 'utf16le', flag: 'r' })).toString();
+        } catch (err) {
+            res = '';
+        }
         const regexPatterns = [
             constants.regexForVariables.MicrosoftAppId,
             constants.regexForVariables.MicrosoftAppPassword
@@ -109,4 +98,14 @@ export async function deleteBot(name: string): Promise<void> {
     const command = `az bot delete --name ${ name }`;
     testTerminalCommand(command);
     await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
+}
+
+export async function deletePrepareDeployFiles(): Promise<void> {
+    const root = await getWorkspaceRoot();
+    try {
+        await fsP.unlink(`${ root }\\web.config`);
+    } catch (err) { }
+    try {
+        await fsP.unlink(`${ root }\\.deployment`);
+    } catch (err) { }
 }

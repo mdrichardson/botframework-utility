@@ -93,11 +93,11 @@ export const regexForVariables = {
 
 export const regexForDispose = {
     CreateAzureResources: /"provisioningState": "Succeeded",/g,
+    Deploy: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g,
+    DeploymentFailed: /(?:found in)/g,
     Emulator: /Adding extension JSON/g,
     // Prep Pub: There's no success message, so we need to handle success and failure
-    PreparePublish: />\[0K\[89G/g,
-    PreparePublishFailed: /(?:found in)/g,
-    Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g,
+    PrepareDeploy: />\[0K\[89G/g,
     WebappCreate: /"appId":.*".{36}"[\s\S]*"appLogoUrl": null,/g,
 };
 
@@ -114,4 +114,4 @@ export const urls = {
 
 export const testing = {
     TerminalOutput: 'terminalOutput.txt',
-}
+};

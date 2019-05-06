@@ -30,29 +30,14 @@ const deploymentCommands: Commands = {
     async deploymentCreateResourcesNewResourceGroup(): Promise<void> {
         await deploymentCreateResources(true, true);
     },
-    async deploymentPublish(): Promise<void> {
+    async deploymentDeploy(): Promise<void> {
 
-        await promptForVariableIfNotExist(constants.envVars.BotName);
-        await promptForVariableIfNotExist(constants.envVars.ResourceGroupName);
-        await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
+        const prepareDeployCommand = await getPrepareDeployCommand();
+        const deployCommand = await getDeployCommand();
 
-        await createUpdateZip();
-
-        const settings = await getEnvBotVariables();
-
-        let csprojFile;
-        if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
-            const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
-            csprojFile = csproj[0].fsPath.split('\\').pop();
-        }
-
-        const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
-        const prepareDeployCommand = `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
-        const publishCommand = `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "code.zip"`;
-
-        await executeTerminalCommand(prepareDeployCommand, constants.regexForDispose.PreparePublish, "Deployment Prep", constants.regexForDispose.PreparePublishFailed);
+        await executeTerminalCommand(prepareDeployCommand, constants.regexForDispose.PrepareDeploy, "Deployment Prep", constants.regexForDispose.DeploymentFailed);
         vscode.window.showInformationMessage('Deploying');
-        await executeTerminalCommand(publishCommand, constants.regexForDispose.Publish, 'Zip Deployment');
+        await executeTerminalCommand(deployCommand, constants.regexForDispose.Deploy, 'Zip Deployment');
     },
 };
 
@@ -174,6 +159,32 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
     return `az ${ azCommand } --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" ${ groupArg }`+
         `--parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+
         `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam } ${ servicePlanParam }`;
+}
+
+export async function getPrepareDeployCommand(): Promise<string> {
+    await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
+    
+    const settings = await getEnvBotVariables();
+
+    let csprojFile;
+    if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {
+        const csproj = await vscode.workspace.findFiles('**/*.csproj', null, 1);
+        csprojFile = csproj[0].fsPath.split('\\').pop();
+    }
+
+    const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
+    return `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
+}
+
+export async function getDeployCommand(): Promise<string> {
+    await promptForVariableIfNotExist(constants.envVars.BotName);
+    await promptForVariableIfNotExist(constants.envVars.ResourceGroupName);
+
+    await createUpdateZip();
+
+    const settings = await getEnvBotVariables();
+
+    return `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "code.zip"`;
 }
 
 export { deploymentCommands };
