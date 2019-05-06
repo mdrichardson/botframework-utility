@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as constants from '../constants';
 import * as vscode from 'vscode';
-import { deleteTerminalOutputFile, newEnvFile, testTerminalCommand, deleteResourceGroup } from './testUtilities';
+import { deleteTerminalOutputFile, newEnvFile, testTerminalCommand, cleanup, deleteResourceGroupDeployment, deleteBot } from './testUtilities';
 import { getCreateAppRegistrationCommand, getCreateResourcesCommand } from '../commands';
 import { BotVariables } from '../interfaces';
 import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables } from '../utilities';
@@ -13,7 +13,7 @@ var testEnvironmentObject: BotVariables = {
     BotName: name,
     CodeLanguage: constants.sdkLanguages.Csharp,
     Location: 'westus',
-    MicrosoftAppId: '',
+    MicrosoftAppId: '37765811-fc7b-4b94-9201-88cf09a2983c',
     MicrosoftAppPassword: 'AtLeast16Characters____0',
     ResourceGroupName: name,
     ServicePlanName: name    
@@ -31,6 +31,7 @@ suiteSetup(async (): Promise<void> => {
     });
 });
 
+// Note: Each of these relies on the each previous test being successful
 suite("Deployment", function(): void {
     setup(async (): Promise<void> => {
         // await deleteTerminalOutputFile();
@@ -52,7 +53,30 @@ suite("Deployment", function(): void {
         const command = await getCreateResourcesCommand(true, true);
         const result = (await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources) as Partial<BotVariables>);
         assert(result);
-        await deleteResourceGroup(testEnvironmentObject.ResourceGroupName);
+    });
+
+    test("Should CreateResourcesExistingResourceGroupNewServicePlan", async function(): Promise<void> {
+        this.timeout(2 * 60 * 1000);
+
+        await deleteResourceGroupDeployment(testEnvironmentObject.BotName);
+
+        testEnvironmentObject.ServicePlanName = `${ testEnvironmentObject.ServicePlanName }_new`;
+        await setBotVariable(testEnvironmentObject);
+
+        const command = await getCreateResourcesCommand(false, true);
+        const result = (await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources) as Partial<BotVariables>);
+        assert(result);
+    });
+
+    test("Should CreateResourcesExistingResourceGroupExistingServicePlan", async function(): Promise<void> {
+        this.timeout(2 * 60 * 1000);
+
+        await deleteBot(testEnvironmentObject.MicrosoftAppId);
+
+        const command = await getCreateResourcesCommand(false, true);
+        const result = (await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources) as Partial<BotVariables>);
+        assert(result);
+        cleanup(testEnvironmentObject.BotName, testEnvironmentObject.ResourceGroupName);
     });
 
 });

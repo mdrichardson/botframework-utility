@@ -165,9 +165,11 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
     const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }"` : '';
     const groupArg = newResourceGroup ? '' : `--resource-group "${ settings.ResourceGroupName }" `;
 
+    const servicePlanLocationParam = newResourceGroup ? 'newAppServicePlanLocation' : 'appServicePlanLocation';
+
     const servicePlanParam = newServicePlan ? 
-        `newAppServicePlanName="${ settings.ServicePlanName }" newAppServicePlanLocation="${ settings.Location }"` : 
-        `existingAppServicePlan="${ settings.ServicePlanName }" appServicePlanLocation="${ settings.Location }"`;
+        `newAppServicePlanName="${ settings.ServicePlanName }" ${ servicePlanLocationParam }="${ settings.Location }"` : 
+        `existingAppServicePlan="${ settings.ServicePlanName }" ${ servicePlanLocationParam }="${ settings.Location }"`;
 
     return `az ${ azCommand } --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" ${ groupArg }`+
         `--parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+

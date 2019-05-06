@@ -84,7 +84,29 @@ export async function deleteTerminalOutputFile(): Promise<void> {
     }
 }
 
-export function deleteResourceGroup(name: string): void {
-    const command = `az group delete -n ${ name }`;
+function deleteWebApp(name: string): void {
+    const command = `az webapp delete --name ${ name }`;
     testTerminalCommand(command);
+}
+
+function deleteResourceGroup(name: string): void {
+    const command = `az group delete -n ${ name } -y`;
+    testTerminalCommand(command);
+}
+
+export function cleanup(webAppName: string, resourceGroupName: string): void {
+    deleteWebApp(webAppName);
+    deleteResourceGroup(resourceGroupName);
+}
+
+export async function deleteResourceGroupDeployment(name: string): Promise<void> {
+    const command = `az group deployment delete -n ${ name }`;
+    testTerminalCommand(command);
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
+}
+
+export async function deleteBot(name: string): Promise<void> {
+    const command = `az bot delete --name ${ name }`;
+    testTerminalCommand(command);
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
 }
