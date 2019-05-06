@@ -49,7 +49,7 @@ async function deploymentCreateResources(newResourceGroup: boolean, newServicePl
     await executeTerminalCommand(command, constants.regexForDispose.CreateAzureResources, 'Azure Resource Creation');
 }
 
-async function regexToEnvVariables(data: string): Promise<void> {
+export async function regexToEnvVariables(data: string): Promise<void> {
     const regexPatterns = [
         constants.regexForVariables.MicrosoftAppId,
         constants.regexForVariables.MicrosoftAppPassword
