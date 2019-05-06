@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import axios from 'axios';
 import archiver = require('archiver');
 import fs = require('fs');
+const fsP = fs.promises;
 
 import { getWorkspaceRoot } from './variables';
 
@@ -12,10 +13,10 @@ export async function getDeploymentTemplate(templateName: string): Promise<strin
     const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
     if (!existingTemplate) {
         if (!deploymentTemplatesFolderExists) {
-            await fs.mkdirSync(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
+            await fsP.mkdir(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
         }
         const file = await axios.get(constants.urls[templateName]);
-        await fs.writeFileSync(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
+        await fsP.writeFile(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
     }
     return (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0].fsPath;
 }
@@ -24,7 +25,7 @@ export async function createUpdateZip(): Promise<void> {
     vscode.window.showInformationMessage('Creating Zip File');
     const root = getWorkspaceRoot();
     await deleteUpdateZip();
-    const output = fs.createWriteStream(`${ root }\\code.zip`);
+    const output = fs.createWriteStream(`${ root }\\${ constants.zipFileName }`);
     const archive = archiver('zip', { zlib: { level: 1 }});
 
     let dots = 0;
@@ -51,7 +52,7 @@ export async function createUpdateZip(): Promise<void> {
                 }
                 updateCount++;
             })
-            .glob('**', { ignore: ['**\\code.zip']})
+            .glob('**', { ignore: [`**\\${ constants.zipFileName }`]})
             .finalize();
     });
 }
@@ -59,7 +60,7 @@ export async function createUpdateZip(): Promise<void> {
 export async function deleteUpdateZip(): Promise<void> {
     const root = getWorkspaceRoot();
     try {
-        await fs.unlinkSync(`${ root }/code.zip`);
+        await fsP.unlink(`${ root }/${ constants.zipFileName }`);
     } catch (err) {
         return;
     }

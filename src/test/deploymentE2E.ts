@@ -4,12 +4,12 @@ import * as vscode from 'vscode';
 import { deleteTerminalOutputFile, testTerminalCommand, cleanup, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles } from './testUtilities';
 import { getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../commands';
 import { BotVariables } from '../interfaces';
-import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables } from '../utilities';
+import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables, createUpdateZip } from '../utilities';
 
 const suffix = Math.floor(Math.random() * 1000);
 const name = `vmicricEXTtest${ suffix }`;
 
-var testEnvironmentObject: BotVariables = {
+var testEnv: BotVariables = {
     BotName: name,
     CodeLanguage: constants.sdkLanguages.Csharp,
     Location: 'westus',
@@ -32,15 +32,15 @@ suiteSetup(async (): Promise<void> => {
 });
 
 suiteTeardown(async (): Promise<void> => {
-    cleanup(testEnvironmentObject.BotName, testEnvironmentObject.ResourceGroupName);
+    cleanup(testEnv.BotName, testEnv.ResourceGroupName);
 });
 
 // Note: Each of these relies on the each previous test being successful
 suite("Deployment", function(): void {
     setup(async (): Promise<void> => {
         await deleteTerminalOutputFile();
-        await setBotVariable(testEnvironmentObject);
-        await setEnvBotVariables(testEnvironmentObject);
+        await setBotVariable(testEnv);
+        await setEnvBotVariables(testEnv);
     });
     test("Should create a web app", async function(): Promise<void> {
         this.timeout(20 * 1000);
@@ -48,7 +48,7 @@ suite("Deployment", function(): void {
         const command = (await getCreateAppRegistrationCommand() as string);
         const result = (await testTerminalCommand(command, constants.regexForDispose.WebappCreate) as Partial<BotVariables>);
         assert(result);
-        if (result) { testEnvironmentObject = { ...testEnvironmentObject, ...result }; };
+        if (result) { testEnv = { ...testEnv, ...result }; };
     });
 
     test("Should CreateResourcesNewResourceGroup", async function(): Promise<void> {
@@ -62,10 +62,10 @@ suite("Deployment", function(): void {
     test("Should CreateResourcesExistingResourceGroupNewServicePlan", async function(): Promise<void> {
         this.timeout(60 * 1000);
 
-        await deleteResourceGroupDeployment(testEnvironmentObject.BotName);
+        await deleteResourceGroupDeployment(testEnv.BotName);
 
-        testEnvironmentObject.ServicePlanName = `${ testEnvironmentObject.ServicePlanName }_new`;
-        await setBotVariable(testEnvironmentObject);
+        testEnv.ServicePlanName = `${ testEnv.ServicePlanName }_new`;
+        await setBotVariable(testEnv);
 
         const command = await getCreateResourcesCommand(false, true);
         const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources);
@@ -75,7 +75,7 @@ suite("Deployment", function(): void {
     test("Should CreateResourcesExistingResourceGroupExistingServicePlan", async function(): Promise<void> {
         this.timeout(1.5 * 60 * 1000);
 
-        await deleteBot(testEnvironmentObject.MicrosoftAppId);
+        await deleteBot(testEnv.MicrosoftAppId);
 
         const command = await getCreateResourcesCommand(false, true);
         const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources);
@@ -92,7 +92,7 @@ suite("Deployment", function(): void {
         assert(result);
 
         let file;
-        if (testEnvironmentObject.CodeLanguage == constants.sdkLanguages.Csharp) {
+        if (testEnv.CodeLanguage == constants.sdkLanguages.Csharp) {
             file = await vscode.workspace.findFiles('**/.deployment');
         } else {
             file = await vscode.workspace.findFiles('**/web.config');
@@ -102,6 +102,8 @@ suite("Deployment", function(): void {
 
     test("Should Deploy", async function(): Promise<void> {
         this.timeout(4 * 60 * 1000);
+
+        await createUpdateZip();
 
         const command = await getDeployCommand();
         const result = await testTerminalCommand(command, constants.regexForDispose.Deploy);

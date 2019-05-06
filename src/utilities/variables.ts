@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 
 import dotenv = require('dotenv');
 import fs = require('fs');
+const fsP = fs.promises;
 
 import { BotVariables, PromptAndValidator } from '../interfaces';
 import FuzzyMatching = require('fuzzy-matching');
@@ -13,13 +14,13 @@ export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
     let botSettings: Partial<BotVariables> = {};
     // Read settings from file
     if (dotenvFile[0]) {
-        const json = dotenv.parse(fs.readFileSync(dotenvFile[0].fsPath));
+        const json = dotenv.parse(await fsP.readFile(dotenvFile[0].fsPath));
         for (const key in json) {
             botSettings[normalizeEnvKeys(key)] = json[key];
         }
     } 
     if (appsettingsJsonFile[0]) {
-        const raw = String(fs.readFileSync(appsettingsJsonFile[0].fsPath));
+        const raw = String(await fsP.readFile(appsettingsJsonFile[0].fsPath));
         const json = JSON.parse(raw);
         for (const key in json) {
             botSettings[normalizeEnvKeys(key)] = json[key];
@@ -64,14 +65,14 @@ async function setLocalBotVariables(fullBotVariables: Partial<BotVariables>): Pr
     const root = getWorkspaceRoot();
     const envString = JSON.stringify(fullBotVariables, null, 2);
     if (await getLanguage() === constants.sdkLanguages.Csharp) {
-        await fs.writeFileSync(`${ root }/${ constants.settingsFiles.Csharp }`, envString);
+        await fsP.writeFile(`${ root }/${ constants.settingsFiles.Csharp }`, envString);
     } else {
         let envString = '';
         for (const key in fullBotVariables) {
             // put in .env format: Key="value"
             envString += `${ key }=\"${ fullBotVariables[key] }\"\n`;
         }
-        await fs.writeFileSync(`${ root }/${ constants.settingsFiles.Node }`, envString);
+        await fsP.writeFile(`${ root }/${ constants.settingsFiles.Node }`, envString);
     }
 }
 
@@ -135,7 +136,7 @@ async function inputIsValid(value: string, validator: RegExp): Promise<boolean> 
         return true;
     } else {
         await vscode.window.showErrorMessage(`Invalid Input. See log for details`);
-        console.log(`INVALID INPUT. VALID REGEXP:\n${ validator }`);
+        console.log(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR:\n${ validator }`);
         return false;
     }
 }

@@ -35,6 +35,8 @@ const deploymentCommands: Commands = {
         const prepareDeployCommand = await getPrepareDeployCommand();
         const deployCommand = await getDeployCommand();
 
+        await createUpdateZip();
+
         await executeTerminalCommand(prepareDeployCommand, constants.regexForDispose.PrepareDeploy, "Deployment Prep", constants.regexForDispose.DeploymentFailed);
         vscode.window.showInformationMessage('Deploying');
         await executeTerminalCommand(deployCommand, constants.regexForDispose.Deploy, 'Zip Deployment');
@@ -147,7 +149,7 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
     const templateName = newResourceGroup ? constants.deploymentTemplates["template-with-new-rg.json"] : constants.deploymentTemplates["template-with-preexisting-rg.json"];
     const deploymentTemplate = await getDeploymentTemplate(templateName);
 
-    const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }"` : '';
+    const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }" ` : '';
     const groupArg = newResourceGroup ? '' : `--resource-group "${ settings.ResourceGroupName }" `;
 
     const servicePlanLocationParam = newResourceGroup ? 'newAppServicePlanLocation' : 'appServicePlanLocation';
@@ -158,7 +160,7 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
 
     return `az ${ azCommand } --name "${ settings.BotName }" --template-file "${ deploymentTemplate }" ${ groupArg }`+
         `--parameters appId="${ settings.MicrosoftAppId }" appSecret="${ settings.MicrosoftAppPassword }" botId="${ settings.BotName }" `+
-        `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam } ${ servicePlanParam }`;
+        `botSku=F0 newWebAppName="${ settings.BotName }" ${ groupParam }${ servicePlanParam }`;
 }
 
 export async function getPrepareDeployCommand(): Promise<string> {
@@ -180,11 +182,9 @@ export async function getDeployCommand(): Promise<string> {
     await promptForVariableIfNotExist(constants.envVars.BotName);
     await promptForVariableIfNotExist(constants.envVars.ResourceGroupName);
 
-    await createUpdateZip();
-
     const settings = await getEnvBotVariables();
 
-    return `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "code.zip"`;
+    return `az webapp deployment source config-zip --resource-group "${ settings.ResourceGroupName }" --name "${ settings.BotName }" --src "${ constants.zipFileName }"`;
 }
 
 export { deploymentCommands };

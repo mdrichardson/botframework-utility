@@ -115,3 +115,5 @@ export const urls = {
 export const testing = {
     TerminalOutput: 'terminalOutput.txt',
 };
+
+export const zipFileName = 'code.zip';
