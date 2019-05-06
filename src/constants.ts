@@ -98,7 +98,7 @@ export const regexForDispose = {
     PreparePublish: />\[0K\[89G/g,
     PreparePublishFailed: /(?:found in)/g,
     Publish: /"complete": true,[\s\S]*"deployer":.*"Push-Deployer",/g,
-    WebappCreate: /"appId":.*".{36}",/g,
+    WebappCreate: /"appId":.*".{36}"[\s\S]*"appLogoUrl": null,/g,
 };
 
 export const deploymentTemplates = {
@@ -108,6 +108,10 @@ export const deploymentTemplates = {
 };
 
 export const urls = {
-    'template-with-new-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/deploymentTemplates/template-with-new-rg.json',
-    'template-with-preexisting-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/deploymentTemplates/template-with-preexisting-rg.json',
+    'template-with-new-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/DeploymentTemplates/template-with-new-rg.json',
+    'template-with-preexisting-rg.json': 'https://raw.githubusercontent.com/Microsoft/BotBuilder-Samples/samples-work-in-progress/samples/csharp_dotnetcore/13.core-bot/DeploymentTemplates/template-with-preexisting-rg.json',
 };
+
+export const testing = {
+    TerminalOutput: 'terminalOutput.txt',
+}

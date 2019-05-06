@@ -114,7 +114,7 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
                 validator = promptAndValidator.validator;
             }
         }
-        let settings = (await getEnvBotVariables() as BotVariables);
+        let settings = await getEnvBotVariables();
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ prompt: prompt }) || '';
             if (validator && !(await inputIsValid(value, validator))) {

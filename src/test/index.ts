@@ -15,7 +15,7 @@ import * as testRunner from 'vscode/lib/testrunner';
 // You can directly control Mocha options by configuring the test runner below
 // See https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically#set-options
 // for more info
-testRunner.configure({
+testRunner.configure({  
     ui: 'tdd',
     useColors: true // colored output from test results
 });

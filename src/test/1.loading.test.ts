@@ -4,8 +4,6 @@ import * as vscode from 'vscode';
 import { deploymentCommands, emulatorCommands, testCommands } from '../commands/index';
 
 suite("Extension Loading Tests", function(): void {
-
-    // Defines a Mocha unit test
     test("Should Properly Load All Commands", async function(): Promise<void> {
         const allCommands = [
             deploymentCommands,

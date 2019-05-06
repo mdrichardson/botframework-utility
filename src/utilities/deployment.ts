@@ -1,9 +1,9 @@
 import * as constants from '../constants';
-import * as fs from 'fs';
 import * as vscode from 'vscode';
 
 import axios from 'axios';
 import archiver = require('archiver');
+import fs = require('fs');
 
 import { getWorkspaceRoot } from './variables';
 

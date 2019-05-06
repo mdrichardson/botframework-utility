@@ -25,7 +25,7 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "C:\\Users\\v-micric\\Documents\\Code\\VS Code Extension\\botframework-utility\\test folder",
+                "C:\\Users\\v-micric\\Documents\\Code\\VS Code Extension\\botframework-utility\\testEnvironment",
                 "--disable-extension",
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/out/test"
