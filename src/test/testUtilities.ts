@@ -131,7 +131,9 @@ export async function deleteCodeFiles(): Promise<void> {
     ];
     await files.forEach(async (codeFiles): Promise<void> => {
         await codeFiles.forEach(async (file): Promise<void> => {
-            await fsP.unlink(file.fsPath);
+            try {
+                await fsP.unlink(file.fsPath);
+            } catch (err) { }
         });
     });
 }

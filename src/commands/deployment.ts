@@ -174,8 +174,8 @@ export async function getPrepareDeployCommand(): Promise<string> {
         csprojFile = csproj[0].fsPath.split('\\').pop();
     }
 
-    const cSharpArg = csprojFile ? `--proj-file-path "${ csprojFile }"` : '';
-    return `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "." ${ cSharpArg }`;
+    const cSharpArg = csprojFile ? ` --proj-file-path "${ csprojFile }"` : '';
+    return `az bot prepare-deploy --lang ${ settings.CodeLanguage } --code-dir "."${ cSharpArg }`;
 }
 
 export async function getDeployCommand(): Promise<string> {

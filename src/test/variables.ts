@@ -39,12 +39,12 @@ suite("Variables", function(): void {
         assert.equal(localResult['BotName'], testName);
     });
     test("Should normalize bot variable keys", async function(): Promise<void> {
-        Object.keys(constants.envVars).forEach((key): void => {
+        for (const key in constants.envVars) {
             const jumbled = key
                 .replace('a', 's')
                 .toLowerCase();
             assert.equal(normalizeEnvKeys(jumbled), key);
-        });
+        }
     });
     test("Should return Csharp language", async function(): Promise<void> {
         const root = await getWorkspaceRoot();
@@ -87,13 +87,13 @@ suite("Variables", function(): void {
         assert.notEqual(promise, undefined);
     });
     test("Each Env Variable prompt should have prompt text and a regex validator", function(): void {
-        Object.keys(constants.envVarPrompts).forEach((key): void => {
+        for (const key in constants.envVarPrompts) {
             assert.equal(typeof constants.envVarPrompts[key].prompt, 'string');
             assert(constants.envVarPrompts[key].validator instanceof RegExp);
-        });
+        }
     });
     test("Should correctly validate RegExp", function(): void {
-        Object.keys(constants.envVarPrompts).forEach((key): void => {
+        for (const key in constants.envVarPrompts) {
             const validator = (constants.envVarPrompts[key].validator as RegExp);
             const shouldBeTrue = inputIsValid(new RandExp(validator).gen(), validator);
             assert.equal(shouldBeTrue, true);
@@ -101,7 +101,7 @@ suite("Variables", function(): void {
             const shouldBeInvalidForAll = '!';
             const shouldBeFalse = inputIsValid(shouldBeInvalidForAll, validator);
             assert.equal(shouldBeFalse, false);
-        });
+        }
     });
     test("Should correctly convert an array to RegExp", function(): void {
         const array = [

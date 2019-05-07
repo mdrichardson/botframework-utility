@@ -1,10 +1,13 @@
 import * as assert from 'assert';
 import * as constants from '../constants';
 import * as vscode from 'vscode';
+import fs = require('fs');
+const fsP = fs.promises;
 
 import { regexToEnvVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../commands';
 import { getEnvBotVariables, setBotVariable, setEnvBotVariables, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip } from '../utilities';
 import { BotVariables } from '../interfaces';
+import { deleteCodeFiles } from './testUtilities';
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
@@ -19,7 +22,6 @@ var testEnv: BotVariables = {
 suite("Deployment - Unit", function(): void {
     setup(async (): Promise<void> => {
         await setBotVariable(testEnv);
-        await setEnvBotVariables(testEnv);
     });
     test("Should get appropriate deployment template - New RG", async function(): Promise<void> {
         const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
@@ -99,8 +101,17 @@ suite("Deployment - Unit", function(): void {
             `existingAppServicePlan="${ testEnv.ServicePlanName }" appServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Prepare Deploy Command", async function(): Promise<void> {
-        const command = await getPrepareDeployCommand();
-        assert.equal(command, `az bot prepare-deploy --lang Csharp --code-dir "." --proj-file-path "test.csproj"`);
+        await setBotVariable({ CodeLanguage: constants.sdkLanguages.Csharp });
+        const commandCsharp = await getPrepareDeployCommand();
+        assert.equal(commandCsharp, `az bot prepare-deploy --lang Csharp --code-dir "." --proj-file-path "test.csproj"`);
+
+        await setBotVariable({ CodeLanguage: constants.sdkLanguages.Node });
+        const commandNode = await getPrepareDeployCommand();
+        assert.equal(commandNode, `az bot prepare-deploy --lang Node --code-dir "."`);
+
+        await setBotVariable({ CodeLanguage: constants.sdkLanguages.Typescript });
+        const commandTypescript = await getPrepareDeployCommand();
+        assert.equal(commandTypescript, `az bot prepare-deploy --lang Typescript --code-dir "."`);
     });
     test("Should Create Appropriate Deploy Command", async function(): Promise<void> {
         const command = await getDeployCommand();

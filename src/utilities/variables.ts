@@ -40,14 +40,14 @@ export async function setBotVariable(variablesToAdd: Partial<BotVariables>): Pro
     let changes = 0;
     for (const key in variablesToAdd) {
         const normalizedKey = normalizeEnvKeys(key);
-        if (!currentBotVariables[normalizedKey]) {
+        if (currentBotVariables[normalizedKey] != variablesToAdd[key]) {
             changes += 1;
             currentBotVariables[normalizedKey] = variablesToAdd[key] || '';
         }        
     }
-    if (changes) {
-        await setEnvBotVariables(currentBotVariables);
+    if (changes > 0) {
         await setLocalBotVariables(currentBotVariables);
+        await setEnvBotVariables(currentBotVariables);
     }
 }
 
@@ -104,7 +104,8 @@ export function getWorkspaceRoot(): string {
 
 export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp): Promise<void> {
     let value;
-    if (variable === constants.envVars.CodeLanguage) {
+    let settings = await getEnvBotVariables();
+    if (variable === constants.envVars.CodeLanguage && !settings.CodeLanguage) {
         value = await getLanguage();
     } else {
         // If prompt and validator not included, try to get them from constants
@@ -115,7 +116,6 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
                 validator = promptAndValidator.validator;
             }
         }
-        let settings = await getEnvBotVariables();
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }) || '';
             if (validator && !(await inputIsValid(value, validator))) {
