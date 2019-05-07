@@ -16,7 +16,7 @@ var testEnv: BotVariables = {
     ServicePlanName: 'vmicricEXT'    
 };
 
-suite("Extension Loading Tests", function(): void {
+suite("Deployment - Unit", function(): void {
     setup(async (): Promise<void> => {
         await setBotVariable(testEnv);
         await setEnvBotVariables(testEnv);

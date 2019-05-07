@@ -109,3 +109,29 @@ export async function deletePrepareDeployFiles(): Promise<void> {
         await fsP.unlink(`${ root }\\.deployment`);
     } catch (err) { }
 }
+
+export async function deleteEnvFiles(): Promise<void> {
+    const root = await getWorkspaceRoot();
+    try {
+        await fsP.unlink(`${ root }\\.env`);
+    } catch (err) { }
+    try {
+        await fsP.unlink(`${ root }\\appsettings.json`);
+    } catch (err) { }
+}
+
+export async function deleteCodeFiles(): Promise<void> {
+    const csFiles = await vscode.workspace.findFiles('**/*.cs');
+    const jsFiles = await vscode.workspace.findFiles('**/*.js');
+    const tsFiles = await vscode.workspace.findFiles('**/*.ts');
+    const files = [
+        csFiles,
+        jsFiles,
+        tsFiles
+    ];
+    await files.forEach(async (codeFiles): Promise<void> => {
+        await codeFiles.forEach(async (file): Promise<void> => {
+            await fsP.unlink(file.fsPath);
+        });
+    });
+}

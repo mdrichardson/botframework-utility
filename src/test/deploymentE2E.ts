@@ -36,7 +36,7 @@ suiteTeardown(async (): Promise<void> => {
 });
 
 // Note: Each of these relies on the each previous test being successful
-suite("Deployment", function(): void {
+suite("Deployment - E2E", function(): void {
     setup(async (): Promise<void> => {
         await deleteTerminalOutputFile();
         await setBotVariable(testEnv);

@@ -61,7 +61,7 @@ export async function syncLocalBotVariablesToEnv(): Promise<void> {
 }
 
 // Save to .env and appsettings.json
-async function setLocalBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
+export async function setLocalBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
     const root = getWorkspaceRoot();
     const envString = JSON.stringify(fullBotVariables, null, 2);
     if (await getLanguage() === constants.sdkLanguages.Csharp) {
@@ -78,7 +78,7 @@ async function setLocalBotVariables(fullBotVariables: Partial<BotVariables>): Pr
 
 // Ensure that keys retrieved from .env and appsettings.json are normalized to constants
 // Allows use of the passed in key if can't be normalized
-function normalizeEnvKeys(key: string): string {
+export function normalizeEnvKeys(key: string): string {
     const minAcceptableDistance = 0.3; // appId vs. MicrosoftAppId = 0.36 distance
     // Acceptable keys - Everything else is ignored
     const fm = new FuzzyMatching(Object.keys(constants.envVars));
@@ -89,11 +89,11 @@ function normalizeEnvKeys(key: string): string {
 export async function getLanguage(): Promise<string> {
     let lang;
     const cSharp = await vscode.workspace.findFiles('*.cs', null, 1);
-    if (cSharp) {
+    if (cSharp.length > 0) {
         lang = constants.sdkLanguages.Csharp;
     } else {
         const typeScript = await vscode.workspace.findFiles('src/*.ts', null, 1);
-        lang = typeScript ? constants.sdkLanguages.Typescript : constants.sdkLanguages.Node;
+        lang = typeScript.length > 0 ? constants.sdkLanguages.Typescript : constants.sdkLanguages.Node;
     }
     return lang;
 }
@@ -117,7 +117,7 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
         }
         let settings = await getEnvBotVariables();
         if (!settings[variable] || !settings[variable].trim()) {
-            value = await vscode.window.showInputBox({ prompt: prompt }) || '';
+            value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }) || '';
             if (validator && !(await inputIsValid(value, validator))) {
                 promptForVariableIfNotExist(variable, prompt, validator);
                 return;
@@ -127,16 +127,18 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
     await setBotVariable({ [variable]: value });
 }
 
-function getPromptAndValidator(variable: string): PromptAndValidator|null {
+export function getPromptAndValidator(variable: string): PromptAndValidator|null {
     return constants.envVarPrompts[variable] ? { prompt: constants.envVarPrompts[variable].prompt, validator: constants.envVarPrompts[variable].validator } : null;
 }
 
-async function inputIsValid(value: string, validator: RegExp): Promise<boolean> {
+export function inputIsValid(value: string, validator: RegExp): boolean {
     if (value.match(validator)) {
         return true;
     } else {
-        await vscode.window.showErrorMessage(`Invalid Input. See log for details`);
-        console.log(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR:\n${ validator }`);
+        vscode.window.showErrorMessage(`Invalid Input. See Output for details`);
+        const log = vscode.window.createOutputChannel('botframework');
+        log.appendLine(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR:\n${ validator }`);
+        log.show();
         return false;
     }
 }
