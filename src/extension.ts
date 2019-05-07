@@ -3,6 +3,15 @@ import * as vscode from 'vscode';
 import { deploymentCommands, emulatorCommands, testCommands } from './commands/index';
 import { syncLocalBotVariablesToEnv } from './utilities/variables';
 
+const output = vscode.window.createOutputChannel('Botframework Utility');
+
+export function log(text: string, show: boolean = false): void {
+    output.appendLine(text);
+    if (show) {
+        output.show();
+    }
+}
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {    
     // Load appsettings.json/.env into env variables
     await syncLocalBotVariablesToEnv();
@@ -30,7 +39,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await syncLocalBotVariablesToEnv();
     });
     
-    console.log('BotFramework Utility is now active!');
+    log('BotFramework Utility is now active!');
 }
 
 export function deactivate(): void {}

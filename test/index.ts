@@ -8,6 +8,7 @@ declare var global: any;
 import * as fs from 'fs';
 import * as glob from 'glob';
 import * as paths from 'path';
+import { log } from '../src/extension';
 
 const istanbul = require('istanbul');
 const Mocha = require('mocha');
@@ -213,7 +214,7 @@ class CoverageRunner {
         const reportTypes = (self.options.reports instanceof Array) ? self.options.reports : ['lcov'];
         reporter.addAll(reportTypes);
         reporter.write(remappedCollector, true, () => {
-            console.log(`reports written to ${ reportingDir }`);
+            log(`reports written to ${ reportingDir }`);
         });
     }
 }

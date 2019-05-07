@@ -7,6 +7,7 @@ const fsP = fs.promises;
 
 import { BotVariables, PromptAndValidator } from '../interfaces';
 import FuzzyMatching = require('fuzzy-matching');
+import { log } from '../extension';
 
 export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
     const dotenvFile = await vscode.workspace.findFiles(`**/*${ constants.settingsFiles.Node }`, null, 1);
@@ -136,9 +137,7 @@ export function inputIsValid(value: string, validator: RegExp): boolean {
         return true;
     } else {
         vscode.window.showErrorMessage(`Invalid Input. See Output for details`);
-        const log = vscode.window.createOutputChannel('botframework');
-        log.appendLine(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR: ${ validator }`);
-        log.show();
+        log(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR: ${ validator }`, true);
         return false;
     }
 }
