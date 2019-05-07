@@ -10,15 +10,19 @@ import { getWorkspaceRoot } from './variables';
 
 export async function getDeploymentTemplate(templateName: string): Promise<string> {
     const existingTemplate = (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0];
-    const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
     if (!existingTemplate) {
-        if (!deploymentTemplatesFolderExists) {
-            await fsP.mkdir(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
-        }
-        const file = await axios.get(constants.urls[templateName]);
-        await fsP.writeFile(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
+        await downloadTemplate(templateName);
     }
     return (await vscode.workspace.findFiles(`**/${ templateName }`, null, 1))[0].fsPath;
+}
+
+export async function downloadTemplate(templateName: string): Promise<void> {
+    const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
+    if (!deploymentTemplatesFolderExists) {
+        await fsP.mkdir(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
+    }
+    const file = await axios.get(constants.urls[templateName]);
+    await fsP.writeFile(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
 }
 
 export async function createUpdateZip(): Promise<void> {

@@ -137,3 +137,12 @@ export async function deleteCodeFiles(): Promise<void> {
         });
     });
 }
+
+export async function deleteDownloadTemplates(): Promise<void> {
+    const files = await vscode.workspace.findFiles('deploymentTemplates/*.json');
+    for (const index in files) {
+        try {
+            await fsP.unlink(files[index].fsPath);
+        } catch (err) { }
+    }
+}

@@ -1,13 +1,13 @@
 import * as assert from 'assert';
 import * as constants from '../constants';
 import * as vscode from 'vscode';
-import fs = require('fs');
-const fsP = fs.promises;
 
 import { regexToEnvVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../commands';
-import { getEnvBotVariables, setBotVariable, setEnvBotVariables, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip } from '../utilities';
+import { getEnvBotVariables, setBotVariable, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip, downloadTemplate } from '../utilities';
 import { BotVariables } from '../interfaces';
-import { deleteCodeFiles } from './testUtilities';
+import { deleteDownloadTemplates } from './testUtilities';
+
+import RandExp = require('randexp');
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
@@ -22,6 +22,14 @@ var testEnv: BotVariables = {
 suite("Deployment - Unit", function(): void {
     setup(async (): Promise<void> => {
         await setBotVariable(testEnv);
+    });
+    test("Should download both deployment templates if missing", async function(): Promise<void> {
+        for (const template in constants.deploymentTemplates) {
+            await deleteDownloadTemplates();
+            await downloadTemplate(template);
+            const exists = await vscode.workspace.findFiles(`**/${ template }`);
+            assert(exists.length > 0);
+        }
     });
     test("Should get appropriate deployment template - New RG", async function(): Promise<void> {
         const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
@@ -47,16 +55,16 @@ suite("Deployment - Unit", function(): void {
         assert(file.length == 0);
     });
     test("Should Detect RegEx in data and convert to ENV variables", async function(): Promise<void> {
-        const testAppId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        const testAppPassword = 'testPassword';
+        const testAppId = new RandExp(constants.regexForValidations.GUID).gen();
+        const testAppPassword = new RandExp(constants.regexForValidations.MicrosoftAppPassword).gen();
         const data = `
             "appId": "${ testAppId }",
             "appPassword": "${ testAppPassword }",
         `;
         await regexToEnvVariables(data);
         const variables = await getEnvBotVariables();
-        assert(variables.MicrosoftAppId = testAppId);
-        assert(variables.MicrosoftAppPassword = testAppPassword);
+        assert.equal(variables.MicrosoftAppId, testAppId);
+        assert.equal(variables.MicrosoftAppPassword, testAppPassword);
     });
     test("Should Create Appropriate App Creation Command", async function(): Promise<void> {
         const command = (await getCreateAppRegistrationCommand() as string);
