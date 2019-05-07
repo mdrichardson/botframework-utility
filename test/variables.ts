@@ -1,6 +1,6 @@
 import * as assert from 'assert';
-import * as constants from '../constants';
-import { getLocalBotVariables, getWorkspaceRoot, getEnvBotVariables, setBotVariable, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../utilities';
+import * as constants from '../src/constants';
+import { getLocalBotVariables, getWorkspaceRoot, getEnvBotVariables, setBotVariable, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../src/utilities';
 import { deleteEnvFiles, deleteCodeFiles } from './testUtilities';
 import fs = require('fs');
 const fsP = fs.promises;

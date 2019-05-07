@@ -1,6 +1,6 @@
-import * as constants from '../constants';
+import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import { getWorkspaceRoot } from '../utilities';
+import { getWorkspaceRoot } from '../src/utilities';
 import fs = require('fs');
 const fsP = fs.promises;
 

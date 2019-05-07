@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { getEmulatorLaunchCommand } from "../utilities/index";
+import { getEmulatorLaunchCommand } from "../src/utilities/index";
 
 suite("Emulator", function(): void {
     test("Should Create Proper Emulator Start Command", function(): void {

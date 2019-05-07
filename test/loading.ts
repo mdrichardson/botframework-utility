@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 
-import { deploymentCommands, emulatorCommands, testCommands } from '../commands/index';
+import { deploymentCommands, emulatorCommands, testCommands } from '../src/commands/index';
 
 suite("Extension Loading Tests", function(): void {
     test("Should Properly Load All Commands", async function(): Promise<void> {

@@ -1,10 +1,10 @@
 import * as assert from 'assert';
-import * as constants from '../constants';
+import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 
-import { regexToEnvVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../commands';
-import { getEnvBotVariables, setBotVariable, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip, downloadTemplate } from '../utilities';
-import { BotVariables } from '../interfaces';
+import { regexToEnvVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/commands';
+import { getEnvBotVariables, setBotVariable, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip, downloadTemplate } from '../src/utilities';
+import { BotVariables } from '../src/interfaces';
 import { deleteDownloadTemplates } from './testUtilities';
 
 import RandExp = require('randexp');

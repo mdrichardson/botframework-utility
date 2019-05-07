@@ -1,10 +1,10 @@
 import * as assert from 'assert';
-import * as constants from '../constants';
+import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { deleteTerminalOutputFile, testTerminalCommand, cleanup, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles } from './testUtilities';
-import { getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../commands';
-import { BotVariables } from '../interfaces';
-import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables, createUpdateZip } from '../utilities';
+import { getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/commands';
+import { BotVariables } from '../src/interfaces';
+import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables, createUpdateZip } from '../src/utilities';
 
 const suffix = Math.floor(Math.random() * 1000);
 const name = `vmicricEXTtest${ suffix }`;
