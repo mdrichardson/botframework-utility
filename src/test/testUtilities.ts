@@ -13,7 +13,7 @@ export async function testTerminalCommand(
     const terminal = await vscode.window.createTerminal(undefined, terminalPath);
 
     // Write terminal output to text file to test
-    const root = await getWorkspaceRoot();
+    const root = getWorkspaceRoot();
     command = `&{ ${ command } } | Tee-Object -FilePath "${ root }\\${ constants.testing.TerminalOutput }"`;
                 
     terminal.show(true);
@@ -65,7 +65,7 @@ export async function testTerminalCommand(
 }
 
 export async function deleteTerminalOutputFile(): Promise<void> {
-    const root = await getWorkspaceRoot();
+    const root = getWorkspaceRoot();
     try {
         await fsP.unlink(`${ root }\\${ constants.testing.TerminalOutput }`);
     } catch (err) {
@@ -101,7 +101,7 @@ export async function deleteBot(name: string): Promise<void> {
 }
 
 export async function deletePrepareDeployFiles(): Promise<void> {
-    const root = await getWorkspaceRoot();
+    const root = getWorkspaceRoot();
     try {
         await fsP.unlink(`${ root }\\web.config`);
     } catch (err) { }
@@ -111,7 +111,7 @@ export async function deletePrepareDeployFiles(): Promise<void> {
 }
 
 export async function deleteEnvFiles(): Promise<void> {
-    const root = await getWorkspaceRoot();
+    const root = getWorkspaceRoot();
     try {
         await fsP.unlink(`${ root }\\.env`);
     } catch (err) { }

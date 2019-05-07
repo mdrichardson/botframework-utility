@@ -34,13 +34,13 @@ suite("Deployment - Unit", function(): void {
     test("Should get appropriate deployment template - New RG", async function(): Promise<void> {
         const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
         const location = await getDeploymentTemplate(templateName);
-        const root = await getWorkspaceRoot();
+        const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-new-rg.json`);
     });
     test("Should get appropriate deployment template - Existing RG", async function(): Promise<void> {
         const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
         const location = await getDeploymentTemplate(templateName);
-        const root = await getWorkspaceRoot();
+        const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
     });
     test("Should create zip file", async function(): Promise<void> {

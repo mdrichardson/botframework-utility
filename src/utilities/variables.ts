@@ -137,7 +137,7 @@ export function inputIsValid(value: string, validator: RegExp): boolean {
     } else {
         vscode.window.showErrorMessage(`Invalid Input. See Output for details`);
         const log = vscode.window.createOutputChannel('botframework');
-        log.appendLine(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR:\n${ validator }`);
+        log.appendLine(`INVALID INPUT: ${ value }\nREGEXP VALIDATOR: ${ validator }`);
         log.show();
         return false;
     }

@@ -47,21 +47,21 @@ suite("Variables", function(): void {
         }
     });
     test("Should return Csharp language", async function(): Promise<void> {
-        const root = await getWorkspaceRoot();
+        const root = getWorkspaceRoot();
 
         await deleteCodeFiles();
         await fsP.writeFile(`${ root }\\test.cs`, 'test');
         assert.equal(await getLanguage(), constants.sdkLanguages.Csharp);
     });
     test("Should return Node language", async function(): Promise<void> {
-        const root = await getWorkspaceRoot();
+        const root = getWorkspaceRoot();
 
         await deleteCodeFiles();
         await fsP.writeFile(`${ root }\\test.js`, 'test');
         assert.equal(await getLanguage(), constants.sdkLanguages.Node);
     });
     test("Should return Typescript language", async function(): Promise<void> {
-        const root = await getWorkspaceRoot();
+        const root = getWorkspaceRoot();
 
         await deleteCodeFiles();
 

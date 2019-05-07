@@ -60,7 +60,7 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Should CreateResourcesExistingResourceGroupNewServicePlan", async function(): Promise<void> {
-        this.timeout(60 * 1000);
+        this.timeout(1.5 * 60 * 1000);
 
         await deleteResourceGroupDeployment(testEnv.BotName);
 

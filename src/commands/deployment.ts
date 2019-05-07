@@ -44,7 +44,6 @@ const deploymentCommands: Commands = {
 };
 
 async function deploymentCreateResources(newResourceGroup: boolean, newServicePlan: boolean): Promise<void> {
-    // TODO: Allow for *all* variables (various locations...)
     const command = await getCreateResourcesCommand(newResourceGroup, newServicePlan);
 
     vscode.window.showInformationMessage('Creating Azure Resources');
@@ -59,7 +58,7 @@ export async function regexToEnvVariables(data: string): Promise<void> {
 
     let matches = {};
     
-    await regexPatterns.forEach(async (r): Promise<void> => {
+    await regexPatterns.forEach((r): void => {
         const match = r.exec(data) || { groups: null };
         if (match.groups) {
             matches = {...matches, ...match.groups};
