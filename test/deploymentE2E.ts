@@ -100,7 +100,7 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Should Deploy", async function(): Promise<void> {
-        this.timeout(4 * 60 * 1000);
+        this.timeout(10 * 60 * 1000);
 
         await createUpdateZip();
 
