@@ -1,4 +1,4 @@
-export function getEmulatorLaunchCommand(url: string, domain: string = 'livechat', action: string = 'open'): string {
+export default function getEmulatorLaunchCommand(url: string, domain: string = 'livechat', action: string = 'open'): string {
     url = encodeURIComponent(url);
 
     let opener;

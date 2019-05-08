@@ -1,4 +1,5 @@
 /* eslint-disable */
+// Cspell:disable
 'use strict';
 
 declare var global: any;

@@ -1,0 +1,22 @@
+import * as constants from '../../constants';
+import { setBotVariable } from '..';
+
+export default async function regexToEnvVariables(data: string): Promise<void> {
+    const regexPatterns = [
+        constants.regexForVariables.MicrosoftAppId,
+        constants.regexForVariables.MicrosoftAppPassword
+    ];
+
+    let matches = {};
+    
+    await regexPatterns.forEach((r): void => {
+        const match = r.exec(data) || { groups: null };
+        if (match.groups) {
+            matches = {...matches, ...match.groups};
+        }
+    });
+
+    if (matches) {
+        await setBotVariable(matches);
+    }
+}

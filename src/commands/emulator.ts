@@ -1,9 +1,7 @@
-import * as constants from '../constants';
 import * as vscode from 'vscode';
 
 import { Commands } from '../interfaces';
-import { executeTerminalCommand } from './deployment';
-import { getEmulatorLaunchCommand } from '../utilities/index';
+import { getEmulatorLaunchCommand, executeTerminalCommand } from '../utilities';
 
 const emulatorCommands: Commands = {
     async openEmulatorLocalhost(): Promise<void> {

@@ -11,6 +11,10 @@
     "cSpell.words": [
         "ibotframework",
         "paren",
-        "utility"
+        "utility",
+        "vmicric"
+    ],
+    "cSpell.ignoreWords": [
+        "randexp"
     ]
 }

@@ -2,12 +2,10 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 
-import { regexToEnvVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/commands';
-import { getEnvBotVariables, setBotVariable, getWorkspaceRoot, getDeploymentTemplate, createUpdateZip, deleteUpdateZip, downloadTemplate } from '../src/utilities';
-import { BotVariables } from '../src/interfaces';
-import { deleteDownloadTemplates } from './testUtilities';
-
 import RandExp = require('randexp');
+import { BotVariables } from '../src/interfaces';
+import { setBotVariable, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createUpdateZip, deleteUpdateZip, regexToEnvVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/utilities';
+import { deleteDownloadTemplates } from './testUtilities';
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',

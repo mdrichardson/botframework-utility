@@ -1,10 +1,10 @@
 import * as assert from 'assert';
 import * as constants from '../src/constants';
-import { getLocalBotVariables, getWorkspaceRoot, getEnvBotVariables, setBotVariable, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../src/utilities';
-import { deleteEnvFiles, deleteCodeFiles } from './testUtilities';
 import fs = require('fs');
 const fsP = fs.promises;
 import RandExp = require('randexp');
+import { deleteEnvFiles, deleteCodeFiles } from './testUtilities';
+import { getWorkspaceRoot, getLocalBotVariables, getEnvBotVariables, setBotVariable, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../src/utilities';
 
 suite("Variables", function(): void {
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
@@ -81,7 +81,7 @@ suite("Variables", function(): void {
     });
     test("Should display input prompt and not resolve/reject if variable doesn't exist", async function(): Promise<void> {
         // There's no way to check if the InputBox is displayed, so instead we're basically just checking if promptForVariableIfNotExist hasn't resolved yet
-        const promise = promptForVariableIfNotExist('idonotexist');
+        const promise = promptForVariableIfNotExist('iDoNotExist');
         // Wait to ensure prompt box is displayed
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
         assert.notEqual(promise, undefined);

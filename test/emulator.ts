@@ -1,3 +1,5 @@
+// Cspell:disable
+
 import * as assert from 'assert';
 import { getEmulatorLaunchCommand } from "../src/utilities/index";
 

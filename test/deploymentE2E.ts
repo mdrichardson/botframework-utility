@@ -1,13 +1,12 @@
 import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import { deleteTerminalOutputFile, testTerminalCommand, cleanup, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles } from './testUtilities';
-import { getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/commands';
 import { BotVariables } from '../src/interfaces';
-import { setBotVariable, syncLocalBotVariablesToEnv, setEnvBotVariables, createUpdateZip } from '../src/utilities';
+import { syncLocalBotVariablesToEnv, setBotVariable, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand } from '../src/utilities';
+import { cleanup, deleteTerminalOutputFile, testTerminalCommand } from './testUtilities';
 
 const suffix = Math.floor(Math.random() * 1000);
-const name = `vmicricEXTtest${ suffix }`;
+const name = `vmicricExtTest${ suffix }`;
 
 var testEnv: BotVariables = {
     BotName: name,
@@ -32,7 +31,7 @@ suiteSetup(async (): Promise<void> => {
 });
 
 suiteTeardown(async (): Promise<void> => {
-    cleanup(testEnv.BotName, testEnv.ResourceGroupName);
+    await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
 });
 
 // Note: Each of these relies on the each previous test being successful

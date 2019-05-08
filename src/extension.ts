@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { deploymentCommands, emulatorCommands, testCommands } from './commands/index';
-import { syncLocalBotVariablesToEnv } from './utilities/variables';
+import { syncLocalBotVariablesToEnv } from './utilities';
 
 const output = vscode.window.createOutputChannel('Botframework Utility');
 

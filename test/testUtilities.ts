@@ -1,7 +1,7 @@
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import { getWorkspaceRoot } from '../src/utilities';
 import fs = require('fs');
+import { getWorkspaceRoot } from '../src/utilities';
 const fsP = fs.promises;
 
 export async function testTerminalCommand(
@@ -73,8 +73,8 @@ export async function deleteTerminalOutputFile(): Promise<void> {
     }
 }
 
-function deleteWebApp(name: string): void {
-    const command = `az webapp delete --name ${ name }`;
+function deleteAppRegistration(id: string): void {
+    const command = `az ad app delete --id ${ id }`;
     testTerminalCommand(command);
 }
 
@@ -83,9 +83,9 @@ function deleteResourceGroup(name: string): void {
     testTerminalCommand(command);
 }
 
-export function cleanup(webAppName: string, resourceGroupName: string): void {
-    deleteWebApp(webAppName);
-    deleteResourceGroup(resourceGroupName);
+export async function cleanup(appId: string, resourceGroupName: string): Promise<void> {
+    await deleteAppRegistration(appId);
+    await deleteResourceGroup(resourceGroupName);
 }
 
 export async function deleteResourceGroupDeployment(name: string): Promise<void> {
