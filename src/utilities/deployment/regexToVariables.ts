@@ -1,7 +1,7 @@
 import * as constants from '../../constants';
-import { setBotVariable } from '..';
+import { setBotVariables } from '..';
 
-export default async function regexToEnvVariables(data: string): Promise<void> {
+export default async function regexToVariables(data: string): Promise<void> {
     const regexPatterns = [
         constants.regexForVariables.MicrosoftAppId,
         constants.regexForVariables.MicrosoftAppPassword
@@ -11,12 +11,16 @@ export default async function regexToEnvVariables(data: string): Promise<void> {
     
     await regexPatterns.forEach((r): void => {
         const match = r.exec(data) || { groups: null };
+        console.log(r.source);
+        console.log(JSON.stringify(match, null, 2));
         if (match.groups) {
             matches = {...matches, ...match.groups};
         }
     });
 
+    console.log(JSON.stringify(matches, null, 2));
+
     if (matches) {
-        await setBotVariable(matches);
+        await setBotVariables(matches);
     }
 }

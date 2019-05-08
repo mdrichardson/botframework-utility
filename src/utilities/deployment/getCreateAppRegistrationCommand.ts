@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { getEnvBotVariables, promptForVariableIfNotExist } from '..';
 
 export default async function getCreateAppRegistrationCommand(): Promise<string|void> {
-    let settings = await getEnvBotVariables();
+    let settings = getEnvBotVariables();
 
     if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
         vscode.window.showInformationMessage(`You already have an App Registration. Delete appId/appPass.`);
@@ -13,7 +13,7 @@ export default async function getCreateAppRegistrationCommand(): Promise<string|
     await promptForVariableIfNotExist(constants.envVars.BotName);
     await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword);
 
-    settings = await getEnvBotVariables();
+    settings = getEnvBotVariables();
 
     return `az ad app create --display-name "${ settings.BotName }" --password "${ settings.MicrosoftAppPassword }" --available-to-other-tenants`;
 }

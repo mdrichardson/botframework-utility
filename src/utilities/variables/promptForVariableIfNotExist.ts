@@ -1,10 +1,10 @@
 import * as constants from '../../constants';
 import * as vscode from 'vscode';
-import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, setBotVariable } from '..';
+import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, setBotVariables } from '..';
 
 export default async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp): Promise<void> {
     let value;
-    let settings = await getEnvBotVariables();
+    let settings = getEnvBotVariables();
     if (variable === constants.envVars.CodeLanguage && !settings.CodeLanguage) {
         value = await getLanguage();
     } else {
@@ -24,5 +24,5 @@ export default async function promptForVariableIfNotExist(variable: string, prom
             }         
         } else { return; }
     }
-    await setBotVariable({ [variable]: value });
+    await setBotVariables({ [variable]: value });
 }

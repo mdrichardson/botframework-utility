@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariable, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand } from '../src/utilities';
+import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand } from '../src/utilities';
 import { cleanup, deleteTerminalOutputFile, testTerminalCommand, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles } from './testUtilities';
 
 const suffix = Math.floor(Math.random() * 1000);
@@ -38,7 +38,7 @@ suiteTeardown(async (): Promise<void> => {
 suite("Deployment - E2E", function(): void {
     setup(async (): Promise<void> => {
         await deleteTerminalOutputFile();
-        await setBotVariable(testEnv);
+        await setBotVariables(testEnv);
         await setEnvBotVariables(testEnv);
     });
     test("Should create a web app", async function(): Promise<void> {
@@ -64,7 +64,7 @@ suite("Deployment - E2E", function(): void {
         await deleteResourceGroupDeployment(testEnv.BotName);
 
         testEnv.ServicePlanName = `${ testEnv.ServicePlanName }_new`;
-        await setBotVariable(testEnv);
+        await setBotVariables(testEnv);
 
         const command = await getCreateResourcesCommand(false, true);
         const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources);

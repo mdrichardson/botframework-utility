@@ -4,7 +4,7 @@ import fs = require('fs');
 const fsP = fs.promises;
 import RandExp = require('randexp');
 import { deleteEnvFiles, deleteCodeFiles } from './testUtilities';
-import { getWorkspaceRoot, getLocalBotVariables, getEnvBotVariables, setBotVariable, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../src/utilities';
+import { getWorkspaceRoot, getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex } from '../src/utilities';
 
 suite("Variables", function(): void {
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
@@ -25,14 +25,14 @@ suite("Variables", function(): void {
     });
     test("Should Load Variables from process.env", async function(): Promise<void> {
         process.env.BOTFRAMEWORK_UTILITY = JSON.stringify({ testVar: 'test'});
-        const result = await getEnvBotVariables();
+        const result = getEnvBotVariables();
         assert.equal(result['testVar'], 'test');
     });
     test("Should set variables locally and to process.env", async function(): Promise<void> {
         const testName = 'testBotNameTEST';
-        await setBotVariable({ BotName: testName });
+        await setBotVariables({ BotName: testName });
 
-        const envResult = await getEnvBotVariables();
+        const envResult = getEnvBotVariables();
         assert.equal(envResult['BotName'], testName);
 
         const localResult = await getLocalBotVariables();
@@ -73,7 +73,7 @@ suite("Variables", function(): void {
     });
     test("Should not prompt for variable if it exists", async function(): Promise<void> {
         const testName = 'testBotNameTEST';
-        await setBotVariable({ BotName: testName });
+        await setBotVariables({ BotName: testName });
         const func = async (): Promise<void> => {
             await promptForVariableIfNotExist('BotName');
         };

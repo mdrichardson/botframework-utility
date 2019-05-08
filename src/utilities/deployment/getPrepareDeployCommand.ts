@@ -5,7 +5,7 @@ import { promptForVariableIfNotExist, getEnvBotVariables } from '..';
 export default async function getPrepareDeployCommand(): Promise<string> {
     await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
     
-    const settings = await getEnvBotVariables();
+    const settings = getEnvBotVariables();
 
     let csprojFile;
     if (settings.CodeLanguage === constants.sdkLanguages.Csharp) {

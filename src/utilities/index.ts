@@ -9,7 +9,7 @@ import getCreateResourcesCommand from './deployment/getCreateResourcesCommand';
 import getDeployCommand from './deployment/getDeployCommand';
 import getDeploymentTemplate from './deployment/getDeploymentTemplate';
 import getPrepareDeployCommand from './deployment/getPrepareDeployCommand';
-import regexToEnvVariables from './deployment/regexToEnvVariables';
+import regexToVariables from './deployment/regexToVariables';
 
 import getEmulatorLaunchCommand from './emulator/getEmulatorLaunchCommand';
 
@@ -22,7 +22,7 @@ import getWorkspaceRoot from './variables/getWorkspaceRoot';
 import inputIsValid from './variables/inputIsValid';
 import normalizeEnvKeys from './variables/normalizeEnvKeys';
 import promptForVariableIfNotExist from './variables/promptForVariableIfNotExist';
-import setBotVariable from './variables/setBotVariables';
+import setBotVariables from './variables/setBotVariables';
 import setEnvBotVariables from './variables/setEnvBotVariables';
 import setLocalBotVariables from './variables/setLocalBotVariables';
 import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToEnv';
@@ -38,7 +38,7 @@ export {
     getDeployCommand,
     getDeploymentTemplate,
     getPrepareDeployCommand,
-    regexToEnvVariables,
+    regexToVariables,
     getEmulatorLaunchCommand,
     arrayToRegex,
     getEnvBotVariables,
@@ -49,7 +49,7 @@ export {
     inputIsValid,
     normalizeEnvKeys,
     promptForVariableIfNotExist,
-    setBotVariable,
+    setBotVariables,
     setEnvBotVariables,
     setLocalBotVariables,
     syncLocalBotVariablesToEnv

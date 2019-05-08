@@ -1,5 +1,5 @@
 import { EnvVarPrompts } from "../interfaces";
-import { regexForValidations } from ".";
+import { regexForValidations } from "./regexForValidations";
 
 export const envVarPrompts: EnvVarPrompts = {
     BotName: { prompt: 'Enter a name for your bot', validator: regexForValidations.WordsOnly },

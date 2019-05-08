@@ -17,7 +17,7 @@ export default async function getCreateResourcesCommand(newResourceGroup: boolea
     const planPrompt = newServicePlan ? constants.envVarPrompts.ServicePlanNameBeingCreated : constants.envVarPrompts.ServicePlanName;
     await promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt.prompt, planPrompt.validator);
 
-    const settings = await getEnvBotVariables();
+    const settings = getEnvBotVariables();
 
     const azCommand = newResourceGroup ? `deployment create --location ${ settings.Location }` : 'group deployment create';
     

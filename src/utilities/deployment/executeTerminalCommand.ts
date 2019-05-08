@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { regexToEnvVariables } from '..';
+import { regexToVariables } from '..';
 
 export default async function executeTerminalCommand(
     command: string,
@@ -25,7 +25,7 @@ export default async function executeTerminalCommand(
     let listenForData = true;
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
         if (listenForData) {
-            await regexToEnvVariables(data);
+            await regexToVariables(data);
             if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
                 vscode.window.showErrorMessage(`${ commandTitle } failed.`);
                 // Ensure we don't call a success message
