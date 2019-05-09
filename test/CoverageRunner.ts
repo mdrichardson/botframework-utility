@@ -1,4 +1,7 @@
-import istanbul = require('istanbul');
+/* eslint-disable @typescript-eslint/no-parameter-properties */
+'use strict';
+
+import { hook, Instrumenter, Reporter } from 'istanbul';
 import Mocha = require('mocha');
 import remapIstanbul = require('remap-istanbul');
 import decache from 'decache';
@@ -33,14 +36,16 @@ export function configure(mochaOpts): void {
 }
 
 export function run(testsRoot, clb): any {
+    console.log(`\n#################### RUNNING TESTS WITH COVERAGE ####################`);
     // Enable source map support
     require('source-map-support').install();
 
     // Read configuration for the coverage file
     let coverOptions: TestRunnerOptions = _readCoverOptions(testsRoot);
+    let coverageRunner;
     if (coverOptions && coverOptions.enabled) {
         // Setup coverage pre-test, including post-test hook to report
-        let coverageRunner = new CoverageRunner(coverOptions, testsRoot, clb);
+        coverageRunner = new CoverageRunner(coverOptions, testsRoot, clb);
         coverageRunner.setupCoverage();
     }
 
@@ -62,6 +67,10 @@ export function run(testsRoot, clb): any {
                     failureCount++;
                 })
                 .on('end', (): void => {
+                    console.log(`\n#################### COVERAGE TESTS COMPLETE ####################`);
+                    if (coverageRunner) {
+                        coverageRunner.reportCoverage();
+                    }
                     clb(undefined, failureCount);
                 });
         } catch (error) {
@@ -85,26 +94,23 @@ class CoverageRunner {
     private transformer: any = undefined;
     private matchFn: any = undefined;
     private instrumenter: any = undefined;
-    private options!: TestRunnerOptions;
-    private testsRoot!: string;
 
-    public constructor(options: TestRunnerOptions, testsRoot: string, endRunCallback: any) {
+    public constructor(private options: TestRunnerOptions, private testsRoot: string, private endRunCallback: any) {
         if (!options.relativeSourcePath) {
             return endRunCallback('Error - relativeSourcePath must be defined for code coverage to work');
         }
-        this.options = options;
-        this.testsRoot = testsRoot;
     }
 
     public setupCoverage(): void {
         // Set up Code Coverage, hooking require so that instrumented code is returned
-        this.instrumenter = new istanbul.Instrumenter({ coverageVariable: this.coverageVar });
-        let sourceRoot = paths.join(this.testsRoot, this.options.relativeSourcePath);
+        let self = this;
+        self.instrumenter = new Instrumenter({ coverageVariable: self.coverageVar });
+        let sourceRoot = paths.join(self.testsRoot, self.options.relativeSourcePath);
 
         // Glob source files
         let srcFiles = glob.sync('**/**.js', {
             cwd: sourceRoot,
-            ignore: this.options.ignorePatterns,
+            ignore: self.options.ignorePatterns,
         });
 
         // Create a match function - taken from the run-with-cover.js in istanbul.
@@ -122,23 +128,24 @@ class CoverageRunner {
             decache(fullPath);
         });
 
-        this.matchFn = (file): boolean => { return fileMap[file]; };
-        this.matchFn.files = Object.keys(fileMap);
+        self.matchFn = (file): boolean => { return fileMap[file]; };
+        self.matchFn.files = Object.keys(fileMap);
 
         // Hook up to the Require function so that when this is called, if any of our source files
         // are required, the instrumented version is pulled in instead. These instrumented versions
         // write to a global coverage variable with hit counts whenever they are accessed
-        this.transformer = this.instrumenter.instrumentSync.bind(this.instrumenter);
+        self.transformer = self.instrumenter.instrumentSync.bind(self.instrumenter);
         let hookOpts = { extensions: ['.js'], verbose: false };
-        istanbul.hook.hookRequire(this.matchFn, this.transformer, hookOpts);
+        hook.hookRequire(self.matchFn, self.transformer, hookOpts);
 
         // initialize the global variable to stop mocha from complaining about leaks
-        global[this.coverageVar] = {};
+        global[self.coverageVar] = {};
 
         // Hook the process exit event to handle reporting
         // Only report coverage if the process is exiting successfully
-        process.on('exit', (): void => {
-            this.reportCoverage();
+        process.on('exit', async (): Promise<void> => {
+            await self.reportCoverage();
+            console.log('DONE');
         });
     }
 
@@ -149,37 +156,38 @@ class CoverageRunner {
      *
      * @memberOf CoverageRunner
      */
-    public reportCoverage(): void {
-        istanbul.hook.unhookRequire();
+    public async reportCoverage(): Promise<void> {
+        let self = this;
+        hook.unhookRequire();
         let cov: any;
-        if (typeof global[this.coverageVar] === 'undefined' || Object.keys(global[this.coverageVar]).length === 0) {
+        if (typeof global[self.coverageVar] === 'undefined' || Object.keys(global[self.coverageVar]).length === 0) {
             console.error('No coverage information was collected, exit without writing coverage information');
             return;
         } else {
-            cov = global[this.coverageVar];
+            cov = global[self.coverageVar];
         }
 
         // TODO consider putting this under a conditional flag
         // Files that are not touched by code ran by the test runner is manually instrumented, to
         // illustrate the missing coverage.
-        this.matchFn.files.forEach((file): void => {
+        self.matchFn.files.forEach((file): void => {
             if (!cov[file]) {
-                this.transformer(fs.readFileSync(file, 'utf-8'), file);
+                self.transformer(fs.readFileSync(file, 'utf-8'), file);
 
                 // When instrumenting the code, istanbul will give each FunctionDeclaration a value of 1 in coverState.s,
                 // presumably to compensate for function hoisting. We need to reset this, as the function was not hoisted,
                 // as it was never loaded.
-                Object.keys(this.instrumenter.coverState.s).forEach((key): void => {
-                    this.instrumenter.coverState.s[key] = 0;
+                Object.keys(self.instrumenter.coverState.s).forEach((key): void => {
+                    self.instrumenter.coverState.s[key] = 0;
                 });
 
-                cov[file] = this.instrumenter.coverState;
+                cov[file] = self.instrumenter.coverState;
             }
         });
 
         // TODO Allow config of reporting directory with
-        let reportingDir = paths.join(this.testsRoot, this.options.relativeCoverageDir);
-        let includePid = this.options.includePid;
+        let reportingDir = paths.join(self.testsRoot, self.options.relativeCoverageDir);
+        let includePid = self.options.includePid;
         let pidExt = includePid ? ('-' + process.pid) : '';
         let coverageFile = paths.resolve(reportingDir, 'coverage' + pidExt + '.json');
 
@@ -190,16 +198,16 @@ class CoverageRunner {
         let remappedCollector = remapIstanbul.remap(cov, {warn: (warning): void => {
             // We expect some warnings as any JS file without a typescript mapping will cause this.
             // By default, we'll skip printing these to the console as it clutters it up
-            if (this.options.verbose) {
+            if (self.options.verbose) {
                 console.warn(warning);
             }
         }});
 
-        let reporter = new istanbul.Reporter(undefined, reportingDir);
-        let reportTypes = (this.options.reports instanceof Array) ? this.options.reports : ['lcov'];
+        let reporter = new Reporter(undefined, reportingDir);
+        let reportTypes = (self.options.reports instanceof Array) ? self.options.reports : ['lcov'];
         reporter.addAll(reportTypes);
         reporter.write(remappedCollector, true, (): void => {
-            console.log(`reports written to ${ reportingDir }`);
+            console.log(`Reports written to ${ reportingDir }`);
         });
     }
 }
