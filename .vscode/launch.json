@@ -20,7 +20,7 @@
 			"preLaunchTask": "npm: watch"
 		},
 		{
-            "name": "Extension Tests",
+            "name": "Extension Tests - Breakpoints",
             "type": "extensionHost",
             "request": "launch",
             "runtimeExecutable": "${execPath}",
@@ -30,9 +30,30 @@
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--extensionTestsPath=${workspaceFolder}/out/test"
             ],
+            "env": {
+                "enableBreakpoints": "true"
+            },
             "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
             "preLaunchTask": "npm: test-compile",
             "sourceMaps": true
-          }
+        },
+		{
+            "name": "Extension Tests - Coverage",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "C:\\Users\\v-micric\\Documents\\Code\\VS Code Extension\\botframework-utility\\testEnvironment",
+                "--disable-extension",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "env": {
+                "enableBreakpoints": "false"
+            },
+            "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
+            "preLaunchTask": "npm: test-compile",
+            "sourceMaps": true
+        }
 	]
 }

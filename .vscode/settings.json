@@ -15,6 +15,9 @@
         "vmicric"
     ],
     "cSpell.ignoreWords": [
+        "coverconfig",
+        "decache",
+        "instrumenter",
         "randexp"
     ]
 }

@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-parameter-properties */
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+/* eslint-disable @typescript-eslint/no-var-requires */
 //
 // PLEASE DO NOT MODIFY / DELETE UNLESS YOU KNOW WHAT YOU ARE DOING
 //
@@ -11,13 +16,21 @@
 // a possible error to the callback or null if none.
 
 import * as testRunner from 'vscode/lib/testrunner';
+import * as CoverageRunner from './CoverageRunner';
 
 // You can directly control Mocha options by configuring the test runner below
 // See https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically#set-options
 // for more info
-testRunner.configure({
-    ui: 'tdd', 		// the TDD UI is being used in extension.test.ts (suite, test, etc.)
-    useColors: true // colored output from test results
-});
 
-module.exports = testRunner;
+if (process.env.enableBreakpoints === "true") {
+    testRunner.configure({
+        slow: 10000,
+        ui: 'tdd', 		// the TDD UI is being used in extension.test.ts (suite, test, etc.)
+        useColors: true // colored output from test results
+    });
+
+    module.exports = testRunner;
+} else {
+    exports.run = CoverageRunner.run;
+    exports.configure = CoverageRunner.configure;
+}
