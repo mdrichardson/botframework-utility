@@ -167,7 +167,6 @@ class CoverageRunner {
             cov = global[self.coverageVar];
         }
 
-        // TODO consider putting this under a conditional flag
         // Files that are not touched by code ran by the test runner is manually instrumented, to
         // illustrate the missing coverage.
         self.matchFn.files.forEach((file): void => {
@@ -185,7 +184,6 @@ class CoverageRunner {
             }
         });
 
-        // TODO Allow config of reporting directory with
         let reportingDir = paths.join(self.testsRoot, self.options.relativeCoverageDir);
         let includePid = self.options.includePid;
         let pidExt = includePid ? ('-' + process.pid) : '';

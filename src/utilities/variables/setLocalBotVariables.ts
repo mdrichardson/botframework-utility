@@ -5,7 +5,6 @@ import fs = require('fs');
 const fsP = fs.promises;
 
 export default async function setLocalBotVariables(fullBotVariables: Partial<BotVariables>): Promise<void> {
-    // TODO: create files if necessary
     const root = getWorkspaceRoot();
     const envString = JSON.stringify(fullBotVariables, null, 2);
     if (await getLanguage() === constants.sdkLanguages.Csharp) {

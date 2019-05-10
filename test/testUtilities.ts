@@ -1,7 +1,7 @@
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import fs = require('fs');
-import { getWorkspaceRoot } from '../src/utilities';
+import { getWorkspaceRoot, regexToVariables } from '../src/utilities';
 const fsP = fs.promises;
 
 export async function testTerminalCommand(
@@ -41,19 +41,9 @@ export async function testTerminalCommand(
         } catch (err) {
             res = '';
         }
-        const regexPatterns = [
-            constants.regexForVariables.MicrosoftAppId,
-            constants.regexForVariables.MicrosoftAppPassword
-        ];
-    
-        let matches = {};
-        
-        await regexPatterns.forEach(async (r): Promise<void> => {
-            const match = r.exec(res) || { groups: null };
-            if (match.groups) {
-                matches = {...matches, ...match.groups};
-            }
-        });
+
+        const matches = regexToVariables(res);
+
         if (commandCompleteRegex && res.match(commandCompleteRegex)) {
             return matches ? matches : true;
         } else if (commandFailedRegex && !res.match(commandFailedRegex)) {

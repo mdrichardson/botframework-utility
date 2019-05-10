@@ -1,7 +1,7 @@
 import * as constants from '../../constants';
 import { setBotVariables } from '..';
 
-export default async function regexToVariables(data: string): Promise<void> {
+export default async function regexToVariables(data: string): Promise<object> {
     const regexPatterns = [
         constants.regexForVariables.MicrosoftAppId,
         constants.regexForVariables.MicrosoftAppPassword
@@ -19,4 +19,5 @@ export default async function regexToVariables(data: string): Promise<void> {
     if (matches) {
         await setBotVariables(matches);
     }
+    return matches;
 }
