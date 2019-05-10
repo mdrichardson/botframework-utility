@@ -4,6 +4,7 @@ import fs = require('fs');
 import { getWorkspaceRoot, regexToVariables } from '../src/utilities';
 const fsP = fs.promises;
 
+// Timeout is necessary for commands that don't return anything (ex. prepare-deploy)
 export async function testTerminalCommand(
     command: string,
     commandCompleteRegex?: RegExp,
@@ -14,7 +15,7 @@ export async function testTerminalCommand(
 
     // Write terminal output to text file to test
     const root = getWorkspaceRoot();
-    command = `&{ ${ command } } | Tee-Object -FilePath "${ root }\\${ constants.testing.TerminalOutput }"`;
+    command = `&{ ${ command } } 2>&1 | Tee-Object -FilePath "${ root }\\${ constants.testing.TerminalOutput }"`;
                 
     terminal.show(true);
     terminal.sendText(command, true);
