@@ -7,10 +7,10 @@ import { getWorkspaceRoot } from '../src/utilities';
 import { testNotify } from './testUtilities';
 
 
-// require('./loading');
-// require('./emulator');
-// require('./variables');
-// require('./deploymentUnit');
+require('./loading');
+require('./emulator');
+require('./variables');
+require('./deploymentUnit');
 require('./deploymentE2E');
 
 // suite("Quick Test", function(): void {

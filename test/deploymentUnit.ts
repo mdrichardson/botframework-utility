@@ -42,7 +42,9 @@ suite("Deployment - Unit", function(): void {
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
     });
     test("Should create zip file", async function(): Promise<void> {
-        this.timeout(10 * 60 * 1000);
+        const timeout = 10 * 60 * 1000; 
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
         testNotify('Creating Zip File...');
         await createUpdateZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);

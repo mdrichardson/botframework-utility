@@ -24,7 +24,7 @@ import * as CoverageRunner from './CoverageRunner';
 
 if (process.env.enableBreakpoints === "true") {
     testRunner.configure({
-        slow: 10000,
+        slow: 1000,
         ui: 'tdd', 		// the TDD UI is being used in extension.test.ts (suite, test, etc.)
         useColors: true // colored output from test results
     });

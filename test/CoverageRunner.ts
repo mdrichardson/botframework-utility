@@ -13,7 +13,7 @@ let mocha = new Mocha({
     ui: "tdd",
 });
 mocha.useColors(true);
-mocha.slow(10000);
+mocha.slow(1000);
 
 function _mkDirIfExists(dir: string): void {
     if (!fs.existsSync(dir)) {

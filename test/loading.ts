@@ -7,6 +7,7 @@ import { deploymentCommands, emulatorCommands, testCommands } from '../src/comma
 suite("Extension Loading Tests", function(): void {
     test("Should Load Extension Without Throwing", async function(): Promise<void> {
         assert.doesNotThrow(extension.activate);
+        assert.doesNotThrow(extension.deactivate);
     });
     test("Should Properly Load All Commands", async function(): Promise<void> {
         const allCommands = [

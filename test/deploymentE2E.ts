@@ -132,7 +132,7 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Should Prepare Deploy", async function(): Promise<void> {
-        const timeout = 10 * 1000;
+        const timeout = 15 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
@@ -164,9 +164,10 @@ suite("Deployment - E2E", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
-        testNotify('Deploying..');
+        testNotify('Zipping...');
         await createUpdateZip();
 
+        testNotify('Deploying...');
         const command = await getDeployCommand();
         const options: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.Deploy,
