@@ -59,7 +59,7 @@ suite("Deployment - Unit", function(): void {
             appId: testAppId,
             appPassword: testAppPassword
         };
-        await regexToVariables(JSON.stringify(data, null, 2));
+        await regexToVariables(JSON.stringify(data));
         const variables = getEnvBotVariables();
         assert.equal(variables.MicrosoftAppId, testAppId);
         assert.equal(variables.MicrosoftAppPassword, testAppPassword);
