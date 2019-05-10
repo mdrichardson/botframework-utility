@@ -123,7 +123,6 @@
 	"dependencies": {
 		"archiver": "^3.0.0",
 		"axios": "^0.18.0",
-		"chalk": "^2.4.2",
 		"dotenv": "^7.0.0",
 		"fuzzy-matching": "^0.4.3"
 	}
