@@ -2,9 +2,10 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand, getWorkspaceRoot } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, testTerminalCommand, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
+import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand } from '../src/utilities';
+import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
 import fs = require('fs');
+import { CommandOptions } from '../src/interfaces/CommandOptions';
 const fsP = fs.promises;
 
 const suffix = Math.floor(Math.random() * 1000);
@@ -58,57 +59,96 @@ suite("Deployment - E2E", function(): void {
     test("Should create a web app", async function(): Promise<void> {
         const timeout = 20 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
         const command = (await getCreateAppRegistrationCommand() as string);
-        const result = (await testTerminalCommand(command, constants.regexForDispose.WebappCreate, undefined, timeout - 1000) as Partial<BotVariables>);
-        assert(result);
-        if (typeof result === 'object') { testEnv = { ...testEnv, ...result }; };
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.WebappCreate,
+            commandTitle: 'Test - App Registration Creation',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = (await executeTerminalCommand(command, options) as Partial<BotVariables>);
+        assert.notEqual(result.MicrosoftAppId, undefined);
+        if (result.MicrosoftAppId) { testEnv = { ...testEnv, ...result }; };
     });
 
     test("Should CreateResourcesNewResourceGroup", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
         const command = await getCreateResourcesCommand(true, true);
-        const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources, undefined, timeout - 1000);
-        assert(result);
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandTitle: 'Test - Azure Resource Creation',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = await executeTerminalCommand(command, options);
+        assert.equal(result, true);
     });
 
     test("Should CreateResourcesExistingResourceGroupNewServicePlan", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
+        testNotify('Creating resources...');
         await deleteResourceGroupDeployment(testEnv.BotName);
 
         testEnv.ServicePlanName = `${ testEnv.ServicePlanName }_new`;
         await setBotVariables(testEnv);
 
         const command = await getCreateResourcesCommand(false, true);
-        const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources, undefined, timeout - 1000);
-        assert(result);
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandTitle: 'Test - Azure Resource Creation',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = await executeTerminalCommand(command, options);
+        assert.equal(result, true);
     });
 
     test("Should CreateResourcesExistingResourceGroupExistingServicePlan", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
+        testNotify('Creating resources...');
         await deleteBot(testEnv.MicrosoftAppId);
 
         const command = await getCreateResourcesCommand(false, true);
-        const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources, undefined, timeout - 1000);
-        assert(result);
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandTitle: 'Test - Azure Resource Creation',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = await executeTerminalCommand(command, options);
+        assert.equal(result, true);
     });
 
     test("Should Prepare Deploy", async function(): Promise<void> {
-        const timeout = 15 * 1000;
+        const timeout = 10 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
+        testNotify('Preparing deployment...');
         await deletePrepareDeployFiles();
 
         const command = await getPrepareDeployCommand();
-        const result = await testTerminalCommand(command, undefined, constants.regexForDispose.PrepareDeploy, timeout - 1000);
-        assert(result);
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.PrepareDeploy,
+            commandFailedRegex: constants.regexForDispose.PrepareDeployFailed,
+            commandTitle: 'Test - Prepare Deployment',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = await executeTerminalCommand(command, options);
+        assert.equal(result, true);
 
         let file;
         if (testEnv.CodeLanguage == constants.sdkLanguages.Csharp) {
@@ -122,12 +162,19 @@ suite("Deployment - E2E", function(): void {
     test("Should Deploy", async function(): Promise<void> {
         const timeout = 10 * 60 * 1000;
         this.timeout(timeout);
+        this.slow(timeout * 0.95);
 
         testNotify('Deploying..');
         await createUpdateZip();
 
         const command = await getDeployCommand();
-        const result = await testTerminalCommand(command, constants.regexForDispose.Deploy, undefined, timeout - 1000);
-        assert(result);
+        const options: CommandOptions = {
+            commandCompleteRegex: constants.regexForDispose.Deploy,
+            commandTitle: 'Test - Deployment',
+            isTest: true,
+            timeout: timeout - 500,
+        };
+        const result = await executeTerminalCommand(command, options);
+        assert.equal(result, true);
     });
 });

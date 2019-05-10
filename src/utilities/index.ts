@@ -1,7 +1,7 @@
 
 import createUpdateZip from './deployment/createUpdateZip';
 import deleteUpdateZip from './deployment/deleteUpdateZip';
-import deploymentCreateResources from './deployment/deploymentCreateResources';
+import createAzureResources from './deployment/createAzureResources';
 import downloadTemplate from './deployment/downloadTemplate';
 import executeTerminalCommand from './deployment/executeTerminalCommand';
 import getCreateAppRegistrationCommand from './deployment/getCreateAppRegistrationCommand';
@@ -30,7 +30,7 @@ import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToE
 export {
     createUpdateZip,
     deleteUpdateZip,
-    deploymentCreateResources,
+    createAzureResources as deploymentCreateResources,
     downloadTemplate,
     executeTerminalCommand,
     getCreateAppRegistrationCommand,

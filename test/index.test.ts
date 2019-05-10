@@ -14,17 +14,7 @@ import { testNotify } from './testUtilities';
 require('./deploymentE2E');
 
 // suite("Quick Test", function(): void {
-//     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
-//         assert(false);
-//     });
-//     teardown(async function(): Promise<void> {
-//         if (this.currentTest.state === 'failed') {
-//             const root = getWorkspaceRoot();
-//             const saveLocation = `${ root }\\${ this.currentTest.title }.txt`;
-//             try {
-//                 await fsP.copyFile(`${ root }\\${ constants.testing.TerminalOutput }`, saveLocation);
-//                 testNotify(`Saved terminal error to: ${ saveLocation }`);
-//             } catch (err) { }
-//         }
+//     test("Should Load Extension Without Throwing", async function(): Promise<void> {
+//         assert.ok({});
 //     });
 // });

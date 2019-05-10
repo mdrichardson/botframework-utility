@@ -1,11 +1,17 @@
 import * as vscode from 'vscode';
 import { regexToVariables } from '..';
+import { BotVariables } from '../../interfaces';
+import { CommandOptions } from '../../interfaces/CommandOptions';
 
 export default async function executeTerminalCommand(
     command: string,
-    commandCompleteRegex?: RegExp,
-    commandTitle: string = 'Command',
-    commandFailedRegex?: RegExp): Promise<void> {
+    options: CommandOptions = {
+        commandTitle: 'Command',
+        isTest: false,
+    }): Promise<boolean|Partial<BotVariables>> {
+
+    const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout } = options;
+
     // Force all commands to use single terminal type, for better control
     const userTerminalPath = (vscode.workspace.getConfiguration('botframework-utility').get('customTerminalForAzCommandsPath') as string);
     let terminalPath = userTerminalPath ? userTerminalPath : undefined;
@@ -21,21 +27,45 @@ export default async function executeTerminalCommand(
                 terminalPath = 'sh';
         }
     }
+
     const terminal = await vscode.window.createTerminal(undefined, terminalPath);
-    let listenForData = true;
+    terminal.show(true);
+
+    terminal.sendText(command, true);
+
+    let result: boolean|Partial<BotVariables> = true;
+
+    let commandComplete = false;
+    let matches = {};
+
+    // Create a listener so we can tell if a command is successful
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
-        if (listenForData) {
-            await regexToVariables(data);
+        if (!commandComplete) {
+            matches = await regexToVariables(data);
             if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
                 vscode.window.showErrorMessage(`${ commandTitle } failed.`);
-                // Ensure we don't call a success message
-                listenForData = false;
+                // Stop listening as soon as we fail--Ensure we don't accidentally call a success message
+                commandComplete = true;
+                result = false;
             } else if (data.trim() && commandCompleteRegex && commandCompleteRegex.test(data)) {
                 vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
                 terminal.dispose();
+                commandComplete = true;
+                result = Object.keys(matches).length > 0 ? matches : true;
             }
         }
     });
-    terminal.show(true);
-    terminal.sendText(command, true);
+
+    // If this is for testing, we want to force awaiting until command is complete
+    if (isTest) {
+        let totalTime = 0;
+        while (!commandComplete) {
+            await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
+            totalTime += 500;
+            if (timeout && totalTime >= timeout) {
+                commandComplete = true;
+            }
+        }
+    }
+    return result;
 }

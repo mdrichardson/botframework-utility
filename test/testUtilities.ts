@@ -1,59 +1,8 @@
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import fs = require('fs');
-import { getWorkspaceRoot, regexToVariables } from '../src/utilities';
+import { getWorkspaceRoot, executeTerminalCommand } from '../src/utilities';
 const fsP = fs.promises;
-
-// Timeout is necessary for commands that don't return anything (ex. prepare-deploy)
-export async function testTerminalCommand(
-    command: string,
-    commandCompleteRegex?: RegExp,
-    commandFailedRegex?: RegExp,
-    timeout?: number): Promise<boolean|object> {
-    const terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
-    const terminal = await vscode.window.createTerminal(undefined, terminalPath);
-
-    // Write terminal output to text file to test
-    const root = getWorkspaceRoot();
-    command = `&{ ${ command } } 2>&1 | Tee-Object -FilePath "${ root }\\${ constants.testing.TerminalOutput }"`;
-                
-    terminal.show(true);
-    terminal.sendText(command, true);
-
-    if (commandCompleteRegex || commandFailedRegex) {
-        let commandComplete = false;
-        const consoleOutputWatcher = vscode.workspace.createFileSystemWatcher(`**/${ constants.testing.TerminalOutput }`, true, false, true);
-        consoleOutputWatcher.onDidChange(async (): Promise<void> => {
-            commandComplete = true;
-        });
-    
-        let totalTime = 0;
-        while (!commandComplete) {
-            await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
-            totalTime += 1000;
-            if (timeout && totalTime >= timeout) {
-                commandComplete = true;
-            }
-        }
-    
-        let res;
-        try {
-            res = (await fsP.readFile(`${ root }\\${ constants.testing.TerminalOutput }`, { encoding: 'utf16le', flag: 'r' })).toString();
-        } catch (err) {
-            res = '';
-        }
-
-        const matches = regexToVariables(res);
-
-        if (commandCompleteRegex && res.match(commandCompleteRegex)) {
-            return matches ? matches : true;
-        } else if (commandFailedRegex && !res.match(commandFailedRegex)) {
-            return matches ? matches : true;
-        }
-        return false;
-    }
-    return true;    
-}
 
 export async function deleteTerminalOutputFile(): Promise<void> {
     const root = getWorkspaceRoot();
@@ -66,12 +15,12 @@ export async function deleteTerminalOutputFile(): Promise<void> {
 
 function deleteAppRegistration(id: string): void {
     const command = `az ad app delete --id ${ id }`;
-    testTerminalCommand(command);
+    executeTerminalCommand(command, { isTest: true, timeout: 5000 });
 }
 
 function deleteResourceGroup(name: string): void {
     const command = `az group delete -n ${ name } -y`;
-    testTerminalCommand(command);
+    executeTerminalCommand(command, { isTest: true, timeout: 15000 });
 }
 
 export async function cleanup(appId: string, resourceGroupName: string): Promise<void> {
@@ -81,14 +30,12 @@ export async function cleanup(appId: string, resourceGroupName: string): Promise
 
 export async function deleteResourceGroupDeployment(name: string): Promise<void> {
     const command = `az group deployment delete -n ${ name }`;
-    testTerminalCommand(command);
-    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
+    executeTerminalCommand(command, { isTest: true, timeout: 15000 });
 }
 
 export async function deleteBot(name: string): Promise<void> {
     const command = `az bot delete --name ${ name }`;
-    testTerminalCommand(command);
-    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
+    executeTerminalCommand(command, { isTest: true, timeout: 5000 });
 }
 
 export async function deletePrepareDeployFiles(): Promise<void> {

@@ -1,9 +1,13 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
+import * as extension from '../src/extension';
 
 import { deploymentCommands, emulatorCommands, testCommands } from '../src/commands/index';
 
 suite("Extension Loading Tests", function(): void {
+    test("Should Load Extension Without Throwing", async function(): Promise<void> {
+        assert.doesNotThrow(extension.activate);
+    });
     test("Should Properly Load All Commands", async function(): Promise<void> {
         const allCommands = [
             deploymentCommands,
