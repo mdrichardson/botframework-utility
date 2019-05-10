@@ -1,5 +1,5 @@
-// require('./loading');
-// require('./emulator');
-// require('./variables');
+require('./loading');
+require('./emulator');
+require('./variables');
 require('./deploymentUnit');
-// require('./deploymentE2E');
+require('./deploymentE2E');

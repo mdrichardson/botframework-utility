@@ -81,10 +81,22 @@ suite("Variables", function(): void {
     });
     test("Should display input prompt and not resolve/reject if variable doesn't exist", async function(): Promise<void> {
         // There's no way to check if the InputBox is displayed, so instead we're basically just checking if promptForVariableIfNotExist hasn't resolved yet
-        const promise = promptForVariableIfNotExist('iDoNotExist');
+        await setBotVariables({ BotName: undefined });
+        // DO NOT await promptForVariable...
+        const promise = promptForVariableIfNotExist(constants.envVars.BotName);
         // Wait to ensure prompt box is displayed
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
         assert.notEqual(promise, undefined);
+    });
+    test("Should throw if we try to prompt for a non-existent variable", async function(): Promise<void> {
+        // assert.throws doesn't work well with async, so we'll use try/catch instead
+        const nonExistentVariable = 'iDoNotExist';
+        try {
+            await promptForVariableIfNotExist(nonExistentVariable);
+            throw new Error('Expected error for non-existent variable, but did not throw.');
+        } catch (err) {
+            assert(err instanceof Error, `Not a valid variable: ${ nonExistentVariable }`);
+        }
     });
     test("Each Env Variable prompt should have prompt text and a regex validator", function(): void {
         for (const key in constants.envVarPrompts) {

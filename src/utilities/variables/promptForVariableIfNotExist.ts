@@ -8,13 +8,11 @@ export default async function promptForVariableIfNotExist(variable: string, prom
     if (variable === constants.envVars.CodeLanguage && !settings.CodeLanguage) {
         value = await getLanguage();
     } else {
-        // If prompt and validator not included, try to get them from constants
+        // If prompt and validator not included, get them from constants. All prompts must have validator of some kind
         if (!prompt && !validator) {
             const promptAndValidator = getPromptAndValidator(variable);
-            if (promptAndValidator) {
-                prompt = promptAndValidator.prompt;
-                validator = promptAndValidator.validator;
-            }
+            prompt = promptAndValidator.prompt;
+            validator = promptAndValidator.validator;
         }
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }) || '';
