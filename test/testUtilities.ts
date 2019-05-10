@@ -146,3 +146,7 @@ export async function deleteDownloadTemplates(): Promise<void> {
         } catch (err) { }
     }
 }
+
+export function testNotify(text: string): void {
+    console.warn(`### ${ text }\r`);
+}

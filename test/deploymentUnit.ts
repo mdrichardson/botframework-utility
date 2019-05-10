@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
 import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createUpdateZip, deleteUpdateZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/utilities';
-import { deleteDownloadTemplates } from './testUtilities';
+import { deleteDownloadTemplates, testNotify } from './testUtilities';
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
@@ -43,6 +43,7 @@ suite("Deployment - Unit", function(): void {
     });
     test("Should create zip file", async function(): Promise<void> {
         this.timeout(10 * 60 * 1000);
+        testNotify('Creating Zip File...');
         await createUpdateZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
         assert(file.length > 0);

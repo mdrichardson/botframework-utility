@@ -3,7 +3,7 @@ import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
 import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, testTerminalCommand, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles } from './testUtilities';
+import { cleanup, deleteTerminalOutputFile, testTerminalCommand, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
 
 const suffix = Math.floor(Math.random() * 1000);
 const name = `vmicricExtTest${ suffix }`;
@@ -53,6 +53,7 @@ suite("Deployment - E2E", function(): void {
     test("Should CreateResourcesNewResourceGroup", async function(): Promise<void> {
         this.timeout(2 * 60 * 1000);
 
+        testNotify('Creating resources...');
         const command = await getCreateResourcesCommand(true, true);
         const result = await testTerminalCommand(command, constants.regexForDispose.CreateAzureResources);
         assert(result);
@@ -102,6 +103,7 @@ suite("Deployment - E2E", function(): void {
     test("Should Deploy", async function(): Promise<void> {
         this.timeout(10 * 60 * 1000);
 
+        testNotify('Deploying..');
         await createUpdateZip();
 
         const command = await getDeployCommand();
