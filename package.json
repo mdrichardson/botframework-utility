@@ -51,11 +51,6 @@
 				"command": "extension.deploymentPublish",
 				"category": "Bot > Deploy",
 				"title": "3. Deploy/Publish"
-			},
-			{
-				"command": "extension.currentTest",
-				"category": "Bot > DEV",
-				"title": "Run Current Test"
 			}
 		],
 		"menus": {
