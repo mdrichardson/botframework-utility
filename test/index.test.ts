@@ -8,10 +8,10 @@ import { testNotify } from './testUtilities';
 
 
 require('./loading');
-// require('./emulator');
-// require('./variables');
-// require('./deploymentUnit');
-// require('./deploymentE2E');
+require('./emulator');
+require('./variables');
+require('./deploymentUnit');
+require('./deploymentE2E');
 
 // suite("Quick Test", function(): void {
 //     test("Should Load Extension Without Throwing", async function(): Promise<void> {
