@@ -1,6 +1,6 @@
 import * as constants from '../../constants';
-import fs = require('fs');
 import { getWorkspaceRoot } from '..';
+import fs = require('fs');
 const fsP = fs.promises;
 
 export async function deleteUpdateZip(): Promise<void> {
