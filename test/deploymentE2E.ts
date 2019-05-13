@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand } from '../src/utilities';
+import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log } from '../src/utilities';
 import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
 import fs = require('fs');
 import { CommandOptions } from '../src/interfaces/CommandOptions';
@@ -31,6 +31,7 @@ suiteSetup(async (): Promise<void> => {
     appsettingsJsonWatcher.onDidChange(async (): Promise<void> => {
         await syncLocalBotVariablesToEnv();
     });
+    log(`Resource Suffix: ${ suffix }`);
 });
 
 suiteTeardown(async (): Promise<void> => {

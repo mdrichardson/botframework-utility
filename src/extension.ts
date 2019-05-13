@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import * as vscode from 'vscode';
 import { log } from 'console';
 import { loadCommands, watchEnvFiles, syncLocalBotVariablesToEnv } from './utilities';

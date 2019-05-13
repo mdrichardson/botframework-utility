@@ -28,7 +28,17 @@ suite("Variables", function(): void {
         const result = getEnvBotVariables();
         assert.equal(result['testVar'], 'test');
     });
-    test("Should set variables locally and to process.env", async function(): Promise<void> {
+    test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
+        const testName = 'testBotNameTEST';
+        await setBotVariables({ BotName: testName });
+
+        const envResult = getEnvBotVariables();
+        assert.equal(envResult['BotName'], testName);
+
+        const localResult = await getLocalBotVariables();
+        assert.equal(localResult['BotName'], testName);
+    });
+    test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
         const testName = 'testBotNameTEST';
         await setBotVariables({ BotName: testName });
 
@@ -46,21 +56,21 @@ suite("Variables", function(): void {
             assert.equal(normalizeEnvKeys(jumbled), key);
         }
     });
-    test("Should return Csharp language", async function(): Promise<void> {
+    test("Should properly get Csharp language", async function(): Promise<void> {
         const root = getWorkspaceRoot();
 
         await deleteCodeFiles();
         await fsP.writeFile(`${ root }\\test.cs`, 'test');
         assert.equal(await getLanguage(), constants.sdkLanguages.Csharp);
     });
-    test("Should return Node language", async function(): Promise<void> {
+    test("Should properly get Node language", async function(): Promise<void> {
         const root = getWorkspaceRoot();
 
         await deleteCodeFiles();
         await fsP.writeFile(`${ root }\\test.js`, 'test');
         assert.equal(await getLanguage(), constants.sdkLanguages.Node);
     });
-    test("Should return Typescript language", async function(): Promise<void> {
+    test("Should properly get Typescript language", async function(): Promise<void> {
         const root = getWorkspaceRoot();
 
         await deleteCodeFiles();

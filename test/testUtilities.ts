@@ -58,6 +58,18 @@ export async function deleteEnvFiles(): Promise<void> {
     } catch (err) { }
 }
 
+export async function writeCodeFiles(lang: string): Promise<void> {
+    const root = getWorkspaceRoot();
+    const data = { test: 'test' };
+    switch(lang) {
+        case constants.sdkLanguages.Csharp:
+            fsP.writeFile(`${ root }\\${ constants.settingsFiles.Csharp }`, data);
+            break;
+        default:
+            fsP.writeFile(`${ root }\\${ constants.settingsFiles.Node }`, data);   
+    }
+}
+
 export async function deleteCodeFiles(): Promise<void> {
     const csFiles = await vscode.workspace.findFiles('**/*.cs');
     const jsFiles = await vscode.workspace.findFiles('**/*.js');
