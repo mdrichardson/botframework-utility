@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, setBotVariables } from '..';
 
-export default async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp): Promise<void> {
+export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp): Promise<void> {
     let value;
     let settings = getEnvBotVariables();
     if (variable === constants.envVars.CodeLanguage && !settings.CodeLanguage) {

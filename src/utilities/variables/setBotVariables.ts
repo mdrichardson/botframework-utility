@@ -1,7 +1,7 @@
-import { BotVariables } from "../../interfaces";
-import { getEnvBotVariables, normalizeEnvKeys, setLocalBotVariables, setEnvBotVariables } from "..";
+import { BotVariables } from '../../interfaces';
+import { getEnvBotVariables, normalizeEnvKeys, setLocalBotVariables, setEnvBotVariables } from '..';
 
-export default async function setBotVariables(variablesToAdd: Partial<BotVariables>): Promise<void> {
+export async function setBotVariables(variablesToAdd: Partial<BotVariables>): Promise<void> {
     // Add new variables to vsCode env
     const currentBotVariables = getEnvBotVariables();
     let changes = 0;

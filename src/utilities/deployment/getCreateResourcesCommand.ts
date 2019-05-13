@@ -1,7 +1,7 @@
 import * as constants from '../../constants';
 import { promptForVariableIfNotExist, getEnvBotVariables, getDeploymentTemplate } from '..';
 
-export default async function getCreateResourcesCommand(newResourceGroup: boolean, newServicePlan: boolean): Promise<string> {
+export async function getCreateResourcesCommand(newResourceGroup: boolean, newServicePlan: boolean): Promise<string> {
     // Force creation of new service plan if creating new resource group
     newServicePlan = newResourceGroup ? true : newServicePlan;
 

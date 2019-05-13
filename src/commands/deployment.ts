@@ -3,12 +3,7 @@ import * as vscode from 'vscode';
 import { CommandOptions } from '../interfaces/CommandOptions';
 import { Commands } from '../interfaces/Commands';
 import * as constants from '../constants';
-import getCreateAppRegistrationCommand from '../utilities/deployment/getCreateAppRegistrationCommand';
-import executeTerminalCommand from '../utilities/deployment/executeTerminalCommand';
-import createAzureResources from '../utilities/deployment/createAzureResources';
-import getPrepareDeployCommand from '../utilities/deployment/getPrepareDeployCommand';
-import getDeployCommand from '../utilities/deployment/getDeployCommand';
-import createUpdateZip from '../utilities/deployment/createUpdateZip';
+import { getCreateAppRegistrationCommand, executeTerminalCommand, createAzureResources, getPrepareDeployCommand, getDeployCommand, createUpdateZip } from '../utilities';
 
 const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {

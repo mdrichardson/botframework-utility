@@ -4,7 +4,7 @@ import archiver = require('archiver');
 import fs = require('fs');
 import { getWorkspaceRoot, deleteUpdateZip } from '..';
 
-export default async function createUpdateZip(): Promise<void> {
+export async function createUpdateZip(): Promise<void> {
     vscode.window.showInformationMessage('Creating Zip File');
     const root = getWorkspaceRoot();
     await deleteUpdateZip();

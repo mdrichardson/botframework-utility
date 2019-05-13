@@ -1,5 +1,5 @@
-import arrayToRegex from "../utilities/variables/arrayToRegex";
-import { azureRegionCodes } from "./azureRegionCodes";
+import { azureRegionCodes } from './azureRegionCodes';
+import { arrayToRegex } from '../utilities/variables/arrayToRegex';
 
 export const regexForValidations = {
     CodeLanguage: /^(?:Csharp|Node|Typescript)$/,

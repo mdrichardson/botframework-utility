@@ -3,7 +3,7 @@ import { regexToVariables } from '..';
 import { BotVariables } from '../../interfaces';
 import { CommandOptions } from '../../interfaces/CommandOptions';
 
-export default async function executeTerminalCommand(
+export async function executeTerminalCommand(
     command: string,
     options: CommandOptions = {
         commandTitle: 'Command',

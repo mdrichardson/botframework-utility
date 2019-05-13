@@ -1,4 +1,4 @@
-import { BotVariables } from "../interfaces";
+import { BotVariables } from '../interfaces';
 
 export const envVars: BotVariables = {
     BotName: 'BotName',

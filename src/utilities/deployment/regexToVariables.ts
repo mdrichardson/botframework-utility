@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import { setBotVariables } from '..';
 import { BotVariables } from '../../interfaces';
 
-export default async function regexToVariables(data: string): Promise<Partial<BotVariables>> {
+export async function regexToVariables(data: string): Promise<Partial<BotVariables>> {
     const regexPatterns = [
         constants.regexForVariables.MicrosoftAppId,
         constants.regexForVariables.MicrosoftAppPassword

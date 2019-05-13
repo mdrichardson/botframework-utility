@@ -1,7 +1,7 @@
 import * as constants from '../../constants';
 import { promptForVariableIfNotExist, getEnvBotVariables } from '..';
 
-export default async function getDeployCommand(): Promise<string> {
+export async function getDeployCommand(): Promise<string> {
     await promptForVariableIfNotExist(constants.envVars.BotName);
     await promptForVariableIfNotExist(constants.envVars.ResourceGroupName);
 

@@ -1,4 +1,4 @@
-import { regexForValidations } from "./regexForValidations";
+import { regexForValidations } from './regexForValidations';
 
 // We .slice() to remove the ^ and $ to make RegEx global match work
 export const regexForVariables = {

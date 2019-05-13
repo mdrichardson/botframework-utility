@@ -4,7 +4,7 @@ import fs = require('fs');
 const fsP = fs.promises;
 import { getWorkspaceRoot } from '..';
 
-export default async function downloadTemplate(templateName: string): Promise<void> {
+export async function downloadTemplate(templateName: string): Promise<void> {
     const deploymentTemplatesFolderExists = await fs.existsSync(`${ getWorkspaceRoot() }/deploymentTemplates/`);
     if (!deploymentTemplatesFolderExists) {
         await fsP.mkdir(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });

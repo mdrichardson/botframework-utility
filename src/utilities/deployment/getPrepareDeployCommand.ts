@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import { promptForVariableIfNotExist, getEnvBotVariables } from '..';
 
-export default async function getPrepareDeployCommand(): Promise<string> {
+export async function getPrepareDeployCommand(): Promise<string> {
     await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
     
     const settings = getEnvBotVariables();

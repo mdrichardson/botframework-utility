@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { deploymentCommands, emulatorCommands } from '../../commands';
 
-export default function loadCommands(context: vscode.ExtensionContext): void {
+export function loadCommands(context: vscode.ExtensionContext): void {
     const allCommands = [
         deploymentCommands,
         emulatorCommands

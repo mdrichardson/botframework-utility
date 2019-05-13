@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { log } from '..';
 
-export default function inputIsValid(value: string, validator: RegExp): boolean {
+export function inputIsValid(value: string, validator: RegExp): boolean {
     if (value.match(validator)) {
         return true;
     } else {

@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import { getEnvBotVariables, promptForVariableIfNotExist } from '..';
 
-export default async function getCreateAppRegistrationCommand(): Promise<string|void> {
+export async function getCreateAppRegistrationCommand(): Promise<string|void> {
     let settings = getEnvBotVariables();
 
     if (settings.MicrosoftAppId && settings.MicrosoftAppPassword) {
