@@ -1,15 +1,14 @@
-import * as constants from '../constants';
 import * as vscode from 'vscode';
 
-import { Commands } from '../interfaces';
-import { 
-    getCreateAppRegistrationCommand, 
-    executeTerminalCommand, 
-    deploymentCreateResources, 
-    getPrepareDeployCommand, 
-    getDeployCommand,
-    createUpdateZip } from '../utilities';
 import { CommandOptions } from '../interfaces/CommandOptions';
+import { Commands } from '../interfaces/Commands';
+import * as constants from '../constants';
+import getCreateAppRegistrationCommand from '../utilities/deployment/getCreateAppRegistrationCommand';
+import executeTerminalCommand from '../utilities/deployment/executeTerminalCommand';
+import createAzureResources from '../utilities/deployment/createAzureResources';
+import getPrepareDeployCommand from '../utilities/deployment/getPrepareDeployCommand';
+import getDeployCommand from '../utilities/deployment/getDeployCommand';
+import createUpdateZip from '../utilities/deployment/createUpdateZip';
 
 const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {
@@ -25,14 +24,14 @@ const deploymentCommands: Commands = {
         }
     },
     // Can't pass args to menu commands, so we'll call the "parent" deployment function
-    async deploymentCreateResourcesExistingResourceGroupExistingServicePlan(): Promise<void> {
-        await deploymentCreateResources(false, false);
+    async createAzureResourcesExistingResourceGroupExistingServicePlan(): Promise<void> {
+        await createAzureResources(false, false);
     },
-    async deploymentCreateResourcesExistingResourceGroupNewServicePlan(): Promise<void> {
-        await deploymentCreateResources(false, true);
+    async createAzureResourcesExistingResourceGroupNewServicePlan(): Promise<void> {
+        await createAzureResources(false, true);
     },
-    async deploymentCreateResourcesNewResourceGroup(): Promise<void> {
-        await deploymentCreateResources(true, true);
+    async createAzureResourcesNewResourceGroup(): Promise<void> {
+        await createAzureResources(true, true);
     },
     async deploymentDeploy(): Promise<void> {
 

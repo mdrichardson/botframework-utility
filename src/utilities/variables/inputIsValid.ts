@@ -1,5 +1,5 @@
-import { log } from '../../extension';
 import * as vscode from 'vscode';
+import { log } from '..';
 
 export default function inputIsValid(value: string, validator: RegExp): boolean {
     if (value.match(validator)) {

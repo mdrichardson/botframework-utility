@@ -1,19 +1,19 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as extension from '../src/extension';
-
-import { deploymentCommands, emulatorCommands, testCommands } from '../src/commands/index';
+import { deploymentCommands, emulatorCommands } from '../src/commands';
 
 suite("Extension Loading Tests", function(): void {
     test("Should Load Extension Without Throwing", async function(): Promise<void> {
-        assert.doesNotThrow(extension.activate);
-        assert.doesNotThrow(extension.deactivate);
+        assert.doesNotThrow(await extension.activate);
+        // Ensure full activate function gets called (for coverage)
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1500));
+        assert.doesNotThrow(await extension.deactivate);
     });
     test("Should Properly Load All Commands", async function(): Promise<void> {
         const allCommands = [
             deploymentCommands,
-            emulatorCommands,
-            testCommands
+            emulatorCommands
         ];
         const loadedCommands = await vscode.commands.getCommands(true);
         const commandObj = {};

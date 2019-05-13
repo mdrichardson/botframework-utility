@@ -13,6 +13,10 @@ import regexToVariables from './deployment/regexToVariables';
 
 import getEmulatorLaunchCommand from './emulator/getEmulatorLaunchCommand';
 
+import log from './loading/log';
+import loadCommands from './loading/loadCommands';
+import watchEnvFiles from './loading/watchEnvFiles';
+
 import arrayToRegex from './variables/arrayToRegex';
 import getEnvBotVariables from './variables/getEnvBotVariables';
 import getLanguage from './variables/getLanguage';
@@ -25,12 +29,12 @@ import promptForVariableIfNotExist from './variables/promptForVariableIfNotExist
 import setBotVariables from './variables/setBotVariables';
 import setEnvBotVariables from './variables/setEnvBotVariables';
 import setLocalBotVariables from './variables/setLocalBotVariables';
-import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToEnv';
+import syncLocalBotVariablesToEnv from './variables/syncLocalBotVariablesToEnv';
 
 export {
     createUpdateZip,
     deleteUpdateZip,
-    createAzureResources as deploymentCreateResources,
+    createAzureResources,
     downloadTemplate,
     executeTerminalCommand,
     getCreateAppRegistrationCommand,
@@ -40,6 +44,9 @@ export {
     getPrepareDeployCommand,
     regexToVariables,
     getEmulatorLaunchCommand,
+    loadCommands,
+    log,
+    watchEnvFiles,
     arrayToRegex,
     getEnvBotVariables,
     getLanguage,

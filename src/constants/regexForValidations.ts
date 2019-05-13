@@ -1,4 +1,4 @@
-import { arrayToRegex } from "../utilities";
+import arrayToRegex from "../utilities/variables/arrayToRegex";
 import { azureRegionCodes } from "./azureRegionCodes";
 
 export const regexForValidations = {
