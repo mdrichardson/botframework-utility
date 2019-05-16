@@ -16,11 +16,13 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
         }
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }) || '';
+            /* istanbul ignore if */
+            /* Ignore reason: cannot test inputBox */
             if (validator && !(await inputIsValid(value, validator))) {
                 promptForVariableIfNotExist(variable, prompt, validator);
                 return;
             }         
-        } else { return; }
+        }
     }
     await setBotVariables({ [variable]: value });
 }

@@ -72,13 +72,13 @@ suite("Deployment - Unit", function(): void {
         assert.equal(command, `az ad app create --display-name "${ testEnv.BotName }" --password "${ testEnv.MicrosoftAppPassword }" --available-to-other-tenants`);
     });
     test("Should Not Return Create App Command if App Id is Present", async function(): Promise<void> {
-        await setBotVariables({ MicrosoftAppId: '37765811-fc7b-4b94-9201-88cf09a1111c' });
+        await setBotVariables({ [constants.envVars.MicrosoftAppId]: '37765811-fc7b-4b94-9201-88cf09a1111c' });
         const command = await getCreateAppRegistrationCommand();
         assert.equal(command, undefined);
     });
     test("Should Create Appropriate Resource Creation Command - New RG, New Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ MicrosoftAppId: appId });
+        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
         const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
 
         const command = await getCreateResourcesCommand(true, true);
@@ -89,7 +89,7 @@ suite("Deployment - Unit", function(): void {
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, New Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ MicrosoftAppId: appId });
+        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
         const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
 
         const command = await getCreateResourcesCommand(false, true);
@@ -100,7 +100,7 @@ suite("Deployment - Unit", function(): void {
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, Existing Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ MicrosoftAppId: appId });
+        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
         const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
 
         const command = await getCreateResourcesCommand(false, false);
@@ -110,15 +110,15 @@ suite("Deployment - Unit", function(): void {
             `existingAppServicePlan="${ testEnv.ServicePlanName }" appServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Prepare Deploy Command", async function(): Promise<void> {
-        await setBotVariables({ CodeLanguage: constants.sdkLanguages.Csharp });
+        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Csharp });
         const commandCsharp = await getPrepareDeployCommand();
         assert.equal(commandCsharp, `az bot prepare-deploy --lang Csharp --code-dir "." --proj-file-path "test.csproj"`);
 
-        await setBotVariables({ CodeLanguage: constants.sdkLanguages.Node });
+        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Node });
         const commandNode = await getPrepareDeployCommand();
         assert.equal(commandNode, `az bot prepare-deploy --lang Node --code-dir "."`);
 
-        await setBotVariables({ CodeLanguage: constants.sdkLanguages.Typescript });
+        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Typescript });
         const commandTypescript = await getPrepareDeployCommand();
         assert.equal(commandTypescript, `az bot prepare-deploy --lang Typescript --code-dir "."`);
     });

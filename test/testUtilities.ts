@@ -58,15 +58,29 @@ export async function deleteEnvFiles(): Promise<void> {
     } catch (err) { }
 }
 
-export async function writeCodeFiles(lang: string): Promise<void> {
+export async function writeCodeFiles(lang: string|null): Promise<void> {
     const root = getWorkspaceRoot();
-    const data = { test: 'test' };
+    const data = JSON.stringify({ test: 'test' }, null, 2);
     switch(lang) {
         case constants.sdkLanguages.Csharp:
-            fsP.writeFile(`${ root }\\${ constants.settingsFiles.Csharp }`, data);
+            await fsP.writeFile(`${ root }\\test.cs`, data);
+            break;
+        case constants.sdkLanguages.Typescript:
+            try {
+                await fsP.mkdir(`${ root }\\src`);
+            } catch (err) { }
+            await fsP.writeFile(`${ root }\\src\\test.ts`, data);
+            break;
+        case constants.sdkLanguages.Node:
+            await fsP.writeFile(`${ root }\\test.js`, data);
             break;
         default:
-            fsP.writeFile(`${ root }\\${ constants.settingsFiles.Node }`, data);   
+            await fsP.writeFile(`${ root }\\test.cs`, data);
+            try {
+                await fsP.mkdir(`${ root }\\src`);
+            } catch (err) { }
+            await fsP.writeFile(`${ root }\\src\\test.ts`, data);
+            await fsP.writeFile(`${ root }\\test.js`, data); 
     }
 }
 
