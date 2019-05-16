@@ -23,32 +23,32 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.openEmulatorLocalhost",
+				"command": "botframework-utility.openEmulatorLocalhost",
 				"category": "Bot > Emulator",
 				"title": "Open Emulator (localhost)"
 			},
 			{
-				"command": "extension.createAppRegistration",
+				"command": "botframework-utility.createAppRegistration",
 				"category": "Bot > Deploy",
 				"title": "1. Create App Registration"
 			},
 			{
-				"command": "extension.deploymentCreateResourcesNewResourceGroup",
+				"command": "botframework-utility.deploymentCreateResourcesNewResourceGroup",
 				"category": "Bot > Deploy",
 				"title": "2A. Create AZ Resources (new Res. Group)"
 			},
 			{
-				"command": "extension.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
+				"command": "botframework-utility.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
 				"category": "Bot > Deploy",
 				"title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
 			},
 			{
-				"command": "extension.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
+				"command": "botframework-utility.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
 				"category": "Bot > Deploy",
 				"title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
 			},
 			{
-				"command": "extension.deploymentPublish",
+				"command": "botframework-utility.deploymentPublish",
 				"category": "Bot > Deploy",
 				"title": "3. Deploy/Publish"
 			}
@@ -57,7 +57,7 @@
 			"explorer/context": [
 				{
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
-					"command": "extension.openEmulatorLocalhost",
+					"command": "botframework-utility.openEmulatorLocalhost",
 					"group": "@botframework-utility"
 				}
 			]
@@ -74,7 +74,7 @@
 		},
 		"keybindings": [
 			{
-				"command": "extension.openEmulatorLocalhost",
+				"command": "botframework-utility.openEmulatorLocalhost",
 				"key": "ctrl+alt+shift+e",
 				"mac": "cmd+alt+shift+e",
 				"when": "debugType != xyz"

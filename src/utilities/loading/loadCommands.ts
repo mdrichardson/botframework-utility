@@ -8,7 +8,7 @@ export function loadCommands(context: vscode.ExtensionContext): void {
     ];
     allCommands.forEach((commandSet): void => {
         for (const key in commandSet) {
-            const command = vscode.commands.registerCommand(`extension.${ key }`, commandSet[key]);
+            const command = vscode.commands.registerCommand(`botframework-utility.${ key }`, commandSet[key]);
             context.subscriptions.push(command);
         }
     });
