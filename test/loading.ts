@@ -20,7 +20,7 @@ suite('Extension Loading Tests', function(): void {
         }
     });
     test('Should have properly loaded all commands', async function(): Promise<void> {
-        // We can't call loadCommands directly without context, so we'll just check that each command is loaded
+        // We can't call loadCommands directly without context, so we'll just check that each command loaded when the extension activated
         const commands = await vscode.commands.getCommands(true);
 
         const commandObj = {};
@@ -42,6 +42,7 @@ suite('Extension Loading Tests', function(): void {
     test('Should not throw when writing text to extension output', async function(): Promise<void> {
         assert.doesNotThrow((): void => {
             log(`Test text`);
+            log(`More text`, true);
         });
     });
     test('Should not throw when watching env files or when files change', async function(): Promise<void> {
