@@ -1,4 +1,5 @@
 import * as constants from '../src/constants';
+import * as vscode from 'vscode';
 import assert = require("assert");
 import fs = require('fs');
 const fsP = fs.promises;
@@ -14,10 +15,16 @@ require('./variables');
 // require('./deploymentE2E');
 
 // suite("Quick Test", function(): void {
-//     test("Should get code language if we don't know it, without prompting", async function(): Promise<void> {
-//         await setBotVariables({ [constants.envVars.CodeLanguage]: undefined });
-//         await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
-//         const variables = getEnvBotVariables();
-//         assert(variables.CodeLanguage != undefined);
+//     test("Should not throw when re-prompting", async function(): Promise<void> {
+//         this.timeout(2000);
+//         await setBotVariables({ [constants.envVars.BotName]: undefined });
+//         try {
+//             const test = new vscode.CancellationTokenSource();
+//             promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token);
+//             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
+//             test.cancel();
+//         } catch(err) {
+//             assert.fail(err);
+//         }
 //     });
 // });

@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as constants from '../src/constants';
+import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { deleteEnvFiles, deleteCodeFiles, writeCodeFiles } from './testUtilities';
 import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables } from '../src/utilities';
@@ -92,6 +93,18 @@ suite("Variables", function(): void {
             await promptForVariableIfNotExist('BotName');
         };
         assert.doesNotThrow(func);
+    });
+    test("Should not throw when re-prompting", async function(): Promise<void> {
+        this.timeout(1500);
+        await setBotVariables({ [constants.envVars.BotName]: undefined });
+        try {
+            const test = new vscode.CancellationTokenSource();
+            promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token);
+            await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
+            test.cancel();
+        } catch(err) {
+            assert.fail(err);
+        }
     });
     test("Should display input prompt and not resolve/reject if variable doesn't exist", async function(): Promise<void> {
         // There's no way to check if the InputBox is displayed, so instead we're basically just checking if promptForVariableIfNotExist hasn't resolved yet
