@@ -32,7 +32,7 @@ suite("Variables", function(): void {
     test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Node);
-        const testName = `testBotName_${ Math.random() }`;
+        const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
         await setBotVariables({ [constants.envVars.BotName]: testName });
 
         await deleteCodeFiles();
@@ -48,7 +48,7 @@ suite("Variables", function(): void {
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Csharp);
-        const testName = `testBotName_${ Math.random() }`;
+        const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
         await setBotVariables({ [constants.envVars.BotName]: testName });
 
         await deleteCodeFiles();
@@ -63,7 +63,7 @@ suite("Variables", function(): void {
     });
     test("Should sync local bot variables to Env", async function(): Promise<void> {
         process.env.BOTFRAMEWORK_UTILITY = undefined;
-        const testName = `testBotName_${ Math.random() }`;
+        const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
         await setLocalBotVariables({ [constants.envVars.BotName]: testName });
 
         await syncLocalBotVariablesToEnv();

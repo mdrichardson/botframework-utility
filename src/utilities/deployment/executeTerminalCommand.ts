@@ -20,9 +20,11 @@ export async function executeTerminalCommand(
             case 'win32':
                 terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
                 break;
+            /* istanbul ignore next: not testing linux */
             case 'darwin':
                 terminalPath = '/bin/bash';
                 break;
+            /* istanbul ignore next: not testing MacOS */
             default:
                 terminalPath = 'sh';
         }
@@ -42,6 +44,7 @@ export async function executeTerminalCommand(
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
         if (!commandComplete) {
             matches = await regexToVariables(data);
+            /* istanbul ignore next: commands shouldn't fail during tests */
             if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
                 vscode.window.showErrorMessage(`${ commandTitle } failed.`);
                 // Stop listening as soon as we fail--Ensure we don't accidentally call a success message

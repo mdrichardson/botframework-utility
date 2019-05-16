@@ -9,9 +9,9 @@ import { testNotify, deleteDownloadTemplates } from './testUtilities';
 
 watchEnvFiles();
 
-// require('./loading');
-// require('./emulator');
-// require('./variables');
+require('./loading');
+require('./emulator');
+require('./variables');
 require('./deploymentUnit');
 require('./deploymentE2E');
 

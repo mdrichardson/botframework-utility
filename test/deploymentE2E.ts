@@ -2,8 +2,8 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
+import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log, watchEnvFiles, createAzureResources } from '../src/utilities';
+import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify, deleteEnvFiles } from './testUtilities';
 import fs = require('fs');
 import { CommandOptions } from '../src/interfaces/CommandOptions';
 const fsP = fs.promises;
@@ -21,29 +21,20 @@ var testEnv: BotVariables = {
     ServicePlanName: name    
 };
 
-suiteSetup(async (): Promise<void> => {
-    // Watch .env and appsettings.json for changes
-    const envWatcher = vscode.workspace.createFileSystemWatcher('**/.env', true, false, true);
-    envWatcher.onDidChange(async (): Promise<void> => {
-        await syncLocalBotVariablesToEnv();
-    });
-    const appsettingsJsonWatcher = vscode.workspace.createFileSystemWatcher('**/appsettings.json', true, false, true);
-    appsettingsJsonWatcher.onDidChange(async (): Promise<void> => {
-        await syncLocalBotVariablesToEnv();
-    });
-    log(`Resource Suffix: ${ suffix }`);
-});
-
-suiteTeardown(async (): Promise<void> => {
-    await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
-});
-
 // Note: Each of these relies on the each previous test being successful
 suite("Deployment - E2E", function(): void {
-    setup(async (): Promise<void> => {
-        await deleteTerminalOutputFile();
+    suiteSetup(async (): Promise<void> => {
+        await deleteEnvFiles();
         await setBotVariables(testEnv);
-        await setEnvBotVariables(testEnv);
+        log(`Resource Suffix: ${ suffix }`);
+    });
+    
+    suiteTeardown(async (): Promise<void> => {
+        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
+    });
+    setup(async (): Promise<void> => {
+        watchEnvFiles();
+        await deleteTerminalOutputFile();
     });
 
     teardown(async function(): Promise<void> {
@@ -132,6 +123,18 @@ suite("Deployment - E2E", function(): void {
         assert.equal(result, true);
     });
 
+    test("Generic CreateAzureResources command should not throw, but will error", async function(): Promise<void> {
+        const timeout = 2 * 60 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
+        try {
+            createAzureResources(false, false);
+        } catch(err) {
+            assert.fail();
+        }
+    });
+
     test("Should Prepare Deploy", async function(): Promise<void> {
         const timeout = 15 * 1000;
         this.timeout(timeout);
@@ -178,5 +181,5 @@ suite("Deployment - E2E", function(): void {
         };
         const result = await executeTerminalCommand(command, options);
         assert.equal(result, true);
-    });
+    });    
 });
