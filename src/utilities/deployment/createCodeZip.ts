@@ -2,12 +2,12 @@ import * as vscode from 'vscode';
 import * as constants from '../../constants';
 import archiver = require('archiver');
 import fs = require('fs');
-import { getWorkspaceRoot, deleteUpdateZip } from '..';
+import { getWorkspaceRoot, deleteCodeZip } from '..';
 
-export async function createUpdateZip(): Promise<void> {
+export async function createCodeZip(): Promise<void> {
     vscode.window.showInformationMessage('Creating Zip File');
     const root = getWorkspaceRoot();
-    await deleteUpdateZip();
+    await deleteCodeZip();
     const output = fs.createWriteStream(`${ root }\\${ constants.zipFileName }`);
     const archive = archiver('zip', { zlib: { level: 1 }});
 
@@ -20,10 +20,15 @@ export async function createUpdateZip(): Promise<void> {
 
     return new Promise((resolve, reject): void => {
         output
-            .on('error', (err): void => reject(err))
-            .on('finish', (): void => {
+            .on('error', (err): void => {
+                /* istanbul ignore next: rare */
+                reject(err);
+            })
+            .on('finish', async (): Promise<void> => {
                 vscode.window.showInformationMessage('Done Creating Zip File');
                 vscode.window.setStatusBarMessage('');
+                // Need to wait for the file to unlock
+                await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
                 resolve();
             });
         archive.pipe(output);

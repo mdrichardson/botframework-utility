@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { CommandOptions } from '../interfaces/CommandOptions';
 import { Commands } from '../interfaces/Commands';
 import * as constants from '../constants';
-import { getCreateAppRegistrationCommand, executeTerminalCommand, createAzureResources, getPrepareDeployCommand, getDeployCommand, createUpdateZip } from '../utilities';
+import { getCreateAppRegistrationCommand, executeTerminalCommand, createAzureResources, getPrepareDeployCommand, getDeployCommand, createCodeZip } from '../utilities';
 
 const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {
@@ -42,7 +42,7 @@ const deploymentCommands: Commands = {
             commandTitle: 'Zip Deployment'
         };
 
-        await createUpdateZip();
+        await createCodeZip();
 
         await executeTerminalCommand(prepareDeployCommand, prepareDeployOptions);
         vscode.window.showInformationMessage('Deploying');

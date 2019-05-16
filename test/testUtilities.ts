@@ -1,7 +1,7 @@
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import fs = require('fs');
 import { getWorkspaceRoot, executeTerminalCommand } from '../src/utilities';
+import fs = require('fs');
 const fsP = fs.promises;
 
 export async function deleteTerminalOutputFile(): Promise<void> {

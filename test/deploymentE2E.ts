@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createUpdateZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log } from '../src/utilities';
+import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log } from '../src/utilities';
 import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify } from './testUtilities';
 import fs = require('fs');
 import { CommandOptions } from '../src/interfaces/CommandOptions';
@@ -166,7 +166,7 @@ suite("Deployment - E2E", function(): void {
         this.slow(timeout * 0.95);
 
         testNotify('Zipping...');
-        await createUpdateZip();
+        await createCodeZip();
 
         testNotify('Deploying...');
         const command = await getDeployCommand();

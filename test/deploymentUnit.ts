@@ -4,8 +4,11 @@ import * as vscode from 'vscode';
 
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
-import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createUpdateZip, deleteUpdateZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/utilities';
+import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createCodeZip, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/utilities';
 import { deleteDownloadTemplates, testNotify } from './testUtilities';
+
+import fs = require('fs');
+const fsP = fs.promises;
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
@@ -29,6 +32,17 @@ suite("Deployment - Unit", function(): void {
             assert(exists.length > 0);
         }
     });
+    test("Should create the deploymentTemplates folder if it doesn't exist", async function(): Promise<void> {
+        const root = getWorkspaceRoot();
+        const location = `${ root }\\deploymentTemplates`;
+        try {
+            await deleteDownloadTemplates();
+            await fsP.rmdir(location);
+        } catch { }
+        await getDeploymentTemplate(constants.deploymentTemplates["template-with-new-rg.json"]);
+        const folder = await fsP.readdir(location);
+        assert(folder.length > 0);
+    });
     test("Should get appropriate deployment template - New RG", async function(): Promise<void> {
         const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
         const location = await getDeploymentTemplate(templateName);
@@ -46,12 +60,13 @@ suite("Deployment - Unit", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
         testNotify('Creating Zip File...');
-        await createUpdateZip();
+        await createCodeZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
         assert(file.length > 0);
     });
     test("Should delete zip file", async function(): Promise<void> {
-        await deleteUpdateZip();
+        this.timeout(10000);
+        await deleteCodeZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
         assert(file.length == 0);
     });

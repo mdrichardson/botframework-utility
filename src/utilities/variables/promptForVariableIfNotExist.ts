@@ -20,8 +20,9 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
                 promptForVariableIfNotExist(variable, prompt, validator, cancellationToken, true);
                 return;
-            }         
-        }
+            }
+        // We already have the variable, so return without setting anything
+        } else { return; }
     }
     await setBotVariables({ [variable]: value });
 }

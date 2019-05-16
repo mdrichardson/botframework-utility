@@ -1,5 +1,5 @@
-import { createUpdateZip } from './deployment/createUpdateZip';
-import { deleteUpdateZip } from './deployment/deleteUpdateZip';
+import { createCodeZip } from './deployment/createCodeZip';
+import { deleteCodeZip } from './deployment/deleteCodeZip';
 import { createAzureResources } from './deployment/createAzureResources';
 import { downloadTemplate } from './deployment/downloadTemplate';
 import { executeTerminalCommand } from './deployment/executeTerminalCommand';
@@ -31,8 +31,8 @@ import { setLocalBotVariables } from './variables/setLocalBotVariables';
 import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToEnv';
 
 export {
-    createUpdateZip,
-    deleteUpdateZip,
+    createCodeZip as createCodeZip,
+    deleteCodeZip as deleteCodeZip,
     createAzureResources,
     downloadTemplate,
     executeTerminalCommand,
