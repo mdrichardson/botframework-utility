@@ -3,11 +3,13 @@ import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { deleteEnvFiles, deleteCodeFiles, writeCodeFiles } from './testUtilities';
-import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables } from '../src/utilities';
+import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv } from '../src/utilities';
 
 suite("Variables", function(): void {
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
         await deleteEnvFiles();
+        await deleteCodeFiles();
+        await writeCodeFiles(constants.sdkLanguages.Csharp);
         const data = { [constants.envVars.BotName]: 'test' };
         await setLocalBotVariables(data);
         const result = await getLocalBotVariables();
@@ -15,6 +17,8 @@ suite("Variables", function(): void {
     });
     test("Should Load Variables from .env", async function(): Promise<void> {
         await deleteEnvFiles();
+        await deleteCodeFiles();
+        await writeCodeFiles(constants.sdkLanguages.Node);
         const data = { [constants.envVars.BotName]: 'test' };
         await setLocalBotVariables(data);
         const result = await getLocalBotVariables();
@@ -28,7 +32,7 @@ suite("Variables", function(): void {
     test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Node);
-        const testName = 'testBotNameTEST';
+        const testName = `testBotName_${ Math.random() }`;
         await setBotVariables({ [constants.envVars.BotName]: testName });
 
         await deleteCodeFiles();
@@ -44,7 +48,7 @@ suite("Variables", function(): void {
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Csharp);
-        const testName = 'testBotNameTEST';
+        const testName = `testBotName_${ Math.random() }`;
         await setBotVariables({ [constants.envVars.BotName]: testName });
 
         await deleteCodeFiles();
@@ -56,6 +60,16 @@ suite("Variables", function(): void {
         await writeCodeFiles(constants.sdkLanguages.Csharp);
         const localResult = await getLocalBotVariables();
         assert.equal(localResult[constants.envVars.BotName], testName);
+    });
+    test("Should sync local bot variables to Env", async function(): Promise<void> {
+        process.env.BOTFRAMEWORK_UTILITY = undefined;
+        const testName = `testBotName_${ Math.random() }`;
+        await setLocalBotVariables({ [constants.envVars.BotName]: testName });
+
+        await syncLocalBotVariablesToEnv();
+
+        const envResult = await getEnvBotVariables();
+        assert.equal(envResult[constants.envVars.BotName], testName);
     });
     test("Should normalize bot variable keys", async function(): Promise<void> {
         for (const key in constants.envVars) {
