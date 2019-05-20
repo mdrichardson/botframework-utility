@@ -39,6 +39,7 @@ const deploymentCommands: Commands = {
         const deployCommand = await getDeployCommand();
         const deployOptions: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.Deploy,
+            commandFailedRegex: constants.regexForDispose.DeployFailed,
             commandTitle: 'Zip Deployment'
         };
 

@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
-import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createCodeZip, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand } from '../src/utilities';
+import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createCodeZip, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand } from '../src/utilities';
 import { deleteDownloadTemplates, testNotify } from './testUtilities';
 
 import fs = require('fs');
@@ -19,6 +19,10 @@ var testEnv: BotVariables = {
     ResourceGroupName: 'vmicricEXT',
     ServicePlanName: 'vmicricEXT'    
 };
+
+suiteSetup(async (): Promise<void> => {
+    await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', undefined, vscode.ConfigurationTarget.Global);
+});
 
 suite("Deployment - Unit", function(): void {
     setup(async (): Promise<void> => {
@@ -63,10 +67,14 @@ suite("Deployment - Unit", function(): void {
         await createCodeZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
         assert(file.length > 0);
+        // Need to wait for the file to unlock
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 2000));
     });
     test("Should delete zip file", async function(): Promise<void> {
         this.timeout(10000);
         await deleteCodeZip();
+        // Give time for it to delete since fs.Promises doesn't seem to work with unlink
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
         assert(file.length == 0);
     });
@@ -140,5 +148,20 @@ suite("Deployment - Unit", function(): void {
     test("Should Create Appropriate Deploy Command", async function(): Promise<void> {
         const command = await getDeployCommand();
         assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.zipFileName }"`);
+    });
+    test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
+        await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', vscode.ConfigurationTarget.Global);
+        try {
+            executeTerminalCommand('az test');
+        } catch { assert.fail(); };
+    });
+    test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
+        try {
+            // Note: Use this format when updating extension configs
+            await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', undefined, vscode.ConfigurationTarget.Global);
+            executeTerminalCommand('az test');
+        } catch (err) {
+            assert.fail(err);
+        }
     });
 });

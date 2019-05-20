@@ -2,10 +2,10 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
-import { syncLocalBotVariablesToEnv, setBotVariables, setEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, log, watchEnvFiles, createAzureResources } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, deleteResourceGroupDeployment, deleteBot, deletePrepareDeployFiles, testNotify, deleteEnvFiles } from './testUtilities';
-import fs = require('fs');
+import {  setBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, watchEnvFiles, createAzureResources } from '../src/utilities';
+import { cleanup, deleteTerminalOutputFile, deleteBot, deletePrepareDeployFiles, testNotify, deleteEnvFiles } from './testUtilities';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
+import fs = require('fs');
 const fsP = fs.promises;
 
 const suffix = Math.floor(Math.random() * 1000);
@@ -21,19 +21,21 @@ var testEnv: BotVariables = {
     ServicePlanName: name    
 };
 
+suiteSetup(async (): Promise<void> => {
+    await deleteEnvFiles();
+    await setBotVariables(testEnv);
+    testNotify(`Resource Suffix: ${ suffix }`);
+});
+
+suiteTeardown(async (): Promise<void> => {
+    await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
+});
+
 // Note: Each of these relies on the each previous test being successful
 suite("Deployment - E2E", function(): void {
-    suiteSetup(async (): Promise<void> => {
-        await deleteEnvFiles();
-        await setBotVariables(testEnv);
-        log(`Resource Suffix: ${ suffix }`);
-    });
-    
-    suiteTeardown(async (): Promise<void> => {
-        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
-    });
     setup(async (): Promise<void> => {
         watchEnvFiles();
+        await setBotVariables(testEnv);
         await deleteTerminalOutputFile();
     });
 
@@ -65,7 +67,7 @@ suite("Deployment - E2E", function(): void {
         if (result.MicrosoftAppId) { testEnv = { ...testEnv, ...result }; };
     });
 
-    test("Should CreateResourcesNewResourceGroup", async function(): Promise<void> {
+    test("Should Create Resources - All New", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
@@ -74,6 +76,7 @@ suite("Deployment - E2E", function(): void {
         const command = await getCreateResourcesCommand(true, true);
         const options: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -82,20 +85,21 @@ suite("Deployment - E2E", function(): void {
         assert.equal(result, true);
     });
 
-    test("Should CreateResourcesExistingResourceGroupNewServicePlan", async function(): Promise<void> {
+    test("Should Create Resources - Existing ResourceGroup, New ServicePlan", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
-        await deleteResourceGroupDeployment(testEnv.BotName);
+        await deleteBot(testEnv[constants.envVars.BotName]);
 
-        testEnv.ServicePlanName = `${ testEnv.ServicePlanName }_new`;
-        await setBotVariables(testEnv);
+        const name = `${ testEnv.ServicePlanName }new`;
+        await setBotVariables({ [constants.envVars.ServicePlanName]: name });
 
         const command = await getCreateResourcesCommand(false, true);
         const options: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -104,17 +108,19 @@ suite("Deployment - E2E", function(): void {
         assert.equal(result, true);
     });
 
-    test("Should CreateResourcesExistingResourceGroupExistingServicePlan", async function(): Promise<void> {
+    test("Should Create Resources - All Existing", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
-        await deleteBot(testEnv.MicrosoftAppId);
+        const name = `${ testEnv.BotName }new`;
+        await setBotVariables({ [constants.envVars.BotName]: name });
 
         const command = await getCreateResourcesCommand(false, true);
         const options: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -123,7 +129,7 @@ suite("Deployment - E2E", function(): void {
         assert.equal(result, true);
     });
 
-    test("Generic CreateAzureResources command should not throw, but will error", async function(): Promise<void> {
+    test("Generic CreateAzureResources command should not throw, but will error in console", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
@@ -175,11 +181,18 @@ suite("Deployment - E2E", function(): void {
         const command = await getDeployCommand();
         const options: CommandOptions = {
             commandCompleteRegex: constants.regexForDispose.Deploy,
+            commandFailedRegex: constants.regexForDispose.DeployFailed,
             commandTitle: 'Test - Deployment',
             isTest: true,
             timeout: timeout - 500,
         };
         const result = await executeTerminalCommand(command, options);
         assert.equal(result, true);
+    });    
+
+    test("Should Clean Up After Itself", async function(): Promise<void> {
+        // SuiteTeardown doesn't seem to be called, so we'll just manually clean up here
+        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
+        assert(true);
     });    
 });

@@ -1,7 +1,12 @@
 import * as vscode from 'vscode';
+import * as constants from '../../constants';
 import { regexToVariables } from '..';
 import { BotVariables } from '../../interfaces';
 import { CommandOptions } from '../../interfaces/CommandOptions';
+
+import fs = require('fs');
+import { getWorkspaceRoot } from '../variables/getWorkspaceRoot';
+const fsP = fs.promises;
 
 export async function executeTerminalCommand(
     command: string,
@@ -13,7 +18,7 @@ export async function executeTerminalCommand(
     const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout } = options;
 
     // Force all commands to use single terminal type, for better control
-    const userTerminalPath = (vscode.workspace.getConfiguration('botframework-utility').get('customTerminalForAzCommandsPath') as string);
+    const userTerminalPath = (await vscode.workspace.getConfiguration().get('botframework-utility.customTerminalForAzCommands') as string);
     let terminalPath = userTerminalPath ? userTerminalPath : undefined;
     if (command.toLowerCase().startsWith('az') && !userTerminalPath) {
         switch (process.platform) {
@@ -40,6 +45,7 @@ export async function executeTerminalCommand(
     let commandComplete = false;
     let matches = {};
 
+    let terminalOutput;
     // Create a listener so we can tell if a command is successful
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
         if (!commandComplete) {
@@ -56,6 +62,9 @@ export async function executeTerminalCommand(
                 commandComplete = true;
                 result = Object.keys(matches).length > 0 ? matches : true;
             }
+            if (isTest) {
+                terminalOutput += data.toString('utf8');
+            }
         }
     });
 
@@ -67,8 +76,12 @@ export async function executeTerminalCommand(
             totalTime += 500;
             if (timeout && totalTime >= timeout) {
                 commandComplete = true;
+                const root = getWorkspaceRoot();
+                await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
             }
         }
+        const root = getWorkspaceRoot();
+        await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
     }
     return result;
 }

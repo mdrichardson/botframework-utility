@@ -16,7 +16,7 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
         }
         if (!settings[variable] || !settings[variable].trim()) {
             value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }, cancellationToken);
-            if (!isReprompt && (!value || /* istanbul ignore next: can't test input */ (validator && !(await inputIsValid(value, validator))))) {
+            if (!isReprompt && /* istanbul ignore next: can't test input */ (!value || (validator && !(inputIsValid(value, validator))))) {
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
                 promptForVariableIfNotExist(variable, prompt, validator, cancellationToken, true);
                 return;

@@ -67,7 +67,8 @@
 			"title": "Botframework Utility",
 			"properties": {
 				"botframework-utility.customTerminalForAzCommands": {
-					"type": "string",
+                    "type": "string",
+                    "default": "",
 					"description": "Path to custom terminal for AZ CLI commands"
 				}
 			}

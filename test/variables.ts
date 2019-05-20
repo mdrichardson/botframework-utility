@@ -24,6 +24,11 @@ suite("Variables", function(): void {
         const result = await getLocalBotVariables();
         assert.equal(result[constants.envVars.BotName], 'test');
     });
+    test("Should Load Variables from process - Empty object if they don't exist", async function(): Promise<void> {
+        process.env.BOTFRAMEWORK_UTILITY = undefined;
+        const result = await getEnvBotVariables();
+        assert(Object.keys(result).length === 0);
+    });
     test("Should Load Variables from process.env", async function(): Promise<void> {
         process.env.BOTFRAMEWORK_UTILITY = JSON.stringify({ testVar: 'test'});
         const result = getEnvBotVariables();
@@ -108,12 +113,24 @@ suite("Variables", function(): void {
         };
         assert.doesNotThrow(func);
     });
-    test("Should not throw when re-prompting", async function(): Promise<void> {
+    test("Should not throw when prompting", async function(): Promise<void> {
         this.timeout(1500);
         await setBotVariables({ [constants.envVars.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
             promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token);
+            await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
+            test.cancel();
+        } catch(err) {
+            assert.fail(err);
+        }
+    });
+    test("Should not throw when re-prompting", async function(): Promise<void> {
+        this.timeout(1500);
+        await setBotVariables({ [constants.envVars.BotName]: undefined });
+        try {
+            const test = new vscode.CancellationTokenSource();
+            promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token, true);
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             test.cancel();
         } catch(err) {

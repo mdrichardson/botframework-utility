@@ -3,7 +3,8 @@
     "relativeSourcePath": "../src",
     "relativeCoverageDir": "../../coverage",
     "ignorePatterns": [
-        "**/node_modules/**"
+        "**/node_modules/**",
+        "**/commands/**"
     ],
     "includePid": false,
     "reports": [

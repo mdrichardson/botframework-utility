@@ -27,8 +27,6 @@ export async function createCodeZip(): Promise<void> {
             .on('finish', async (): Promise<void> => {
                 vscode.window.showInformationMessage('Done Creating Zip File');
                 vscode.window.setStatusBarMessage('');
-                // Need to wait for the file to unlock
-                await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
                 resolve();
             });
         archive.pipe(output);

@@ -9,6 +9,7 @@
 * Execute all deployment commands. Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy".
 ![Deployment Options](https://github.com/mdrichardson/botframework-utility/blob/master/resources/deployment-options.jpg?raw=true)
   * Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
+* 100% Test Code Coverage!
 
 ### Future
 

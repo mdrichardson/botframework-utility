@@ -9,6 +9,7 @@ export async function createAzureResources(newResourceGroup: boolean, newService
     vscode.window.showInformationMessage('Creating Azure Resources');
     const options: CommandOptions = {
         commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
+        commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
         commandTitle: 'Azure Resource Creation'
     };
     await executeTerminalCommand(command, options);
