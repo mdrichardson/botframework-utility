@@ -29,6 +29,8 @@ import { setBotVariables } from './variables/setBotVariables';
 import { setEnvBotVariables } from './variables/setEnvBotVariables';
 import { setLocalBotVariables } from './variables/setLocalBotVariables';
 import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToEnv';
+import { getVsCodeConfig } from './variables/getVsCodeConfig';
+import { setVsCodeConfig } from './variables/setVsCodeConfig';
 
 export {
     createCodeZip as createCodeZip,
@@ -41,6 +43,7 @@ export {
     getDeployCommand,
     getDeploymentTemplate,
     getPrepareDeployCommand,
+    getVsCodeConfig,
     regexToVariables,
     getEmulatorLaunchCommand,
     loadCommands,
@@ -58,5 +61,6 @@ export {
     setBotVariables,
     setEnvBotVariables,
     setLocalBotVariables,
+    setVsCodeConfig,
     syncLocalBotVariablesToEnv
 };

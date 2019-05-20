@@ -9,6 +9,7 @@ import { sdkLanguages } from './sdkLanguages';
 import { settingsFiles } from './settingsFiles';
 import { testing } from './testing';
 import { urls } from './urls';
+import { vsCodeConfigNames } from './vsCodeConfigNames';
 import { zipFileName } from './zipFileName';
 
 export {
@@ -23,5 +24,6 @@ export {
     settingsFiles,
     testing,
     urls,
+    vsCodeConfigNames,
     zipFileName
 };

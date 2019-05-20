@@ -3,9 +3,14 @@ import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { deleteEnvFiles, deleteCodeFiles, writeCodeFiles } from './testUtilities';
-import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv } from '../src/utilities';
+import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv, setVsCodeConfig, getVsCodeConfig } from '../src/utilities';
 
 suite("Variables", function(): void {
+    test("Should Get and Set VSCode Configs", async function(): Promise<void> {
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'test');
+        assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands), 'test');
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
+    });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
         await deleteEnvFiles();
         await deleteCodeFiles();

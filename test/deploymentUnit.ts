@@ -8,6 +8,7 @@ import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceR
 import { deleteDownloadTemplates, testNotify } from './testUtilities';
 
 import fs = require('fs');
+import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 const fsP = fs.promises;
 
 var testEnv: BotVariables = {
@@ -21,7 +22,7 @@ var testEnv: BotVariables = {
 };
 
 suiteSetup(async (): Promise<void> => {
-    await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', undefined, vscode.ConfigurationTarget.Global);
+    await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
 });
 
 suite("Deployment - Unit", function(): void {
@@ -150,15 +151,14 @@ suite("Deployment - Unit", function(): void {
         assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.zipFileName }"`);
     });
     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
-        await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', vscode.ConfigurationTarget.Global);
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
         try {
             executeTerminalCommand('az test');
         } catch { assert.fail(); };
     });
     test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
         try {
-            // Note: Use this format when updating extension configs
-            await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', undefined, vscode.ConfigurationTarget.Global);
+            await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
             executeTerminalCommand('az test');
         } catch (err) {
             assert.fail(err);

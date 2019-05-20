@@ -6,6 +6,7 @@ import { CommandOptions } from '../../interfaces/CommandOptions';
 
 import fs = require('fs');
 import { getWorkspaceRoot } from '../variables/getWorkspaceRoot';
+import { getVsCodeConfig } from '../variables/getVsCodeConfig';
 const fsP = fs.promises;
 
 export async function executeTerminalCommand(
@@ -18,7 +19,7 @@ export async function executeTerminalCommand(
     const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout } = options;
 
     // Force all commands to use single terminal type, for better control
-    const userTerminalPath = (await vscode.workspace.getConfiguration().get('botframework-utility.customTerminalForAzCommands') as string);
+    const userTerminalPath = await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands);
     let terminalPath = userTerminalPath ? userTerminalPath : undefined;
     if (command.toLowerCase().startsWith('az') && !userTerminalPath) {
         switch (process.platform) {

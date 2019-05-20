@@ -6,6 +6,8 @@ const fsP = fs.promises;
 import mocha = require('mocha');
 import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log } from '../src/utilities';
 import { testNotify, deleteDownloadTemplates } from './testUtilities';
+import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
+import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
 
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
@@ -14,24 +16,13 @@ require('./loading');
 require('./emulator');
 require('./variables');
 require('./deploymentUnit');
-require('./deploymentE2E');
+// require('./deploymentE2E');  -- 5/20: ran out of app registrations
 
 // suite("Quick Test", function(): void {
-//     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
+//     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
 //         this.timeout(50000);
-//         await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe', vscode.ConfigurationTarget.Global);
-//         try {
-//             executeTerminalCommand('az test');
-//         } catch { assert.fail(); };
-//     });
-//     test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
-//         this.timeout(50000);
-//         try {
-//             // Note: Use this format when updating extension configs
-//             await vscode.workspace.getConfiguration().update('botframework-utility.customTerminalForAzCommands', undefined, vscode.ConfigurationTarget.Global);
-//             executeTerminalCommand('az test');
-//         } catch (err) {
-//             assert.fail(err);
-//         }
+//         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'test');
+//         assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands), 'test');
+//         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
 //     });
 // });
