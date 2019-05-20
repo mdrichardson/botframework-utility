@@ -19,10 +19,13 @@ require('./deploymentUnit');
 // require('./deploymentE2E');  -- 5/20: ran out of app registrations
 
 // suite("Quick Test", function(): void {
-//     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
-//         this.timeout(50000);
-//         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'test');
-//         assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands), 'test');
-//         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
+//     test("Should not prompt for variable if it exists", async function(): Promise<void> {
+//         const testName = 'testBotNameTEST';
+//         await setBotVariables({ [constants.envVars.BotName]: testName });
+//         try {
+//             await promptForVariableIfNotExist('BotName');
+//         } catch (err) {
+//             assert.fail();
+//         }
 //     });
 // });

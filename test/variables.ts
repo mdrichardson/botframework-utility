@@ -113,10 +113,11 @@ suite("Variables", function(): void {
     test("Should not prompt for variable if it exists", async function(): Promise<void> {
         const testName = 'testBotNameTEST';
         await setBotVariables({ [constants.envVars.BotName]: testName });
-        const func = async (): Promise<void> => {
+        try {
             await promptForVariableIfNotExist('BotName');
-        };
-        assert.doesNotThrow(func);
+        } catch (err) {
+            assert.fail();
+        }
     });
     test("Should not throw when prompting", async function(): Promise<void> {
         this.timeout(1500);
