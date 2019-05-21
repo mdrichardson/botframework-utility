@@ -9,12 +9,13 @@
 * Execute all deployment commands. Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy".
 ![Deployment Options](https://github.com/mdrichardson/botframework-utility/blob/master/resources/deployment-options.jpg?raw=true)
   * Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
+* Update all Bot Framework CLI tools. Open Command Palette (`ctrl` + `shift` + `p`) and type "Update".
+![Update CLI Tools](https://github.com/mdrichardson/botframework-utility/raw/master/resources/cli-tool-update.jpg?raw=true)
 * 100% Test Code Coverage!
 
 ### Future
 
 * Launch other endpoints by reading settings from `.env` and `appsettings.json`
-* Validation for deployment variables
 
 ## Prerequisites
 
