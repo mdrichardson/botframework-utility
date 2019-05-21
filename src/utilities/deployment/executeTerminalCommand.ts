@@ -14,9 +14,9 @@ export async function executeTerminalCommand(
     options: CommandOptions = {
         commandTitle: 'Command',
         isTest: false,
-    }): Promise<boolean|Partial<BotVariables>> {
+    }): Promise<boolean|RegExpExecArray|Partial<BotVariables>> {
 
-    const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout } = options;
+    const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout, returnRegex } = options;
 
     // Force all commands to use single terminal type, for better control
     const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands) as string);
@@ -41,7 +41,7 @@ export async function executeTerminalCommand(
 
     terminal.sendText(command, true);
 
-    let result: boolean|Partial<BotVariables> = true;
+    let result: boolean|RegExpExecArray|Partial<BotVariables> = false;
 
     let commandComplete = false;
     let matches = {};
@@ -49,40 +49,52 @@ export async function executeTerminalCommand(
     let terminalOutput;
     // Create a listener so we can tell if a command is successful
     (terminal as any).onDidWriteData(async (data): Promise<void> => {
-        if (!commandComplete) {
-            matches = await regexToVariables(data);
-            /* istanbul ignore next: commands shouldn't fail during tests */
-            if (data.trim() && commandFailedRegex && commandFailedRegex.test(data)) {
-                vscode.window.showErrorMessage(`${ commandTitle } failed.`);
-                // Stop listening as soon as we fail--Ensure we don't accidentally call a success message
-                commandComplete = true;
-                result = false;
-            } else if (data.trim() && commandCompleteRegex && commandCompleteRegex.test(data)) {
-                vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
+        if (!commandComplete && data.trim()) {
+            if (returnRegex && returnRegex.test(data)) {
+                matches = (returnRegex.exec(data) as RegExpExecArray);
                 terminal.dispose();
                 commandComplete = true;
-                result = Object.keys(matches).length > 0 ? matches : true;
-            }
-            if (isTest) {
-                terminalOutput += data.toString('utf8');
+                result = Object.keys(matches).length > 0 && matches ? matches : true;
+            } else {
+                matches = await regexToVariables(data);
+                /* istanbul ignore next: commands shouldn't fail during tests */
+                if (commandFailedRegex && commandFailedRegex.test(data)) {
+                    vscode.window.showErrorMessage(`${ commandTitle } failed.`);
+                    // Stop listening as soon as we fail--Ensure we don't accidentally call a success message
+                    commandComplete = true;
+                    result = false;
+                } else if (commandCompleteRegex && commandCompleteRegex.test(data)) {
+                    vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
+                    terminal.dispose();
+                    commandComplete = true;
+                    result = Object.keys(matches).length > 0 ? matches : true;
+                }
+                if (isTest) {
+                    terminalOutput += data.toString('utf8');
+                }
             }
         }
     });
 
-    // If this is for testing, we want to force awaiting until command is complete
-    if (isTest) {
+    // If this is for testing (or we need regex returned), we want to force awaiting until command is complete
+    if (isTest || returnRegex) {
         let totalTime = 0;
-        while (!commandComplete) {
+        while (!commandComplete && !result) {
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             totalTime += 500;
             if (timeout && totalTime >= timeout) {
                 commandComplete = true;
-                const root = getWorkspaceRoot();
-                await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
+                result = result ? result : false;
+                if (isTest) {
+                    const root = getWorkspaceRoot();
+                    await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
+                }
             }
         }
-        const root = getWorkspaceRoot();
-        await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
+        if (isTest) {
+            const root = getWorkspaceRoot();
+            await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
+        }
     }
     return result;
 }

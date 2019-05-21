@@ -33,7 +33,9 @@ import { getVsCodeConfig } from './variables/getVsCodeConfig';
 import { setVsCodeConfig } from './variables/setVsCodeConfig';
 
 import { getToolsUpdateCommand } from './tools/getToolsUpdateCommand';
-import { normalizeCliTools } from './tools/normalizeCliTools';
+import { handleAzCliUpdate } from './tools/handleAzCliUpdate';
+import { getCurrentAzCliVersion } from './tools/getCurrentAzCliVersion';
+import { getLatestAzCliVersion } from './tools/getLatestAzCliVersion';
 
 export {
     createCodeZip,
@@ -66,6 +68,8 @@ export {
     setLocalBotVariables,
     setVsCodeConfig,
     syncLocalBotVariablesToEnv,
+    getCurrentAzCliVersion,
+    getLatestAzCliVersion,
     getToolsUpdateCommand,
-    normalizeCliTools
+    handleAzCliUpdate
 };

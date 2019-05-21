@@ -72,20 +72,58 @@
 			"title": "Botframework Utility",
 			"properties": {
 				"botframework-utility.customTerminalForAzCommands": {
-                    "type": "string",
-                    "default": "",
+					"type": "string",
+					"default": "",
 					"description": "Path to custom terminal for AZ CLI commands"
-                },
-                "botframework-utility.excludeCliToolsFromUpdate" : {
-                    "type": "array",
-                    "examples": [
-                        ["az", "botdispatch", "botskills", "chatdown", "dialoglint", "dialogschema", "dialogtracker", "ludown", "luis-apis", "luisgen", "msbot", "qnamaker" ]
-                    ],
-                    "default": ["dialogtracker", "dialogschema", "dialoglint", "msbot"],
-                    "description": "Select which tools to exclude when updating all tools"   
-                }
-            }
-        },
+				},
+				"botframework-utility.excludeCliToolsFromUpdate": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": [
+						{
+							"type": "string",
+							"enum": [
+								"az",
+								"botdispatch",
+								"botskills",
+								"chatdown",
+								"dialoglint",
+								"dialogschema",
+								"dialogtracker",
+								"ludown",
+								"luis-apis",
+								"luisgen",
+								"msbot",
+								"qnamaker"
+							]
+						}
+					],
+					"examples": [
+						[
+							"az",
+							"botdispatch",
+							"botskills",
+							"chatdown",
+							"dialoglint",
+							"dialogschema",
+							"dialogtracker",
+							"ludown",
+							"luis-apis",
+							"luisgen",
+							"msbot",
+							"qnamaker"
+						]
+					],
+					"default": [
+						"dialogtracker",
+						"dialogschema",
+						"dialoglint",
+						"msbot"
+					],
+					"description": "Select which tools to exclude when updating all tools"
+				}
+			}
+		},
 		"keybindings": [
 			{
 				"command": "botframework-utility.openEmulatorLocalhost",
@@ -130,9 +168,11 @@
 		"webpack-cli": "^3.3.2"
 	},
 	"dependencies": {
+		"@types/semver": "^6.0.0",
 		"archiver": "^3.0.0",
 		"axios": "^0.18.0",
 		"dotenv": "^7.0.0",
-		"fuzzy-matching": "^0.4.3"
+		"fuzzy-matching": "^0.4.3",
+		"semver": "^6.0.0"
 	}
 }

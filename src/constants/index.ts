@@ -12,6 +12,7 @@ import { testing } from './testing';
 import { urls } from './urls';
 import { vsCodeConfigNames } from './vsCodeConfigNames';
 import { zipFileName } from './zipFileName';
+import { websites } from './websites';
 
 export {
     azureRegionCodes,
@@ -27,5 +28,6 @@ export {
     testing,
     urls,
     vsCodeConfigNames,
+    websites,
     zipFileName
 };
