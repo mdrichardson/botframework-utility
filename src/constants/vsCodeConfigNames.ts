@@ -1,3 +1,4 @@
 export const vsCodeConfigNames = {
-    customTerminalForAzCommands: 'customTerminalForAzCommands'
+    customTerminalForAzCommands: 'customTerminalForAzCommands',
+    excludeCliToolsFromUpdate: 'excludeCliToolsFromUpdate'
 };

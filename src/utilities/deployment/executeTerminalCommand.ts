@@ -19,7 +19,7 @@ export async function executeTerminalCommand(
     const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout } = options;
 
     // Force all commands to use single terminal type, for better control
-    const userTerminalPath = await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands);
+    const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands) as string);
     let terminalPath = userTerminalPath ? userTerminalPath : undefined;
     if (command.toLowerCase().startsWith('az') && !userTerminalPath) {
         switch (process.platform) {

@@ -51,6 +51,11 @@
 				"command": "botframework-utility.deploymentPublish",
 				"category": "Bot > Deploy",
 				"title": "3. Deploy/Publish"
+			},
+			{
+				"command": "botframework-utility.updateCliTools",
+				"category": "Bot > CLI Tools",
+				"title": "Update All"
 			}
 		],
 		"menus": {
@@ -70,9 +75,17 @@
                     "type": "string",
                     "default": "",
 					"description": "Path to custom terminal for AZ CLI commands"
-				}
-			}
-		},
+                },
+                "botframework-utility.excludeCliToolsFromUpdate" : {
+                    "type": "array",
+                    "examples": [
+                        ["az", "botdispatch", "botskills", "chatdown", "dialoglint", "dialogschema", "dialogtracker", "ludown", "luis-apis", "luisgen", "msbot", "qnamaker" ]
+                    ],
+                    "default": ["dialogtracker", "dialogschema", "dialoglint", "msbot"],
+                    "description": "Select which tools to exclude when updating all tools"   
+                }
+            }
+        },
 		"keybindings": [
 			{
 				"command": "botframework-utility.openEmulatorLocalhost",
@@ -85,7 +98,6 @@
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
 		"compile": "webpack --mode none",
-		"watch": "webpack --mode none --watch",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "node ./node_modules/vscode/bin/test",
 		"test-compile": "tsc --sourceMap -p ./ && npm run compile",

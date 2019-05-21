@@ -1,4 +1,5 @@
 import { azureRegionCodes } from './azureRegionCodes';
+import { cliTools } from './cliTools';
 import { deploymentTemplates } from './deploymentTemplates';
 import { envVars } from './envVars';
 import { envVarPrompts } from './envVarPrompts';
@@ -14,6 +15,7 @@ import { zipFileName } from './zipFileName';
 
 export {
     azureRegionCodes,
+    cliTools,
     deploymentTemplates,
     envVarPrompts,
     envVars,

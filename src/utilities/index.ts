@@ -32,9 +32,12 @@ import { syncLocalBotVariablesToEnv } from './variables/syncLocalBotVariablesToE
 import { getVsCodeConfig } from './variables/getVsCodeConfig';
 import { setVsCodeConfig } from './variables/setVsCodeConfig';
 
+import { getToolsUpdateCommand } from './tools/getToolsUpdateCommand';
+import { normalizeCliTools } from './tools/normalizeCliTools';
+
 export {
-    createCodeZip as createCodeZip,
-    deleteCodeZip as deleteCodeZip,
+    createCodeZip,
+    deleteCodeZip,
     createAzureResources,
     downloadTemplate,
     executeTerminalCommand,
@@ -62,5 +65,7 @@ export {
     setEnvBotVariables,
     setLocalBotVariables,
     setVsCodeConfig,
-    syncLocalBotVariablesToEnv
+    syncLocalBotVariablesToEnv,
+    getToolsUpdateCommand,
+    normalizeCliTools
 };

@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
-import { deploymentCommands, emulatorCommands } from '../../commands';
+import { deploymentCommands, emulatorCommands, toolsCommands } from '../../commands';
 
 /* istanbul ignore next: can't create context, therefore can't load commands */
 export function loadCommands(context: vscode.ExtensionContext): void {
     const allCommands = [
         deploymentCommands,
-        emulatorCommands
+        emulatorCommands,
+        toolsCommands
     ];
     allCommands.forEach((commandSet): void => {
         for (const key in commandSet) {

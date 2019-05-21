@@ -7,5 +7,7 @@ export const regexForDispose = {
     // Prep Pub: There's no success message, so we need to handle success and failure
     PrepareDeploy: />\[0K\[89G/g,
     PrepareDeployFailed: /(?:found in)/g,
+    UpdateCliTools: /updated \d packages in/g,
+    UpdateCliToolsFailed: /404 Not Found - GET https:\/\/registry.npmjs.com\//g,
     WebappCreate: /"appId":.*".{36}"[\s\S]*"appLogoUrl": null,/g,
 };
