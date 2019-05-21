@@ -2,9 +2,16 @@
 
 import * as assert from 'assert';
 import * as constants from '../src/constants';
-import { getToolsUpdateCommand, setVsCodeConfig } from '../src/utilities/index';
+import { getToolsUpdateCommand, setVsCodeConfig, getCurrentAzCliVersion, getLatestAzCliVersion } from '../src/utilities/index';
+import Axios, { AxiosResponse } from 'axios';
 
 suite('Tools', function(): void {
+    test("All Website Constants Should Return 200 Status", async function(): Promise<void> {
+        for (const key in constants.websites) {
+            const response = (await Axios.get(constants.websites[key]) as AxiosResponse);
+            assert.equal(response.status, 200);
+        }
+    });
     test('Should Get Appropriate Tools Update Command - No Exclusions', async function(): Promise<void> {
         await setVsCodeConfig(constants.vsCodeConfigNames.excludeCliToolsFromUpdate, []);
         const command = await getToolsUpdateCommand();
@@ -22,5 +29,17 @@ suite('Tools', function(): void {
         await setVsCodeConfig(constants.vsCodeConfigNames.excludeCliToolsFromUpdate, constants.cliTools);
         const command = await getToolsUpdateCommand();
         assert.equal(command, '');
+    });
+    test("Should get the current version of AZ CLI", async function(): Promise<void> {
+        this.timeout(10000);
+        const version = await getCurrentAzCliVersion();
+        assert(typeof version === 'string');
+        assert(version !== '0.0.0');
+    });
+    test("Should get the latest version of AZ CLI", async function(): Promise<void> {
+        this.timeout(5000);
+        const version = await getLatestAzCliVersion();
+        assert(typeof version === 'string');
+        assert(version !== '0.0.0');
     });
 });
