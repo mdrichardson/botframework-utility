@@ -13,19 +13,31 @@ suite('Tools', function(): void {
         }
     });
     test('Should Get Appropriate Tools Update Command - No Exclusions', async function(): Promise<void> {
+        const timeout = 12 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await setVsCodeConfig(constants.vsCodeConfigNames.excludeCliToolsFromUpdate, []);
         const command = await getToolsUpdateCommand();
-        const toUpdate = constants.cliTools;
+        const toUpdate = constants.cliTools.slice(1);
         assert.equal(command, `npm install -g ${ toUpdate.join(' ') }`);
     });
     test('Should Get Appropriate Tools Update Command - Many Exclusions', async function(): Promise<void> {
-        const notExclude = constants.cliTools.slice(0, 2);
-        const exclude = constants.cliTools.slice(2);
+        const timeout = 12 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
+        const notExclude = constants.cliTools.slice(1, 3);
+        const exclude = constants.cliTools.slice(3);
         await setVsCodeConfig(constants.vsCodeConfigNames.excludeCliToolsFromUpdate, exclude);
         const command = await getToolsUpdateCommand();
         assert.equal(command, `npm install -g ${ notExclude.join(' ') }`);
     });
     test('Should Get Appropriate Tools Update Command - All Exclusions', async function(): Promise<void> {
+        const timeout = 12 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+        
         await setVsCodeConfig(constants.vsCodeConfigNames.excludeCliToolsFromUpdate, constants.cliTools);
         const command = await getToolsUpdateCommand();
         assert.equal(command, '');

@@ -30,6 +30,10 @@ suite("Deployment - Unit", function(): void {
         await setBotVariables(testEnv);
     });
     test("Should download both deployment templates if missing", async function(): Promise<void> {
+        const timeout = 10 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         for (const template in constants.deploymentTemplates) {
             await deleteDownloadTemplates();
             await downloadTemplate(template);
@@ -78,10 +82,10 @@ suite("Deployment - Unit", function(): void {
         this.slow(timeout * 0.95);
 
         await deleteCodeZip();
-        // Give time for it to delete since fs.Promises doesn't seem to work with unlink
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
-        const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
-        assert(file.length == 0);
+        // Give time for it to delete since it doesn't seem to do so immediately
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
+        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
+        assert(!file.length);
     });
     test("Should Detect RegEx in data and convert to ENV variables", async function(): Promise<void> {
         const testAppId = new RandExp(constants.regexForValidations.GUID).gen();

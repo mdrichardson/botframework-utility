@@ -10,6 +10,9 @@ import fs = require('fs');
 const fsP = fs.promises;
 
 suite('Samples', function(): void {
+    teardown((): void => {
+        sinon.restore();
+    });
     test("Should Create an Appropriate Temporary Directory", async function(): Promise<void> {
         const tempDir = await createTempDir('test');
 
@@ -83,7 +86,7 @@ suite('Samples', function(): void {
 
         await deleteDirectory(samplePath);
     });
-    test("Should Put a Sample in a New Folder When Dir Is Empty", async function(): Promise<void> {
+    test("Should Put a Sample in a Root Folder When Dir Is Empty", async function(): Promise<void> {
         const timeout = 100 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
