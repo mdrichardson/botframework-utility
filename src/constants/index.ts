@@ -29,5 +29,11 @@ export {
     urls,
     vsCodeConfigNames,
     websites,
-    zipFileName
+    zipFileName,
 };
+
+import * as samples from './samplesRepo';
+export { samples };
+
+import * as terminal from './terminal';
+export { terminal };

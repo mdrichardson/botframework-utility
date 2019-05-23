@@ -20,8 +20,8 @@ export async function executeTerminalCommand(
 
     // Force all commands to use single terminal type, for better control
     const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands) as string);
-    let terminalPath = userTerminalPath ? userTerminalPath : undefined;
-    if (command.toLowerCase().startsWith('az') && !userTerminalPath) {
+    let terminalPath;
+    if (!userTerminalPath) {
         switch (process.platform) {
             case 'win32':
                 terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
@@ -33,6 +33,16 @@ export async function executeTerminalCommand(
             /* istanbul ignore next: not testing MacOS */
             default:
                 terminalPath = 'sh';
+        }
+    } else {
+        terminalPath = userTerminalPath;
+    }
+
+    // Join commands, as necessary
+    for (const key in constants.terminal.pathRegex) {
+        if (constants.terminal.pathRegex[key].test(terminalPath)) {
+            command = command.replace(new RegExp(constants.terminal.join, 'gm'), constants.terminal.joins[key]);
+            break;
         }
     }
 
@@ -77,7 +87,7 @@ export async function executeTerminalCommand(
     });
 
     // If this is for testing (or we need regex returned), we want to force awaiting until command is complete
-    if (isTest || returnRegex) {
+    if (isTest || returnRegex || timeout) {
         let totalTime = 0;
         while (!commandComplete && !result) {
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));

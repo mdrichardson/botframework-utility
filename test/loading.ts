@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as extension from '../src/extension';
 import * as constants from '../src/constants';
-import { deploymentCommands, emulatorCommands, toolsCommands } from '../src/commands';
+import { deploymentCommands, emulatorCommands, toolsCommands, samplesCommands } from '../src/commands';
 import { log, watchEnvFiles, getWorkspaceRoot } from '../src/utilities';
 import fs = require('fs');
 const fsP = fs.promises;
@@ -27,6 +27,7 @@ suite('Extension Loading Tests', function(): void {
         const allCommands = [
             deploymentCommands,
             emulatorCommands,
+            samplesCommands,
             toolsCommands
         ];
         commands.forEach((command): void => {

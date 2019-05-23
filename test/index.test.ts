@@ -24,9 +24,6 @@ watchEnvFiles();
 
 suite("Quick Test", function(): void {
     test("All Website Constants Should Return 200 Status", async function(): Promise<void> {
-        for (const key in constants.websites) {
-            const response = (await Axios.get(constants.websites[key]) as AxiosResponse);
-            assert.equal(response.status, 200);
-        }
+        
     });
 });

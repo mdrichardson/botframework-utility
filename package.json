@@ -56,7 +56,12 @@
 				"command": "botframework-utility.updateCliTools",
 				"category": "Bot > CLI Tools",
 				"title": "Update All"
-			}
+            },
+            {
+				"command": "botframework-utility.getSample",
+				"category": "Bot > Samples",
+				"title": "Get/Download Sample"
+            }
 		],
 		"menus": {
 			"explorer/context": [
@@ -140,7 +145,8 @@
 		"test": "node ./node_modules/vscode/bin/test",
 		"test-compile": "tsc --sourceMap -p ./ && npm run compile",
 		"lint": "eslint ./src --ext .ts",
-		"package": "vsce package"
+        "package": "vsce package",
+        "watch": "npm run test-compile && tsc -watch -p ./"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",

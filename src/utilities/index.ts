@@ -37,6 +37,13 @@ import { handleAzCliUpdate } from './tools/handleAzCliUpdate';
 import { getCurrentAzCliVersion } from './tools/getCurrentAzCliVersion';
 import { getLatestAzCliVersion } from './tools/getLatestAzCliVersion';
 
+import { getSample } from './samples/getSample';
+import { getSparseCheckoutCommand } from './samples/getSparseCheckoutCommand';
+import { promptForSample } from './samples/promptForSample';
+import { rootFolderIsEmpty } from './samples/rootFolderIsEmpty';
+import { deleteDirectory } from './samples/deleteDirectory';
+import { renameDirectory } from './samples/renameDirectory';
+
 export {
     createCodeZip,
     deleteCodeZip,
@@ -71,5 +78,11 @@ export {
     getCurrentAzCliVersion,
     getLatestAzCliVersion,
     getToolsUpdateCommand,
-    handleAzCliUpdate
+    handleAzCliUpdate,
+    deleteDirectory,
+    getSample,
+    getSparseCheckoutCommand,
+    promptForSample,
+    renameDirectory,
+    rootFolderIsEmpty
 };
