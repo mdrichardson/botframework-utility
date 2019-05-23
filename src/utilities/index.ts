@@ -43,6 +43,7 @@ import { promptForSample } from './samples/promptForSample';
 import { rootFolderIsEmpty } from './samples/rootFolderIsEmpty';
 import { deleteDirectory } from './samples/deleteDirectory';
 import { renameDirectory } from './samples/renameDirectory';
+import { createTempDir } from './samples/createTempDir';
 
 export {
     createCodeZip,
@@ -79,6 +80,7 @@ export {
     getLatestAzCliVersion,
     getToolsUpdateCommand,
     handleAzCliUpdate,
+    createTempDir,
     deleteDirectory,
     getSample,
     getSparseCheckoutCommand,

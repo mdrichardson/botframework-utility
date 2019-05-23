@@ -114,3 +114,17 @@ export async function deleteDownloadTemplates(): Promise<void> {
 export function testNotify(text: string): void {
     console.warn(`### ${ text }\r`);
 }
+
+export async function makeNestedTestDir(): Promise<string> {
+    const root = getWorkspaceRoot();
+
+    const testDir = `${ root }\\TestDir`;
+    await fsP.mkdir(testDir);
+    await fsP.writeFile(`${ testDir }\\testFile.txt`, 'test');
+
+    const nestedDir = `${ testDir }\\nestedDir`;
+    await fsP.mkdir(nestedDir);
+    await fsP.writeFile(`${ nestedDir }\\nestedFile.txt`, 'test');
+
+    return testDir;
+}

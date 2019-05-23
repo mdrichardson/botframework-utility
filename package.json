@@ -56,12 +56,12 @@
 				"command": "botframework-utility.updateCliTools",
 				"category": "Bot > CLI Tools",
 				"title": "Update All"
-            },
-            {
+			},
+			{
 				"command": "botframework-utility.getSample",
 				"category": "Bot > Samples",
 				"title": "Get/Download Sample"
-            }
+			}
 		],
 		"menus": {
 			"explorer/context": [
@@ -145,13 +145,14 @@
 		"test": "node ./node_modules/vscode/bin/test",
 		"test-compile": "tsc --sourceMap -p ./ && npm run compile",
 		"lint": "eslint ./src --ext .ts",
-        "package": "vsce package",
-        "watch": "npm run test-compile && tsc -watch -p ./"
+		"package": "vsce package",
+		"watch": "npm run test-compile && tsc -watch -p ./"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^2.2.48",
 		"@types/node": "^10.14.6",
+		"@types/sinon": "^7.0.11",
 		"@typescript-eslint/eslint-plugin": "^1.7.0",
 		"@typescript-eslint/parser": "^1.7.0",
 		"decache": "^4.5.1",
@@ -166,6 +167,7 @@
 		"mocha": "^6.1.4",
 		"randexp": "^0.5.3",
 		"remap-istanbul": "^0.13.0",
+		"sinon": "^7.3.2",
 		"ts-loader": "^5.4.4",
 		"tslint": "^5.16.0",
 		"typescript": "^3.4.5",

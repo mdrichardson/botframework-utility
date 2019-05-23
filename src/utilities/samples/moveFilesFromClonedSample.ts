@@ -10,7 +10,7 @@ export async function moveFilesFromClonedSample(sample: string, tempDir: string,
 
     const oldDir = `${ tempDir }/samples/${ language }/${ sampleName }`;
     let newDir = `${ root }/${ sampleName }`;
-    if (!empty) {
+    if (empty) {
         newDir = root;
         const files = await fsP.readdir(oldDir);
         await Promise.all(await files.map(async (file): Promise<void> => {

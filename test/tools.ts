@@ -31,13 +31,19 @@ suite('Tools', function(): void {
         assert.equal(command, '');
     });
     test("Should get the current version of AZ CLI", async function(): Promise<void> {
-        this.timeout(10000);
+        const timeout = 10 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+        
         const version = await getCurrentAzCliVersion();
         assert(typeof version === 'string');
         assert(version !== '0.0.0');
     });
     test("Should get the latest version of AZ CLI", async function(): Promise<void> {
-        this.timeout(5000);
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const version = await getLatestAzCliVersion();
         assert(typeof version === 'string');
         assert(version !== '0.0.0');

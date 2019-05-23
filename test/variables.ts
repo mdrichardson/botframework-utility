@@ -120,7 +120,10 @@ suite("Variables", function(): void {
         }
     });
     test("Should not throw when prompting", async function(): Promise<void> {
-        this.timeout(1500);
+        const timeout = 1.5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await setBotVariables({ [constants.envVars.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
@@ -132,7 +135,10 @@ suite("Variables", function(): void {
         }
     });
     test("Should not throw when re-prompting", async function(): Promise<void> {
-        this.timeout(1500);
+        const timeout = 1.5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+        
         await setBotVariables({ [constants.envVars.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();

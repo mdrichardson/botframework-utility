@@ -64,6 +64,7 @@ suite("Deployment - Unit", function(): void {
         const timeout = 10 * 60 * 1000; 
         this.timeout(timeout);
         this.slow(timeout * 0.95);
+        
         testNotify('Creating Zip File...');
         await createCodeZip();
         const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
@@ -72,7 +73,10 @@ suite("Deployment - Unit", function(): void {
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 2000));
     });
     test("Should delete zip file", async function(): Promise<void> {
-        this.timeout(10000);
+        const timeout = 10 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await deleteCodeZip();
         // Give time for it to delete since fs.Promises doesn't seem to work with unlink
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));

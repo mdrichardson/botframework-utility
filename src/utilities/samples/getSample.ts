@@ -1,18 +1,15 @@
 import * as constants from '../../constants';
 import { CommandOptions } from '../../interfaces';
-import { getSparseCheckoutCommand, executeTerminalCommand, getWorkspaceRoot, deleteDirectory } from '..';
-import fs = require('fs');
+import { getSparseCheckoutCommand, executeTerminalCommand, deleteDirectory } from '..';
 import { moveFilesFromClonedSample } from './moveFilesFromClonedSample';
 import { rootFolderIsEmpty } from './rootFolderIsEmpty';
-const fsP = fs.promises;
+import { createTempDir } from './createTempDir';
 
 export async function getSample(sample: string): Promise<void> {
-    // Make temp dir
-    const root = getWorkspaceRoot();
-    const date = new Date();
-    const tempString = `${ date.toDateString() }${ date.getHours() }${ date.getMinutes() }`.replace(/ /g, '');
-    let tempDir = `${ root }\\${ sample.split('/').pop() }_${ tempString }`;
-    await fsP.mkdir(tempDir);
+    // Check if directory is empty before we start adding files to it
+    const empty = await rootFolderIsEmpty();
+
+    const tempDir = await createTempDir((sample.split('/').pop() as string));
         
     const options: CommandOptions = {
         commandCompleteRegex: constants.regexForDispose.GitClone,
@@ -35,8 +32,8 @@ export async function getSample(sample: string): Promise<void> {
 
     await executeTerminalCommand(commands.join(constants.terminal.join), options);
 
-    const empty = await rootFolderIsEmpty();
-
+    // Ensure nothing is locked
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
     await moveFilesFromClonedSample(sample, tempDir, empty);
 
     await deleteDirectory(tempDir);
