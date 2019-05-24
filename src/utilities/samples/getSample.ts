@@ -30,7 +30,7 @@ export async function getSample(sample: string): Promise<void> {
         `git pull --depth=1 origin master`
     ];
 
-    await executeTerminalCommand(commands.join(constants.terminal.join), options);
+    await executeTerminalCommand(commands, options);
 
     // Ensure nothing is locked
     await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));

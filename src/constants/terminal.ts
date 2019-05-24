@@ -1,6 +1,3 @@
-// DO NOT SEPARATE COMMANDS WITH SPACES
-export const join = '@JOIN@';
-
 export const joins = {
     bash: ' && ',
     commandPrompt: ' & ',

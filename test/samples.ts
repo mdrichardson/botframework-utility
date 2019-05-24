@@ -100,6 +100,9 @@ suite('Samples', function(): void {
 
         const root = getWorkspaceRoot();
         const fakeEmpty = `${ root }\\fakeEmpty`;
+        if (fs.existsSync(fakeEmpty)) {
+            await deleteDirectory(fakeEmpty);
+        }
         await fsP.mkdir(fakeEmpty);
 
         // Fake vscode into using new empty root folder

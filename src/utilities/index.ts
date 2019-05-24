@@ -44,6 +44,9 @@ import { rootFolderIsEmpty } from './samples/rootFolderIsEmpty';
 import { deleteDirectory } from './samples/deleteDirectory';
 import { renameDirectory } from './samples/renameDirectory';
 import { createTempDir } from './samples/createTempDir';
+import { getTerminalPath } from './deployment/getTerminalPath';
+import { joinTerminalCommands } from './deployment/joinTerminalCommands';
+import { handleTerminalData } from './deployment/handleTerminalData';
 
 export {
     createCodeZip,
@@ -56,7 +59,10 @@ export {
     getDeployCommand,
     getDeploymentTemplate,
     getPrepareDeployCommand,
+    getTerminalPath,
     getVsCodeConfig,
+    handleTerminalData,
+    joinTerminalCommands,
     regexToVariables,
     getEmulatorLaunchCommand,
     loadCommands,
