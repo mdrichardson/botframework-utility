@@ -7,9 +7,9 @@ import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnv
 
 suite("Variables", function(): void {
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'test');
-        assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands), 'test');
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'test');
+        assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminal), 'test');
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
     });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
         const timeout = 4 * 1000;

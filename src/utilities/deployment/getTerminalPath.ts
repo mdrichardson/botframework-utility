@@ -2,20 +2,18 @@ import * as constants from '../../constants';
 import { getVsCodeConfig } from '..';
 
 export async function getTerminalPath(): Promise<string> {
-    const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands) as string);
+    const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminal) as string);
     let terminalPath;
     if (!userTerminalPath) {
         switch (process.platform) {
             case 'win32':
-                terminalPath = 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe';
+                terminalPath = constants.terminal.platformPaths.windows;
                 break;
-            /* istanbul ignore next: not testing linux */
             case 'darwin':
-                terminalPath = '/bin/bash';
+                terminalPath = constants.terminal.platformPaths.osx;
                 break;
-            /* istanbul ignore next: not testing MacOS */
             default:
-                terminalPath = 'sh';
+                terminalPath = constants.terminal.platformPaths.linux;
         }
     } else {
         terminalPath = userTerminalPath;

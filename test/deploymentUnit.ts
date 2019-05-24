@@ -4,8 +4,8 @@ import * as vscode from 'vscode';
 
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
-import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, createCodeZip, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand } from '../src/utilities';
-import { deleteDownloadTemplates, testNotify } from './testUtilities';
+import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData } from '../src/utilities';
+import { deleteDownloadTemplates } from './testUtilities';
 
 import fs = require('fs');
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
@@ -22,7 +22,7 @@ var testEnv: BotVariables = {
 };
 
 suiteSetup(async (): Promise<void> => {
-    await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
+    await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
 });
 
 suite("Deployment - Unit", function(): void {
@@ -157,18 +157,100 @@ suite("Deployment - Unit", function(): void {
         const command = await getDeployCommand();
         assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.zipFileName }"`);
     });
+    // TODO: Add tests for separated commands
     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
         try {
             executeTerminalCommand('az test');
         } catch { assert.fail(); };
     });
     test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
         try {
-            await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
+            await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
             executeTerminalCommand('az test');
         } catch (err) {
             assert.fail(err);
         }
+    });
+    test("Should Return the Appropriate Terminal Path", async function(): Promise<void> {
+        this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+        const path = await getTerminalPath();
+        assert.equal(path, constants.terminal.platformPaths.windows);
+
+        Object.defineProperty(process, 'platform', { value: 'linux' });
+        const linuxPath = await getTerminalPath();
+        assert.equal(linuxPath, constants.terminal.platformPaths.linux);
+
+        Object.defineProperty(process, 'platform', { value: 'darwin' });
+        const osxPath = await getTerminalPath();
+        assert.equal(osxPath, constants.terminal.platformPaths.osx);
+
+        Object.defineProperty(process, 'platform', this.originalPlatform);
+
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'testPath');
+        const testPath = await getTerminalPath();
+        assert.equal(testPath, 'testPath');
+
+        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+    });
+    test("Should Appropriately Join Terminal Commands", async function(): Promise<void> {
+        const commands = [
+            'first',
+            'second',
+            'third'
+        ];
+        const powershell = await joinTerminalCommands(commands, constants.terminal.platformPaths.windows);
+        assert.equal(powershell, commands.join(constants.terminal.joins.powershell));
+
+        const commandPrompt = await joinTerminalCommands(commands, 'c:\\windows\\system32\\cmd.exe');
+        assert.equal(commandPrompt, commands.join(constants.terminal.joins.commandPrompt));
+
+        const sh = await joinTerminalCommands(commands, constants.terminal.platformPaths.linux);
+        assert.equal(sh, commands.join(constants.terminal.joins.bash));
+    });
+    test("Terminal should return false if no data and nothing checked", async function(): Promise<void> {
+        const terminal = vscode.window.createTerminal();
+        const result = await handleTerminalData(terminal, {});
+        assert.equal(result, false);
+        terminal.dispose();
+    });
+    test("Terminal should return regex group matches if given returnRegex", async function(): Promise<void> {
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText('test');
+        const result = (await handleTerminalData(terminal, {
+            returnRegex: /(?<err>The term 'test' is not)/
+        }) as RegExpMatchArray);
+        assert.equal((result.groups as object)['err'], "The term 'test' is not");
+        terminal.dispose();
+    });
+    test("Terminal should return false if it detects failure regex", async function(): Promise<void> {
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText('test');
+        const result = (await handleTerminalData(terminal, {
+            commandFailedRegex: /(?<err>The term 'test' is not)/
+        }) as RegExpMatchArray);
+        assert.equal(result, false);
+        terminal.dispose();
+    });
+    test("Terminal should return true if it detects complete regex", async function(): Promise<void> {
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText('test');
+        const result = (await handleTerminalData(terminal, {
+            commandCompleteRegex: /(?<err>The term 'test' is not)/
+        }) as RegExpMatchArray);
+        assert.equal(result, true);
+        terminal.dispose();
+    });
+    test("Terminal should return false if it detects fail regex before complete regex", async function(): Promise<void> {
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText('test');
+        const result = (await handleTerminalData(terminal, {
+            commandCompleteRegex: /(?<err>The term 'test' is not)/,
+            commandFailedRegex: /(?<err>The term 'test' is not)/
+        }) as RegExpMatchArray);
+        assert.equal(result, false);
+        terminal.dispose();
     });
 });

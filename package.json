@@ -76,10 +76,10 @@
 			"type": "object",
 			"title": "Botframework Utility",
 			"properties": {
-				"botframework-utility.customTerminalForAzCommands": {
+				"botframework-utility.customTerminal": {
 					"type": "string",
 					"default": "",
-					"description": "Path to custom terminal for AZ CLI commands"
+					"description": "Path to custom terminal for commands"
 				},
 				"botframework-utility.excludeCliToolsFromUpdate": {
 					"type": "array",

@@ -1,11 +1,11 @@
 import * as constants from '../../constants';
 import * as vscode from 'vscode';
-import { BotVariables } from "../../interfaces";
+import { BotVariables, CommandOptions } from "../../interfaces";
 import { regexToVariables, getWorkspaceRoot } from "..";
 import fs = require('fs');
 const fsP = fs.promises;
 
-export async function handleTerminalData(terminal, options): Promise<boolean|RegExpExecArray|Partial<BotVariables>> {
+export async function handleTerminalData(terminal: vscode.Terminal, options: CommandOptions): Promise<boolean|RegExpExecArray|Partial<BotVariables>> {
     const { commandCompleteRegex, commandFailedRegex, commandTitle, isTest, timeout, returnRegex } = options;
 
     let result: boolean|RegExpExecArray|Partial<BotVariables> = false;
