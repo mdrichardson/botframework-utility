@@ -149,6 +149,7 @@
 		"watch": "npm run test-compile && tsc -watch -p ./"
 	},
 	"devDependencies": {
+		"@types/archiver": "^3.0.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^2.2.48",
 		"@types/node": "^10.14.6",

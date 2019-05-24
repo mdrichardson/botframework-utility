@@ -8,6 +8,8 @@ export async function createCodeZip(): Promise<void> {
     vscode.window.showInformationMessage('Creating Zip File');
     const root = getWorkspaceRoot();
     await deleteCodeZip();
+    // Give time for it to delete since it doesn't seem to do so immediately
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
     const output = fs.createWriteStream(`${ root }\\${ constants.zipFileName }`);
     const archive = archiver('zip', { zlib: { level: 1 }});
 
@@ -38,7 +40,7 @@ export async function createCodeZip(): Promise<void> {
                 }
                 updateCount++;
             })
-            .glob('**', { ignore: [`**\\${ constants.zipFileName }`]})
+            .glob(`**`, { cwd: root, ignore: [`**\\${ constants.zipFileName }`], })
             .finalize();
     });
 }

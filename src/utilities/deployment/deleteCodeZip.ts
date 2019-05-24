@@ -5,8 +5,8 @@ const fsP = fs.promises;
 
 export async function deleteCodeZip(): Promise<void> {
     const root = getWorkspaceRoot();
-    try {
-        // fs.Promises doesn't seem to work with unlink
+    const zip = `${ root }\\${ constants.zipFileName }`;
+    if (fs.existsSync(zip)) {
         await fsP.unlink(`${ root }\\${ constants.zipFileName }`);
-    } catch (err) { }
+    }
 }

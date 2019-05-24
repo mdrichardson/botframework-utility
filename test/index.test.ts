@@ -14,46 +14,15 @@ import sinon = require('sinon');
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
 
-// require('./loading');
-// require('./emulator');
-// require('./variables');
-// require('./tools');
-// require('./samples');
-// require('./deploymentUnit');
+require('./loading');
+require('./emulator');
+require('./variables');
+require('./tools');
+require('./samples');
+require('./deploymentUnit');
 // require('./deploymentE2E');  -- 5/20: ran out of app registrations
 
-suite("Quick Test", function(): void {
-    test("Should delete zip file", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
-
-        await deleteCodeZip();
-        // Give time for it to delete since it doesn't seem to do so immediately
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
-        assert(!file.length);
-    });
-    test("Should delete zip file", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
-
-        await deleteCodeZip();
-        // Give time for it to delete since it doesn't seem to do so immediately
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
-        assert(!file.length);
-    });
-    test("Should delete zip file", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
-
-        await deleteCodeZip();
-        // Give time for it to delete since it doesn't seem to do so immediately
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
-        assert(!file.length);
-    });
-});
+// suite("Quick Test", function(): void {
+//     test("Should create zip file", async function(): Promise<void> {
+//     });
+// });

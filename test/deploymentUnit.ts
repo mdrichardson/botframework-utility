@@ -64,17 +64,16 @@ suite("Deployment - Unit", function(): void {
         const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
     });
-    test("Should create zip file", async function(): Promise<void> {
-        const timeout = 10 * 60 * 1000; 
+    test("Should delete zip file", async function(): Promise<void> {
+        const timeout = 10 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
-        
-        testNotify('Creating Zip File...');
-        await createCodeZip();
-        const file = await vscode.workspace.findFiles(`**/${ constants.zipFileName }`);
-        assert(file.length > 0);
-        // Need to wait for the file to unlock
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 2000));
+
+        await deleteCodeZip();
+        // Give time for it to delete since it doesn't seem to do so immediately
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
+        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
+        assert(!file.length);
     });
     test("Should delete zip file", async function(): Promise<void> {
         const timeout = 10 * 1000;
