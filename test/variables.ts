@@ -12,6 +12,10 @@ suite("Variables", function(): void {
         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminalForAzCommands, undefined);
     });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
+        const timeout = 4 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await deleteEnvFiles();
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Csharp);
@@ -21,6 +25,10 @@ suite("Variables", function(): void {
         assert.equal(result[constants.envVars.BotName], 'test');
     });
     test("Should Load Variables from .env", async function(): Promise<void> {
+        const timeout = 4 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await deleteEnvFiles();
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Node);
@@ -40,6 +48,10 @@ suite("Variables", function(): void {
         assert.equal(result['testVar'], 'test');
     });
     test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
+        const timeout = 6 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Node);
         const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
@@ -56,6 +68,10 @@ suite("Variables", function(): void {
         assert.equal(localResult[constants.envVars.BotName], testName);
     });
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
+        const timeout = 6 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+        
         await deleteCodeFiles();
         await writeCodeFiles(constants.sdkLanguages.Csharp);
         const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;

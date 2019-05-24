@@ -4,8 +4,8 @@ import assert = require("assert");
 import fs = require('fs');
 const fsP = fs.promises;
 import mocha = require('mocha');
-import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip } from '../src/utilities';
-import { testNotify, deleteDownloadTemplates, makeNestedTestDir } from './testUtilities';
+import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv } from '../src/utilities';
+import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles } from './testUtilities';
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
@@ -23,6 +23,4 @@ require('./deploymentUnit');
 // require('./deploymentE2E');  -- 5/20: ran out of app registrations
 
 // suite("Quick Test", function(): void {
-//     test("Should create zip file", async function(): Promise<void> {
-//     });
 // });

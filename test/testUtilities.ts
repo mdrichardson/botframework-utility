@@ -40,25 +40,31 @@ export async function deleteBot(name: string): Promise<void> {
 
 export async function deletePrepareDeployFiles(): Promise<void> {
     const root = getWorkspaceRoot();
-    try {
-        await fsP.unlink(`${ root }\\web.config`);
-    } catch (err) { }
-    try {
-        await fsP.unlink(`${ root }\\.deployment`);
-    } catch (err) { }
+    const files = [
+        `${ root }\\web.config`,
+        `${ root }\\.deployment`
+    ];
+    await Promise.all(files.map(async (file): Promise<void> => {
+        if (fs.existsSync(file)) {
+            await fsP.unlink(file);
+        }
+    }));
 }
 
 export async function deleteEnvFiles(): Promise<void> {
     const root = getWorkspaceRoot();
-    try {
-        await fsP.unlink(`${ root }\\.env`);
-    } catch (err) { }
-    try {
-        await fsP.unlink(`${ root }\\appsettings.json`);
-    } catch (err) { }
+    const files = [
+        `${ root }\\.env`,
+        `${ root }\\appsettings.json`
+    ];
+    await Promise.all(files.map(async (file): Promise<void> => {
+        if (fs.existsSync(file)) {
+            await fsP.unlink(file);
+        }
+    }));
 }
 
-export async function writeCodeFiles(lang: string|null): Promise<void> {
+export async function writeCodeFiles(lang?: string): Promise<void> {
     const root = getWorkspaceRoot();
     const data = JSON.stringify({ test: 'test' }, null, 2);
     switch(lang) {
@@ -82,6 +88,8 @@ export async function writeCodeFiles(lang: string|null): Promise<void> {
             await fsP.writeFile(`${ root }\\src\\test.ts`, data);
             await fsP.writeFile(`${ root }\\test.js`, data); 
     }
+    // Ensure files won't be locked
+    await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
 }
 
 export async function deleteCodeFiles(): Promise<void> {

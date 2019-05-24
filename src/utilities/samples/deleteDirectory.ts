@@ -4,7 +4,7 @@ const fsP = fs.promises;
 export async function deleteDirectory(path: string): Promise<void> {
     if (fs.existsSync(path)) {
         const files = await fsP.readdir(path);
-        await Promise.all(await files.map(async (file): Promise<void> => {
+        await Promise.all(files.map(async (file): Promise<void> => {
             const delPath = `${ path }/${ file }`;
             if ((await fsP.lstat(delPath)).isDirectory()) {
                 await deleteDirectory(delPath);
