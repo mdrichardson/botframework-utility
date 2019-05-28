@@ -97,6 +97,10 @@ suite("Deployment - Unit", function(): void {
         assert.equal(command, undefined);
     });
     test("Should Create Appropriate Resource Creation Command - New RG, New Service", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
         const templateName = constants.deployment.templates["template-with-new-rg.json"];
@@ -108,6 +112,10 @@ suite("Deployment - Unit", function(): void {
             `groupName="${ testEnv.ResourceGroupName }" groupLocation="${ testEnv.Location }" newAppServicePlanName="${ testEnv.ServicePlanName }" newAppServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, New Service", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
         const templateName = constants.deployment.templates["template-with-preexisting-rg.json"];
@@ -119,6 +127,10 @@ suite("Deployment - Unit", function(): void {
             `newAppServicePlanName="${ testEnv.ServicePlanName }" appServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, Existing Service", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
         const templateName = constants.deployment.templates["template-with-preexisting-rg.json"];
