@@ -25,4 +25,5 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
         } else { return; }
     }
     await setBotVariables({ [variable]: value });
+    return value;
 }

@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { deleteEnvFiles, deleteCodeFiles, writeCodeFiles } from './testUtilities';
 import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv, setVsCodeConfig, getVsCodeConfig } from '../src/utilities';
+import sinon = require('sinon');
 
 suite("Variables", function(): void {
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
@@ -165,16 +166,14 @@ suite("Variables", function(): void {
             assert.fail(err);
         }
     });
-    test("Should display input prompt and not resolve/reject if variable doesn't exist", async function(): Promise<void> {
-        // There's no way to check if the InputBox is displayed, so instead we're basically just checking if promptForVariableIfNotExist hasn't resolved yet
+    test("Should prompt for variable if it doesn't exist", async function(): Promise<void> {
         await setBotVariables({ [constants.envVars.BotName]: undefined });
-        // DO NOT await promptForVariable...
-        const promise = promptForVariableIfNotExist(constants.envVars.BotName);
-        // Wait to ensure prompt box is displayed
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 1000));
-        assert.notEqual(promise, undefined);
+        const promptStub = sinon.stub(vscode.window, 'showInputBox');
+        promptStub.resolves('testBotName');
+        const result = await promptForVariableIfNotExist(constants.envVars.BotName);
+        assert.equal(result, 'testBotName');
     });
-    test("Should throw if we try to prompt for a non-existent variable", async function(): Promise<void> {
+    test("Should throw if we try to prompt for an invalid variable", async function(): Promise<void> {
         // assert.throws doesn't work well with async, so we'll use try/catch instead
         const nonExistentVariable = 'iDoNotExist';
         try {

@@ -4,8 +4,8 @@ import * as vscode from 'vscode';
 
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
-import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData } from '../src/utilities';
-import { deleteDownloadTemplates } from './testUtilities';
+import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData, getTerminalPath, joinTerminalCommands } from '../src/utilities';
+import { deleteDownloadTemplates, deleteTerminalOutputFile } from './testUtilities';
 
 import fs = require('fs');
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
@@ -63,17 +63,6 @@ suite("Deployment - Unit", function(): void {
         const location = await getDeploymentTemplate(templateName);
         const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
-    });
-    test("Should delete zip file", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
-
-        await deleteCodeZip();
-        // Give time for it to delete since it doesn't seem to do so immediately
-        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
-        assert(!file.length);
     });
     test("Should delete zip file", async function(): Promise<void> {
         const timeout = 10 * 1000;
@@ -157,7 +146,6 @@ suite("Deployment - Unit", function(): void {
         const command = await getDeployCommand();
         assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.zipFileName }"`);
     });
-    // TODO: Add tests for separated commands
     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
         await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
         try {
@@ -217,6 +205,10 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return regex group matches if given returnRegex", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
@@ -226,31 +218,69 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return false if it detects failure regex", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
-            commandFailedRegex: /(?<err>The term 'test' is not)/
+            commandFailedRegex: /(?<err>The term 'test' is not)/,
+            timeout: 5000,
         }) as RegExpMatchArray);
         assert.equal(result, false);
         terminal.dispose();
     });
     test("Terminal should return true if it detects complete regex", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
-            commandCompleteRegex: /(?<err>The term 'test' is not)/
+            commandCompleteRegex: /(?<err>The term 'test' is not)/,
+            timeout: 5000,
         }) as RegExpMatchArray);
         assert.equal(result, true);
         terminal.dispose();
     });
     test("Terminal should return false if it detects fail regex before complete regex", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
             commandCompleteRegex: /(?<err>The term 'test' is not)/,
-            commandFailedRegex: /(?<err>The term 'test' is not)/
+            commandFailedRegex: /(?<err>The term 'test' is not)/,
+            timeout: 5000,
         }) as RegExpMatchArray);
         assert.equal(result, false);
+        terminal.dispose();
+    });
+    test("Should save failed terminal output on test", async function(): Promise<void> {
+        const timeout = 5 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
+        await deleteTerminalOutputFile();
+
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText('test');
+        const result = (await handleTerminalData(terminal, {
+            commandFailedRegex: /(?<err>The term 'test' is not)/,
+            isTest: true,
+            timeout: 5000,
+        }) as RegExpMatchArray);
+
+        assert.equal(result, false);
+
+        const outputFile = await vscode.workspace.findFiles(constants.testing.TerminalOutput);
+        assert(outputFile.length);
+
+        await deleteTerminalOutputFile();
         terminal.dispose();
     });
 });

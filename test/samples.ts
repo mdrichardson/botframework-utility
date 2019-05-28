@@ -37,9 +37,9 @@ suite('Samples', function(): void {
         assert.equal(command, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.powershell }`);
     });
     test("Should Prompt User For Samples and Return Path to Sample", async function(): Promise<void> {
-        const promptStub = sinon.stub(vscode.window, "showQuickPick");
+        const promptStub = sinon.stub(vscode.window, 'showQuickPick');
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
-        const sample = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
+        const sample = (constants.samples.cSharpSamples['01.console-echo'] as unknown as vscode.QuickPickItem);
         promptStub.onCall(0).resolves(language);
         promptStub.onCall(1).resolves(sample);
         const path = await promptForSample();
