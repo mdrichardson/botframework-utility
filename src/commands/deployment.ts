@@ -1,15 +1,14 @@
 import * as vscode from 'vscode';
-
+import * as constants from '../constants';
 import { CommandOptions } from '../interfaces/CommandOptions';
 import { Commands } from '../interfaces/Commands';
-import * as constants from '../constants';
 import { getCreateAppRegistrationCommand, executeTerminalCommand, createAzureResources, getPrepareDeployCommand, getDeployCommand, createCodeZip } from '../utilities';
 
 const deploymentCommands: Commands = {
     async createAppRegistration(): Promise<void> {
         const command = await getCreateAppRegistrationCommand();
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.WebappCreate,
+            commandCompleteRegex: constants.regex.forDispose.WebappCreate,
             commandTitle: 'App Registration Creation'
         };
 
@@ -32,14 +31,14 @@ const deploymentCommands: Commands = {
 
         const prepareDeployCommand = await getPrepareDeployCommand();
         const prepareDeployOptions: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.PrepareDeploy,
-            commandFailedRegex: constants.regexForDispose.PrepareDeployFailed,
+            commandCompleteRegex: constants.regex.forDispose.PrepareDeploy,
+            commandFailedRegex: constants.regex.forDispose.PrepareDeployFailed,
             commandTitle: 'Deployment Prep'
         };
         const deployCommand = await getDeployCommand();
         const deployOptions: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.Deploy,
-            commandFailedRegex: constants.regexForDispose.DeployFailed,
+            commandCompleteRegex: constants.regex.forDispose.Deploy,
+            commandFailedRegex: constants.regex.forDispose.DeployFailed,
             commandTitle: 'Zip Deployment'
         };
 

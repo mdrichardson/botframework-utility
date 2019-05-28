@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import { PromptAndValidator } from '../../interfaces';
 
 export function getPromptAndValidator(variable: string): PromptAndValidator {
-    if (constants.envVarPrompts[variable]) {
-        return { prompt: constants.envVarPrompts[variable].prompt, validator: constants.envVarPrompts[variable].validator };
+    if (constants.variables.botVariablePrompts[variable]) {
+        return { prompt: constants.variables.botVariablePrompts[variable].prompt, validator: constants.variables.botVariablePrompts[variable].validator };
     } else throw new Error(`Not a valid variable: ${ variable }`);
 }

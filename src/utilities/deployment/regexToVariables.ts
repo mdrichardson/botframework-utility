@@ -4,8 +4,8 @@ import { BotVariables } from '../../interfaces';
 
 export async function regexToVariables(data: string): Promise<Partial<BotVariables>> {
     const regexPatterns = [
-        constants.regexForVariables.MicrosoftAppId,
-        constants.regexForVariables.MicrosoftAppPassword
+        constants.regex.forVariables.MicrosoftAppId,
+        constants.regex.forVariables.MicrosoftAppPassword
     ];
 
     let matches = {};

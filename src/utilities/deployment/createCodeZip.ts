@@ -10,7 +10,7 @@ export async function createCodeZip(): Promise<void> {
     await deleteCodeZip();
     // Give time for it to delete since it doesn't seem to do so immediately
     await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-    const output = fs.createWriteStream(`${ root }\\${ constants.zipFileName }`);
+    const output = fs.createWriteStream(`${ root }\\${ constants.files.zip }`);
     const archive = archiver('zip', { zlib: { level: 1 }});
 
     let dots = 0;
@@ -40,7 +40,7 @@ export async function createCodeZip(): Promise<void> {
                 }
                 updateCount++;
             })
-            .glob(`**`, { cwd: root, ignore: [`**\\${ constants.zipFileName }`], })
+            .glob(`**`, { cwd: root, ignore: [`**\\${ constants.files.zip }`], })
             .finalize();
     });
 }

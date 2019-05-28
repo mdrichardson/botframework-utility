@@ -1,5 +1,5 @@
 import { PromptAndValidator } from './PromptAndValidator';
 
-export interface EnvVarPrompts {
+export interface BotVariablePrompts {
     [index: string]: PromptAndValidator;
 }

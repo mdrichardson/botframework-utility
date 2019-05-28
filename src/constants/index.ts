@@ -1,39 +1,26 @@
-import { azureRegionCodes } from './azureRegionCodes';
-import { cliTools } from './cliTools';
-import { deploymentTemplates } from './deploymentTemplates';
-import { envVars } from './envVars';
-import { envVarPrompts } from './envVarPrompts';
-import { regexForDispose } from './regexForDispose';
-import { regexForValidations } from './regexForValidations';
-import { regexForVariables } from './regexForVariables';
-import { sdkLanguages } from './sdkLanguages';
-import { settingsFiles } from './settingsFiles';
-import { testing } from './testing';
-import { urls } from './urls';
-import { vsCodeConfigNames } from './vsCodeConfigNames';
-import { zipFileName } from './zipFileName';
-import { websites } from './websites';
+import * as deployment from './deployment';
+export { deployment };
 
-export {
-    azureRegionCodes,
-    cliTools,
-    deploymentTemplates,
-    envVarPrompts,
-    envVars,
-    regexForDispose,
-    regexForValidations,
-    regexForVariables,
-    sdkLanguages,
-    settingsFiles,
-    testing,
-    urls,
-    vsCodeConfigNames,
-    websites,
-    zipFileName,
-};
+import * as files from './files';
+export { files };
 
-import * as samples from './samplesRepo';
+import * as regex from './regex';
+export { regex };
+
+import * as samples from './samples';
 export { samples };
 
 import * as terminal from './terminal';
 export { terminal };
+
+import * as testing from './testing';
+export { testing };
+
+import * as urls from './urls';
+export { urls };
+
+import * as variables from './variables';
+export { variables };
+
+import * as vsCodeConfig from './vsCodeConfig';
+export { vsCodeConfig };

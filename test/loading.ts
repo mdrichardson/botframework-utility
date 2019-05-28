@@ -52,8 +52,8 @@ suite('Extension Loading Tests', function(): void {
             const root = getWorkspaceRoot();
             const data = JSON.stringify({ test: 'test' });
             watchEnvFiles();
-            await fsP.writeFile(`${ root }\\${ constants.settingsFiles.Node }`, data);
-            await fsP.writeFile(`${ root }\\${ constants.settingsFiles.Csharp }`, data);
+            await fsP.writeFile(`${ root }\\${ constants.files.settings.Node }`, data);
+            await fsP.writeFile(`${ root }\\${ constants.files.settings.Csharp }`, data);
         } catch {
             assert.fail();
         }

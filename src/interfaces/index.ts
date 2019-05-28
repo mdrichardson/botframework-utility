@@ -1,13 +1,13 @@
 import { BotVariables } from './BotVariables';
 import { Commands } from './Commands';
-import { EnvVarPrompts } from './EnvVarPrompts';
+import { BotVariablePrompts } from './BotVariablePrompts';
 import { PromptAndValidator } from './PromptAndValidator';
 import { CommandOptions } from './CommandOptions';
 
 export {
     BotVariables,
+    BotVariablePrompts,
     CommandOptions,
     Commands,
-    EnvVarPrompts,
     PromptAndValidator
 };

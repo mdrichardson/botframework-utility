@@ -68,16 +68,16 @@ export async function writeCodeFiles(lang?: string): Promise<void> {
     const root = getWorkspaceRoot();
     const data = JSON.stringify({ test: 'test' }, null, 2);
     switch(lang) {
-        case constants.sdkLanguages.Csharp:
+        case constants.variables.sdkLanguages.Csharp:
             await fsP.writeFile(`${ root }\\test.cs`, data);
             break;
-        case constants.sdkLanguages.Typescript:
+        case constants.variables.sdkLanguages.Typescript:
             try {
                 await fsP.mkdir(`${ root }\\src`);
             } catch (err) { }
             await fsP.writeFile(`${ root }\\src\\test.ts`, data);
             break;
-        case constants.sdkLanguages.Node:
+        case constants.variables.sdkLanguages.Node:
             await fsP.writeFile(`${ root }\\test.js`, data);
             break;
         default:

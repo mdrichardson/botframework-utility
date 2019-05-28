@@ -5,23 +5,23 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
     // Force creation of new service plan if creating new resource group
     newServicePlan = newResourceGroup ? true : newServicePlan;
 
-    await promptForVariableIfNotExist(constants.envVars.Location);
-    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppId);
-    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword);
-    await promptForVariableIfNotExist(constants.envVars.BotName);
-    await promptForVariableIfNotExist(constants.envVars.ServicePlanName);
+    await promptForVariableIfNotExist(constants.variables.botVariables.Location);
+    await promptForVariableIfNotExist(constants.variables.botVariables.MicrosoftAppId);
+    await promptForVariableIfNotExist(constants.variables.botVariables.MicrosoftAppPassword);
+    await promptForVariableIfNotExist(constants.variables.botVariables.BotName);
+    await promptForVariableIfNotExist(constants.variables.botVariables.ServicePlanName);
 
-    const rgPrompt = newResourceGroup ? constants.envVarPrompts.ResourceGroupNameBeingCreated : constants.envVarPrompts.ResourceGroupName;
-    await promptForVariableIfNotExist(constants.envVars.ResourceGroupName, rgPrompt.prompt, rgPrompt.validator);
+    const rgPrompt = newResourceGroup ? constants.variables.botVariablePrompts.ResourceGroupNameBeingCreated : constants.variables.botVariablePrompts.ResourceGroupName;
+    await promptForVariableIfNotExist(constants.variables.botVariables.ResourceGroupName, rgPrompt.prompt, rgPrompt.validator);
 
-    const planPrompt = newServicePlan ? constants.envVarPrompts.ServicePlanNameBeingCreated : constants.envVarPrompts.ServicePlanName;
-    await promptForVariableIfNotExist(constants.envVars.ServicePlanName, planPrompt.prompt, planPrompt.validator);
+    const planPrompt = newServicePlan ? constants.variables.botVariablePrompts.ServicePlanNameBeingCreated : constants.variables.botVariablePrompts.ServicePlanName;
+    await promptForVariableIfNotExist(constants.variables.botVariables.ServicePlanName, planPrompt.prompt, planPrompt.validator);
 
     const settings = getEnvBotVariables();
 
     const azCommand = newResourceGroup ? `deployment create --location ${ settings.Location }` : 'group deployment create';
     
-    const templateName = newResourceGroup ? constants.deploymentTemplates["template-with-new-rg.json"] : constants.deploymentTemplates["template-with-preexisting-rg.json"];
+    const templateName = newResourceGroup ? constants.deployment.templates["template-with-new-rg.json"] : constants.deployment.templates["template-with-preexisting-rg.json"];
     const deploymentTemplate = await getDeploymentTemplate(templateName);
 
     const groupParam = newResourceGroup ? `groupName="${ settings.ResourceGroupName }" groupLocation="${ settings.Location }" ` : '';

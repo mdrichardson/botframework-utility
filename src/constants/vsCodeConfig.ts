@@ -1,4 +1,4 @@
-export const vsCodeConfigNames = {
+export const names = {
     customTerminal: 'customTerminal',
     excludeCliToolsFromUpdate: 'excludeCliToolsFromUpdate'
 };

@@ -1,4 +1,3 @@
-export const testing = {
-    PromptCancellationToken: 'promptCancel',
-    TerminalOutput: 'terminalOutput.txt',
-};
+export const PromptCancellationToken = 'promptCancel';
+
+export const TerminalOutput = 'terminalOutput.txt';

@@ -13,7 +13,7 @@ const fsP = fs.promises;
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
-    CodeLanguage: constants.sdkLanguages.Csharp,
+    CodeLanguage: constants.variables.sdkLanguages.Csharp,
     Location: 'westus',
     MicrosoftAppId: '',
     MicrosoftAppPassword: 'TestPassword__0123',
@@ -22,7 +22,7 @@ var testEnv: BotVariables = {
 };
 
 suiteSetup(async (): Promise<void> => {
-    await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+    await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
 });
 
 suite("Deployment - Unit", function(): void {
@@ -34,7 +34,7 @@ suite("Deployment - Unit", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
-        for (const template in constants.deploymentTemplates) {
+        for (const template in constants.deployment.templates) {
             await deleteDownloadTemplates();
             await downloadTemplate(template);
             const exists = await vscode.workspace.findFiles(`**/${ template }`);
@@ -48,18 +48,18 @@ suite("Deployment - Unit", function(): void {
             await deleteDownloadTemplates();
             await fsP.rmdir(location);
         } catch { }
-        await getDeploymentTemplate(constants.deploymentTemplates["template-with-new-rg.json"]);
+        await getDeploymentTemplate(constants.deployment.templates["template-with-new-rg.json"]);
         const folder = await fsP.readdir(location);
         assert(folder.length > 0);
     });
     test("Should get appropriate deployment template - New RG", async function(): Promise<void> {
-        const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
+        const templateName = constants.deployment.templates["template-with-new-rg.json"];
         const location = await getDeploymentTemplate(templateName);
         const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-new-rg.json`);
     });
     test("Should get appropriate deployment template - Existing RG", async function(): Promise<void> {
-        const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
+        const templateName = constants.deployment.templates["template-with-preexisting-rg.json"];
         const location = await getDeploymentTemplate(templateName);
         const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
@@ -72,12 +72,12 @@ suite("Deployment - Unit", function(): void {
         await deleteCodeZip();
         // Give time for it to delete since it doesn't seem to do so immediately
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
-        const file = await vscode.workspace.findFiles(`${ constants.zipFileName }`);
+        const file = await vscode.workspace.findFiles(`${ constants.files.zip }`);
         assert(!file.length);
     });
     test("Should Detect RegEx in data and convert to ENV variables", async function(): Promise<void> {
-        const testAppId = new RandExp(constants.regexForValidations.GUID).gen();
-        const testAppPassword = new RandExp(constants.regexForValidations.MicrosoftAppPassword).gen();
+        const testAppId = new RandExp(constants.regex.forValidations.GUID).gen();
+        const testAppPassword = new RandExp(constants.regex.forValidations.MicrosoftAppPassword).gen();
         const data = {
             appId: testAppId,
             appPassword: testAppPassword
@@ -92,14 +92,14 @@ suite("Deployment - Unit", function(): void {
         assert.equal(command, `az ad app create --display-name "${ testEnv.BotName }" --password "${ testEnv.MicrosoftAppPassword }" --available-to-other-tenants`);
     });
     test("Should Not Return Create App Command if App Id is Present", async function(): Promise<void> {
-        await setBotVariables({ [constants.envVars.MicrosoftAppId]: '37765811-fc7b-4b94-9201-88cf09a1111c' });
+        await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: '37765811-fc7b-4b94-9201-88cf09a1111c' });
         const command = await getCreateAppRegistrationCommand();
         assert.equal(command, undefined);
     });
     test("Should Create Appropriate Resource Creation Command - New RG, New Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
-        const templateName = constants.deploymentTemplates["template-with-new-rg.json"];
+        await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
+        const templateName = constants.deployment.templates["template-with-new-rg.json"];
 
         const command = await getCreateResourcesCommand(true, true);
 
@@ -109,8 +109,8 @@ suite("Deployment - Unit", function(): void {
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, New Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
-        const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
+        await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
+        const templateName = constants.deployment.templates["template-with-preexisting-rg.json"];
 
         const command = await getCreateResourcesCommand(false, true);
 
@@ -120,8 +120,8 @@ suite("Deployment - Unit", function(): void {
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, Existing Service", async function(): Promise<void> {
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
-        await setBotVariables({ [constants.envVars.MicrosoftAppId]: appId });
-        const templateName = constants.deploymentTemplates["template-with-preexisting-rg.json"];
+        await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
+        const templateName = constants.deployment.templates["template-with-preexisting-rg.json"];
 
         const command = await getCreateResourcesCommand(false, false);
 
@@ -130,31 +130,31 @@ suite("Deployment - Unit", function(): void {
             `existingAppServicePlan="${ testEnv.ServicePlanName }" appServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Prepare Deploy Command", async function(): Promise<void> {
-        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Csharp });
+        await setBotVariables({ [constants.variables.botVariables.CodeLanguage]: constants.variables.sdkLanguages.Csharp });
         const commandCsharp = await getPrepareDeployCommand();
         assert.equal(commandCsharp, `az bot prepare-deploy --lang Csharp --code-dir "." --proj-file-path "test.csproj"`);
 
-        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Node });
+        await setBotVariables({ [constants.variables.botVariables.CodeLanguage]: constants.variables.sdkLanguages.Node });
         const commandNode = await getPrepareDeployCommand();
         assert.equal(commandNode, `az bot prepare-deploy --lang Node --code-dir "."`);
 
-        await setBotVariables({ [constants.envVars.CodeLanguage]: constants.sdkLanguages.Typescript });
+        await setBotVariables({ [constants.variables.botVariables.CodeLanguage]: constants.variables.sdkLanguages.Typescript });
         const commandTypescript = await getPrepareDeployCommand();
         assert.equal(commandTypescript, `az bot prepare-deploy --lang Typescript --code-dir "."`);
     });
     test("Should Create Appropriate Deploy Command", async function(): Promise<void> {
         const command = await getDeployCommand();
-        assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.zipFileName }"`);
+        assert.equal(command, `az webapp deployment source config-zip --resource-group "${ testEnv.ResourceGroupName }" --name "${ testEnv.BotName }" --src "${ constants.files.zip }"`);
     });
     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
         try {
             executeTerminalCommand('az test');
         } catch { assert.fail(); };
     });
     test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
         try {
-            await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+            await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
             executeTerminalCommand('az test');
         } catch (err) {
             assert.fail(err);
@@ -163,7 +163,7 @@ suite("Deployment - Unit", function(): void {
     test("Should Return the Appropriate Terminal Path", async function(): Promise<void> {
         this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
 
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
         const path = await getTerminalPath();
         assert.equal(path, constants.terminal.platformPaths.windows);
 
@@ -177,11 +177,11 @@ suite("Deployment - Unit", function(): void {
 
         Object.defineProperty(process, 'platform', this.originalPlatform);
 
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'testPath');
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'testPath');
         const testPath = await getTerminalPath();
         assert.equal(testPath, 'testPath');
 
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
     });
     test("Should Appropriately Join Terminal Commands", async function(): Promise<void> {
         const commands = [

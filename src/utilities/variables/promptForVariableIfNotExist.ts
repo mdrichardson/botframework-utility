@@ -5,7 +5,7 @@ import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, s
 export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp, cancellationToken?: vscode.CancellationToken, isReprompt?: boolean): Promise<void> {
     let value;
     let settings = getEnvBotVariables();
-    if (variable === constants.envVars.CodeLanguage && !settings.CodeLanguage) {
+    if (variable === constants.variables.botVariables.CodeLanguage && !settings.CodeLanguage) {
         value = await getLanguage();
     } else {
         // If prompt and validator not included, get them from constants. All prompts must have validator of some kind

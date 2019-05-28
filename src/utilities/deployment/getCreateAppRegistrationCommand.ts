@@ -10,8 +10,8 @@ export async function getCreateAppRegistrationCommand(): Promise<string|void> {
         return;
     }
 
-    await promptForVariableIfNotExist(constants.envVars.BotName);
-    await promptForVariableIfNotExist(constants.envVars.MicrosoftAppPassword);
+    await promptForVariableIfNotExist(constants.variables.botVariables.BotName);
+    await promptForVariableIfNotExist(constants.variables.botVariables.MicrosoftAppPassword);
 
     settings = getEnvBotVariables();
 

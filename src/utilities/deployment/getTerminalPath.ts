@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import { getVsCodeConfig } from '..';
 
 export async function getTerminalPath(): Promise<string> {
-    const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfigNames.customTerminal) as string);
+    const userTerminalPath = (await getVsCodeConfig(constants.vsCodeConfig.names.customTerminal) as string);
     let terminalPath;
     if (!userTerminalPath) {
         switch (process.platform) {

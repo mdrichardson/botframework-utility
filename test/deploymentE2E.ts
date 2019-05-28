@@ -13,7 +13,7 @@ const name = `vmicricExtTest${ suffix }`;
 
 var testEnv: BotVariables = {
     BotName: name,
-    CodeLanguage: constants.sdkLanguages.Csharp,
+    CodeLanguage: constants.variables.sdkLanguages.Csharp,
     Location: 'westus',
     MicrosoftAppId: '',
     MicrosoftAppPassword: 'AtLeast16Characters____0',
@@ -57,7 +57,7 @@ suite("Deployment - E2E", function(): void {
 
         const command = (await getCreateAppRegistrationCommand() as string);
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.WebappCreate,
+            commandCompleteRegex: constants.regex.forDispose.WebappCreate,
             commandTitle: 'Test - App Registration Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -75,8 +75,8 @@ suite("Deployment - E2E", function(): void {
         testNotify('Creating resources...');
         const command = await getCreateResourcesCommand(true, true);
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
-            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
+            commandCompleteRegex: constants.regex.forDispose.CreateAzureResources,
+            commandFailedRegex: constants.regex.forDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -91,15 +91,15 @@ suite("Deployment - E2E", function(): void {
         this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
-        await deleteBot(testEnv[constants.envVars.BotName]);
+        await deleteBot(testEnv[constants.variables.botVariables.BotName]);
 
         const name = `${ testEnv.ServicePlanName }new`;
-        await setBotVariables({ [constants.envVars.ServicePlanName]: name });
+        await setBotVariables({ [constants.variables.botVariables.ServicePlanName]: name });
 
         const command = await getCreateResourcesCommand(false, true);
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
-            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
+            commandCompleteRegex: constants.regex.forDispose.CreateAzureResources,
+            commandFailedRegex: constants.regex.forDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -115,12 +115,12 @@ suite("Deployment - E2E", function(): void {
 
         testNotify('Creating resources...');
         const name = `${ testEnv.BotName }new`;
-        await setBotVariables({ [constants.envVars.BotName]: name });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: name });
 
         const command = await getCreateResourcesCommand(false, true);
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.CreateAzureResources,
-            commandFailedRegex: constants.regexForDispose.CreateAzureResourcesError,
+            commandCompleteRegex: constants.regex.forDispose.CreateAzureResources,
+            commandFailedRegex: constants.regex.forDispose.CreateAzureResourcesError,
             commandTitle: 'Test - Azure Resource Creation',
             isTest: true,
             timeout: timeout - 500,
@@ -151,8 +151,8 @@ suite("Deployment - E2E", function(): void {
 
         const command = await getPrepareDeployCommand();
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.PrepareDeploy,
-            commandFailedRegex: constants.regexForDispose.PrepareDeployFailed,
+            commandCompleteRegex: constants.regex.forDispose.PrepareDeploy,
+            commandFailedRegex: constants.regex.forDispose.PrepareDeployFailed,
             commandTitle: 'Test - Prepare Deployment',
             isTest: true,
             timeout: timeout - 500,
@@ -161,7 +161,7 @@ suite("Deployment - E2E", function(): void {
         assert.equal(result, true);
 
         let file;
-        if (testEnv.CodeLanguage == constants.sdkLanguages.Csharp) {
+        if (testEnv.CodeLanguage == constants.variables.sdkLanguages.Csharp) {
             file = await vscode.workspace.findFiles('**/.deployment');
         } else {
             file = await vscode.workspace.findFiles('**/web.config');
@@ -180,8 +180,8 @@ suite("Deployment - E2E", function(): void {
         testNotify('Deploying...');
         const command = await getDeployCommand();
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.Deploy,
-            commandFailedRegex: constants.regexForDispose.DeployFailed,
+            commandCompleteRegex: constants.regex.forDispose.Deploy,
+            commandFailedRegex: constants.regex.forDispose.DeployFailed,
             commandTitle: 'Test - Deployment',
             isTest: true,
             timeout: timeout - 500,

@@ -4,8 +4,8 @@ import { getTerminalPath } from '..';
 export async function getSparseCheckoutCommand(path: string): Promise<string> {
     const terminalPath = await getTerminalPath();
 
-    for (const key in constants.terminal.pathRegex) {
-        if (constants.terminal.pathRegex[key].test(terminalPath)) {
+    for (const key in constants.regex.terminalPaths) {
+        if (constants.regex.terminalPaths[key].test(terminalPath)) {
             return `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding[key] }`;
         }
     }

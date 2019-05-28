@@ -8,9 +8,9 @@ import sinon = require('sinon');
 
 suite("Variables", function(): void {
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, 'test');
-        assert.equal(await getVsCodeConfig(constants.vsCodeConfigNames.customTerminal), 'test');
-        await setVsCodeConfig(constants.vsCodeConfigNames.customTerminal, undefined);
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'test');
+        assert.equal(await getVsCodeConfig(constants.vsCodeConfig.names.customTerminal), 'test');
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
     });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
         const timeout = 4 * 1000;
@@ -19,11 +19,11 @@ suite("Variables", function(): void {
 
         await deleteEnvFiles();
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Csharp);
-        const data = { [constants.envVars.BotName]: 'test' };
+        await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
+        const data = { [constants.variables.botVariables.BotName]: 'test' };
         await setLocalBotVariables(data);
         const result = await getLocalBotVariables();
-        assert.equal(result[constants.envVars.BotName], 'test');
+        assert.equal(result[constants.variables.botVariables.BotName], 'test');
     });
     test("Should Load Variables from .env", async function(): Promise<void> {
         const timeout = 4 * 1000;
@@ -32,11 +32,11 @@ suite("Variables", function(): void {
 
         await deleteEnvFiles();
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Node);
-        const data = { [constants.envVars.BotName]: 'test' };
+        await writeCodeFiles(constants.variables.sdkLanguages.Node);
+        const data = { [constants.variables.botVariables.BotName]: 'test' };
         await setLocalBotVariables(data);
         const result = await getLocalBotVariables();
-        assert.equal(result[constants.envVars.BotName], 'test');
+        assert.equal(result[constants.variables.botVariables.BotName], 'test');
     });
     test("Should Load Variables from process - Empty object if they don't exist", async function(): Promise<void> {
         process.env.BOTFRAMEWORK_UTILITY = undefined;
@@ -54,19 +54,19 @@ suite("Variables", function(): void {
         this.slow(timeout * 0.95);
 
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Node);
+        await writeCodeFiles(constants.variables.sdkLanguages.Node);
         const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
-        await setBotVariables({ [constants.envVars.BotName]: testName });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: testName });
 
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Node);
+        await writeCodeFiles(constants.variables.sdkLanguages.Node);
         const envResult = getEnvBotVariables();
-        assert.equal(envResult[constants.envVars.BotName], testName);
+        assert.equal(envResult[constants.variables.botVariables.BotName], testName);
 
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Node);
+        await writeCodeFiles(constants.variables.sdkLanguages.Node);
         const localResult = await getLocalBotVariables();
-        assert.equal(localResult[constants.envVars.BotName], testName);
+        assert.equal(localResult[constants.variables.botVariables.BotName], testName);
     });
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
         const timeout = 6 * 1000;
@@ -74,32 +74,32 @@ suite("Variables", function(): void {
         this.slow(timeout * 0.95);
         
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Csharp);
+        await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
-        await setBotVariables({ [constants.envVars.BotName]: testName });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: testName });
 
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Csharp);
+        await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         const envResult = getEnvBotVariables();
-        assert.equal(envResult[constants.envVars.BotName], testName);
+        assert.equal(envResult[constants.variables.botVariables.BotName], testName);
 
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Csharp);
+        await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         const localResult = await getLocalBotVariables();
-        assert.equal(localResult[constants.envVars.BotName], testName);
+        assert.equal(localResult[constants.variables.botVariables.BotName], testName);
     });
     test("Should sync local bot variables to Env", async function(): Promise<void> {
         process.env.BOTFRAMEWORK_UTILITY = undefined;
         const testName = `testBotName_${ Math.floor(Math.random() * 1000) }`;
-        await setLocalBotVariables({ [constants.envVars.BotName]: testName });
+        await setLocalBotVariables({ [constants.variables.botVariables.BotName]: testName });
 
         await syncLocalBotVariablesToEnv();
 
         const envResult = await getEnvBotVariables();
-        assert.equal(envResult[constants.envVars.BotName], testName);
+        assert.equal(envResult[constants.variables.botVariables.BotName], testName);
     });
     test("Should normalize bot variable keys", async function(): Promise<void> {
-        for (const key in constants.envVars) {
+        for (const key in constants.variables.botVariables) {
             const jumbled = key
                 .replace('a', 's')
                 .toLowerCase();
@@ -108,28 +108,28 @@ suite("Variables", function(): void {
     });
     test("Should properly get Csharp language", async function(): Promise<void> {
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Csharp);
-        assert.equal(await getLanguage(), constants.sdkLanguages.Csharp);
+        await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
+        assert.equal(await getLanguage(), constants.variables.sdkLanguages.Csharp);
     });
     test("Should properly get Node language", async function(): Promise<void> {
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Node);
-        assert.equal(await getLanguage(), constants.sdkLanguages.Node);
+        await writeCodeFiles(constants.variables.sdkLanguages.Node);
+        assert.equal(await getLanguage(), constants.variables.sdkLanguages.Node);
     });
     test("Should properly get Typescript language", async function(): Promise<void> {
         await deleteCodeFiles();
-        await writeCodeFiles(constants.sdkLanguages.Typescript);
-        assert.equal(await getLanguage(), constants.sdkLanguages.Typescript);
+        await writeCodeFiles(constants.variables.sdkLanguages.Typescript);
+        assert.equal(await getLanguage(), constants.variables.sdkLanguages.Typescript);
     });
     test("Should get code language if we don't know it, without prompting", async function(): Promise<void> {
-        await setBotVariables({ [constants.envVars.CodeLanguage]: undefined });
-        await promptForVariableIfNotExist(constants.envVars.CodeLanguage);
+        await setBotVariables({ [constants.variables.botVariables.CodeLanguage]: undefined });
+        await promptForVariableIfNotExist(constants.variables.botVariables.CodeLanguage);
         const variables = getEnvBotVariables();
         assert(variables.CodeLanguage != undefined);
     });
     test("Should not prompt for variable if it exists", async function(): Promise<void> {
         const testName = 'testBotNameTEST';
-        await setBotVariables({ [constants.envVars.BotName]: testName });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: testName });
         try {
             await promptForVariableIfNotExist('BotName');
         } catch (err) {
@@ -141,10 +141,10 @@ suite("Variables", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
-        await setBotVariables({ [constants.envVars.BotName]: undefined });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
-            promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token);
+            promptForVariableIfNotExist('BotName', undefined, constants.regex.forValidations.WordsOnly, test.token);
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             test.cancel();
         } catch(err) {
@@ -156,10 +156,10 @@ suite("Variables", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
         
-        await setBotVariables({ [constants.envVars.BotName]: undefined });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
-            promptForVariableIfNotExist('BotName', undefined, constants.regexForValidations.WordsOnly, test.token, true);
+            promptForVariableIfNotExist('BotName', undefined, constants.regex.forValidations.WordsOnly, test.token, true);
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             test.cancel();
         } catch(err) {
@@ -167,10 +167,10 @@ suite("Variables", function(): void {
         }
     });
     test("Should prompt for variable if it doesn't exist", async function(): Promise<void> {
-        await setBotVariables({ [constants.envVars.BotName]: undefined });
+        await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         const promptStub = sinon.stub(vscode.window, 'showInputBox');
         promptStub.resolves('testBotName');
-        const result = await promptForVariableIfNotExist(constants.envVars.BotName);
+        const result = await promptForVariableIfNotExist(constants.variables.botVariables.BotName);
         assert.equal(result, 'testBotName');
     });
     test("Should throw if we try to prompt for an invalid variable", async function(): Promise<void> {
@@ -184,14 +184,14 @@ suite("Variables", function(): void {
         }
     });
     test("Each Env Variable prompt should have prompt text and a regex validator", function(): void {
-        for (const key in constants.envVarPrompts) {
-            assert.equal(typeof constants.envVarPrompts[key].prompt, 'string');
-            assert(constants.envVarPrompts[key].validator instanceof RegExp);
+        for (const key in constants.variables.botVariablePrompts) {
+            assert.equal(typeof constants.variables.botVariablePrompts[key].prompt, 'string');
+            assert(constants.variables.botVariablePrompts[key].validator instanceof RegExp);
         }
     });
     test("Should correctly validate RegExp", function(): void {
-        for (const key in constants.envVarPrompts) {
-            const validator = (constants.envVarPrompts[key].validator as RegExp);
+        for (const key in constants.variables.botVariablePrompts) {
+            const validator = (constants.variables.botVariablePrompts[key].validator as RegExp);
             const shouldBeTrue = inputIsValid(new RandExp(validator).gen(), validator);
             assert.equal(shouldBeTrue, true);
 

@@ -4,8 +4,8 @@ import { CommandOptions } from "../../interfaces/CommandOptions";
 
 export async function getCurrentAzCliVersion(): Promise<string> {
     const options: CommandOptions = {
-        commandFailedRegex: constants.regexForDispose.GeneralTerminalFailure,
-        returnRegex: constants.regexForVariables.AzCliVersion,
+        commandFailedRegex: constants.regex.forDispose.GeneralTerminalFailure,
+        returnRegex: constants.regex.forVariables.AzCliVersion,
         timeout: 10000,
     };
     const matches = (await executeTerminalCommand('az -v', options) as RegExpExecArray);

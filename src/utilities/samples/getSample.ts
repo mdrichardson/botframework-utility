@@ -12,8 +12,8 @@ export async function getSample(sample: string): Promise<void> {
     const tempDir = await createTempDir((sample.split('/').pop() as string));
         
     const options: CommandOptions = {
-        commandCompleteRegex: constants.regexForDispose.GitClone,
-        commandFailedRegex: constants.regexForDispose.GitCloneFailed,
+        commandCompleteRegex: constants.regex.forDispose.GitClone,
+        commandFailedRegex: constants.regex.forDispose.GitCloneFailed,
         commandTitle: 'Get Sample',
         isTest: true,
         timeout: 10 * 1000,

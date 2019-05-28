@@ -7,8 +7,8 @@ import { normalizeEnvKeys } from '..';
 const fsP = fs.promises;
 
 export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
-    const dotenvFile = await vscode.workspace.findFiles(`**/*${ constants.settingsFiles.Node }`, null, 1);
-    const appsettingsJsonFile = await vscode.workspace.findFiles(`**/${ constants.settingsFiles.Csharp }`, null, 1);
+    const dotenvFile = await vscode.workspace.findFiles(`**/*${ constants.files.settings.Node }`, null, 1);
+    const appsettingsJsonFile = await vscode.workspace.findFiles(`**/${ constants.files.settings.Csharp }`, null, 1);
     let botSettings: Partial<BotVariables> = {};
     // Read settings from file
     if (dotenvFile[0]) {

@@ -1,13 +1,22 @@
+export const cliTools = [
+    "az", 
+    "botdispatch", 
+    "botskills", 
+    "chatdown", 
+    // "dialogtracker", 
+    // "dialogschema", 
+    // "dialoglint", 
+    "msbot", 
+    "ludown", 
+    "luis-apis", 
+    "luisgen", 
+    "qnamaker" 
+];
+
 export const joins = {
     bash: ' && ',
     commandPrompt: ' & ',
     powershell: '; '
-};
-
-export const pathRegex = {
-    bash: /^bash|sh$/gi,
-    commandPrompt: /command|cmd/i,
-    powershell: /powershell|pwsh/i,
 };
 
 export const sparseCheckoutEnding = {

@@ -9,6 +9,6 @@ export async function downloadTemplate(templateName: string): Promise<void> {
     if (!deploymentTemplatesFolderExists) {
         await fsP.mkdir(`${ getWorkspaceRoot() }/deploymentTemplates/`, { recursive: true });
     }
-    const file = await axios.get(constants.urls[templateName]);
+    const file = await axios.get(constants.urls.downloadTemplates[templateName]);
     await fsP.writeFile(`${ getWorkspaceRoot() }/deploymentTemplates/${ templateName }`, JSON.stringify(file.data, null, 2));
 }

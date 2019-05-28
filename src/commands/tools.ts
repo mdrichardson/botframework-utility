@@ -8,8 +8,8 @@ const toolsCommands: Commands = {
     async updateCliTools(): Promise<void> {        
         const command = await getToolsUpdateCommand();
         const options: CommandOptions = {
-            commandCompleteRegex: constants.regexForDispose.UpdateCliTools,
-            commandFailedRegex: constants.regexForDispose.UpdateCliToolsFailed,
+            commandCompleteRegex: constants.regex.forDispose.UpdateCliTools,
+            commandFailedRegex: constants.regex.forDispose.UpdateCliToolsFailed,
             commandTitle: 'CLI Tools Update'
         };
 
