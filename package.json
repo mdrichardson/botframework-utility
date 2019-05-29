@@ -28,6 +28,11 @@
 				"title": "Open Emulator (localhost)"
 			},
 			{
+				"command": "botframework-utility.openEmulatorLocalhostWithApp",
+				"category": "Bot > Emulator",
+				"title": "Open Emulator (localhost w/ AppId/AppPass)"
+			},
+			{
 				"command": "botframework-utility.createAppRegistration",
 				"category": "Bot > Deploy",
 				"title": "1. Create App Registration"

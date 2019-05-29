@@ -2,7 +2,7 @@ import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, setBotVariables } from '..';
 
-export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp, cancellationToken?: vscode.CancellationToken, isReprompt?: boolean): Promise<void> {
+export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp, cancellationToken?: vscode.CancellationToken, isReprompt?: boolean): Promise<string> {
     let value;
     let settings = getEnvBotVariables();
     if (variable === constants.variables.botVariables.CodeLanguage && !settings.CodeLanguage) {
@@ -19,10 +19,10 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
             if (!isReprompt && /* istanbul ignore next: can't test input */ (!value || (validator && !(inputIsValid(value, validator))))) {
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
                 promptForVariableIfNotExist(variable, prompt, validator, cancellationToken, true);
-                return;
+                return '';
             }
         // We already have the variable, so return without setting anything
-        } else { return; }
+        } else { return settings[variable]; }
     }
     await setBotVariables({ [variable]: value });
     return value;

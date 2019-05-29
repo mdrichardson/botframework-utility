@@ -1,4 +1,12 @@
-export function getEmulatorLaunchCommand(url: string, domain: string = 'livechat', action: string = 'open'): string {
+import { EmulatorParams } from '../../interfaces';
+
+export function getEmulatorLaunchCommand(url: string,
+    params: EmulatorParams = {
+        action: 'open',
+        domain: 'livechat',
+    }): string {
+    const { action = 'open', domain = 'livechat', appId, appPassword, botFileSecret } = params;
+    
     url = encodeURIComponent(url);
 
     let opener;
@@ -16,6 +24,19 @@ export function getEmulatorLaunchCommand(url: string, domain: string = 'livechat
             opener = 'xdg-open';
             break;
     }
+
+    let command = `${ opener } "bfemulator://${ domain }.${ action }?botUrl=${ url }`;
+    if (appId) {
+        command += `&msaAppId=${ appId }`;
+    }
+    if (appPassword) {
+        command += `&msaPassword=${ appPassword }`;
+    }
+    if (botFileSecret) {
+        command += `&secret=${ botFileSecret }`;
+    }
+
+    command += '"';
     
-    return `${ opener } bfemulator://${ domain }.${ action }?botUrl=${ url }`;
+    return command;
 }
