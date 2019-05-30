@@ -7,6 +7,10 @@ import Axios, { AxiosResponse } from 'axios';
 
 suite('Tools', function(): void {
     test("All Website Constants Should Return 200 Status", async function(): Promise<void> {
+        const timeout = 10 * 1000;
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
         for (const key in constants.urls.downloadTemplates) {
             const response = (await Axios.get(constants.urls.downloadTemplates[key]) as AxiosResponse);
             assert.equal(response.status, 200);
@@ -20,7 +24,7 @@ suite('Tools', function(): void {
         }));
     });
     test('Should Get Appropriate Tools Update Command - No Exclusions', async function(): Promise<void> {
-        const timeout = 12 * 1000;
+        const timeout = 20 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
@@ -30,7 +34,7 @@ suite('Tools', function(): void {
         assert.equal(command, `npm install -g ${ toUpdate.join(' ') }`);
     });
     test('Should Get Appropriate Tools Update Command - Many Exclusions', async function(): Promise<void> {
-        const timeout = 12 * 1000;
+        const timeout = 20 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
@@ -41,7 +45,7 @@ suite('Tools', function(): void {
         assert.equal(command, `npm install -g ${ notExclude.join(' ') }`);
     });
     test('Should Get Appropriate Tools Update Command - All Exclusions', async function(): Promise<void> {
-        const timeout = 12 * 1000;
+        const timeout = 20 * 1000;
         this.timeout(timeout);
         this.slow(timeout * 0.95);
         

@@ -24,6 +24,7 @@ export const forValidations = {
     Location: arrayToRegex(azureRegionCodes),
     MicrosoftAppPassword: /^[\w@#$%^&*\-!=\[\]{}|:‘,.?/`~();]{16,}$/,
     ResourceGroups: /^[\w\.\-)(].*[^\.]$/,
+    Website: /^https?:\/\/[\w\/\.:]*\/api\/messages\/?$/i,
     WordsOnly: /^\w{4,}$/,
 };
 
@@ -32,6 +33,7 @@ export const endpointNameRegex = /(?<EndpointName>^Endpoint_\w*|^Endpoint)/i;
 export const endpointSuffixes = {
     AppId: 'AppId',
     AppPassword: 'AppPassword',
+    Host: 'Host',
     Name: 'Name'
 };
 

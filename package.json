@@ -79,6 +79,11 @@
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
 					"command": "botframework-utility.openEmulatorLocalhost",
 					"group": "@botframework-utility"
+                },
+                {
+					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
+					"command": "botframework-utility.openEmulatorProduction",
+					"group": "@botframework-utility"
 				}
 			]
 		},

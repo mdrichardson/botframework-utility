@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as constants from '../constants';
 
 import { Commands } from '../interfaces';
-import { getEmulatorLaunchCommand, executeTerminalCommand, promptForVariableIfNotExist } from '../utilities';
+import { getEmulatorLaunchCommand, executeTerminalCommand, promptForVariableIfNotExist, log, getSingleEndpoint } from '../utilities';
 
 const emulatorCommands: Commands = {
     async openEmulatorLocalhost(): Promise<void> {
@@ -18,14 +18,20 @@ const emulatorCommands: Commands = {
         const appPassword = await promptForVariableIfNotExist(constants.variables.botVariables.MicrosoftAppPassword);
         
         vscode.window.showInformationMessage('Opening Emulator at localhost');
-        var command = getEmulatorLaunchCommand('http://localhost:3978/api/messages', { appId, appPassword });
+        const command = getEmulatorLaunchCommand('http://localhost:3978/api/messages', { appId, appPassword });
         await executeTerminalCommand(command);
     },
     async openEmulatorProduction(): Promise<void> {
-        // get array of production endpoints
-        // if length = 0, prompt
-        // if length = 1, launch
-        // if length > 1, show quickpick > launch
+        const endpoint = await getSingleEndpoint();
+        
+        if (endpoint) {
+            vscode.window.showInformationMessage(`Opening Emulator at ${ endpoint.Name }: ${ endpoint.Host }`);
+            const command = getEmulatorLaunchCommand(endpoint.Host, { 
+                appId: endpoint.AppId, 
+                appPassword: endpoint.AppPassword,
+            });
+            await executeTerminalCommand(command);
+        } else { log('No Endpoint Found'); }
     }
 };
 

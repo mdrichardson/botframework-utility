@@ -1,6 +1,6 @@
 export interface Endpoint {
     Name: string;
-    Endpoint: string;
+    Host: string;
     AppId: string;
     AppPassword: string;
 }
