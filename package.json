@@ -35,6 +35,11 @@
 			{
 				"command": "botframework-utility.openEmulatorProduction",
 				"category": "Bot > Emulator",
+				"title": "Open Emulator (Production Endpoint(s))"
+			},
+			{
+				"command": "botframework-utility.openEmulatorProduction",
+				"category": "Bot > Emulator",
 				"title": "Open Emulator (Production Endpoint)"
 			},
 			{
@@ -78,6 +83,11 @@
 				{
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
 					"command": "botframework-utility.openEmulatorLocalhost",
+					"group": "@botframework-utility"
+                },
+				{
+					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
+					"command": "botframework-utility.openEmulatorLocalhostWithApp",
 					"group": "@botframework-utility"
                 },
                 {
