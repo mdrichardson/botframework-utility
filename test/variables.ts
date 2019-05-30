@@ -2,11 +2,14 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import RandExp = require('randexp');
-import { deleteEnvFiles, deleteCodeFiles, writeCodeFiles } from './testUtilities';
+import { clearEnvVariables, deleteCodeFiles, writeCodeFiles } from './testUtilities';
 import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv, setVsCodeConfig, getVsCodeConfig } from '../src/utilities';
 import sinon = require('sinon');
 
 suite("Variables", function(): void {
+    teardown((): void => {
+        sinon.restore();
+    });
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'test');
         assert.equal(await getVsCodeConfig(constants.vsCodeConfig.names.customTerminal), 'test');
@@ -17,7 +20,7 @@ suite("Variables", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
-        await deleteEnvFiles();
+        await clearEnvVariables();
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         const data = { [constants.variables.botVariables.BotName]: 'test' };
@@ -30,7 +33,7 @@ suite("Variables", function(): void {
         this.timeout(timeout);
         this.slow(timeout * 0.95);
 
-        await deleteEnvFiles();
+        await clearEnvVariables();
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Node);
         const data = { [constants.variables.botVariables.BotName]: 'test' };

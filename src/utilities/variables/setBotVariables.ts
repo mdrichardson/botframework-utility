@@ -7,7 +7,7 @@ export async function setBotVariables(variablesToAdd: Partial<BotVariables>): Pr
     let changes = 0;
     for (const key in variablesToAdd) {
         const normalizedKey = normalizeEnvKeys(key);
-        if (currentBotVariables[normalizedKey] != variablesToAdd[key]) {
+        if (currentBotVariables[normalizedKey] !== variablesToAdd[key]) {
             changes += 1;
             currentBotVariables[normalizedKey] = variablesToAdd[key] || '';
         }        

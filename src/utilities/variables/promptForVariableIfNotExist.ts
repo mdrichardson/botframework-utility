@@ -8,13 +8,13 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
     if (variable === constants.variables.botVariables.CodeLanguage && !settings.CodeLanguage) {
         value = await getLanguage();
     } else {
-        // If prompt and validator not included, get them from constants. All prompts must have validator of some kind
-        if (!prompt && !validator) {
-            const promptAndValidator = getPromptAndValidator(variable);
-            prompt = promptAndValidator.prompt;
-            validator = promptAndValidator.validator;
-        }
-        if (!settings[variable] || !settings[variable].trim()) {
+        if (!settings[variable] || !(settings[variable] as string).trim()) {            
+            // If prompt and validator not included, get them from constants. All prompts must have validator of some kind
+            if (!prompt && !validator) {
+                const promptAndValidator = getPromptAndValidator(variable);
+                prompt = promptAndValidator.prompt;
+                validator = promptAndValidator.validator;
+            }
             value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }, cancellationToken);
             if (!isReprompt && /* istanbul ignore next: can't test input */ (!value || (validator && !(inputIsValid(value, validator))))) {
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
@@ -22,7 +22,7 @@ export async function promptForVariableIfNotExist(variable: string, prompt?: str
                 return '';
             }
         // We already have the variable, so return without setting anything
-        } else { return settings[variable]; }
+        } else { return (settings[variable] as string); }
     }
     await setBotVariables({ [variable]: value });
     return value;

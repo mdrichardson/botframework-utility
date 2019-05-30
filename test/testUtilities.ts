@@ -33,7 +33,7 @@ export async function deleteResourceGroupDeployment(name: string): Promise<void>
     executeTerminalCommand(command, { isTest: true, timeout: 15000 });
 }
 
-export async function deleteBot(name: string): Promise<void> {
+export async function deleteBot(name: string|undefined): Promise<void> {
     const command = `az bot delete --name ${ name }`;
     executeTerminalCommand(command, { isTest: true, timeout: 5000 });
 }
@@ -51,17 +51,18 @@ export async function deletePrepareDeployFiles(): Promise<void> {
     }));
 }
 
-export async function deleteEnvFiles(): Promise<void> {
+export async function clearEnvVariables(): Promise<void> {
     const root = getWorkspaceRoot();
     const files = [
         `${ root }\\.env`,
         `${ root }\\appsettings.json`
     ];
     await Promise.all(files.map(async (file): Promise<void> => {
-        if (fs.existsSync(file)) {
+        try {
             await fsP.unlink(file);
-        }
+        } catch (err) { }
     }));
+    process.env['BOTFRAMEWORK_UTILITY'] = '';
 }
 
 export async function writeCodeFiles(lang?: string): Promise<void> {

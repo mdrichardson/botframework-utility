@@ -2,8 +2,8 @@ import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import * as dotenv from 'dotenv';
 import { BotVariables } from '../../interfaces';
+import { handleLocalEnvJson } from './handleLocalEnvJson';
 import fs = require('fs');
-import { normalizeEnvKeys } from '..';
 const fsP = fs.promises;
 
 export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
@@ -13,16 +13,12 @@ export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
     // Read settings from file
     if (dotenvFile[0]) {
         const json = dotenv.parse(await fsP.readFile(dotenvFile[0].fsPath));
-        for (const key in json) {
-            botSettings[normalizeEnvKeys(key)] = json[key];
-        }
+        botSettings = handleLocalEnvJson(json, botSettings);
     } 
     if (appsettingsJsonFile[0]) {
         const raw = String(await fsP.readFile(appsettingsJsonFile[0].fsPath));
         const json = JSON.parse(raw);
-        for (const key in json) {
-            botSettings[normalizeEnvKeys(key)] = json[key];
-        }
+        botSettings = handleLocalEnvJson(json, botSettings);
     }
     return botSettings;
 }

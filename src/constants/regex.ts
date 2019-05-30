@@ -27,6 +27,19 @@ export const forValidations = {
     WordsOnly: /^\w{4,}$/,
 };
 
+export const endpointNameRegex = /(?<EndpointName>^Endpoint_\w*|^Endpoint)/i;
+
+export const endpointSuffixes = {
+    AppId: 'AppId',
+    AppPassword: 'AppPassword',
+    Name: 'Name'
+};
+
+export const endpointKeys = {
+    AppId: new RegExp(`^${ endpointNameRegex.source }_${ endpointSuffixes.AppId }$`, 'i'),
+    AppPassword: new RegExp(`^${ endpointNameRegex.source }_${ endpointSuffixes.AppPassword }$`, 'i'),
+};
+
 // We .slice() to remove the ^ and $ to make RegEx global match work
 export const forVariables = {
     AzCliCurrentVersion: /The current version of the CLI is <strong>(?<version>[\d.]*)<\/strong>./,

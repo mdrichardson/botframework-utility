@@ -33,6 +33,11 @@
 				"title": "Open Emulator (localhost w/ AppId/AppPass)"
 			},
 			{
+				"command": "botframework-utility.openEmulatorProduction",
+				"category": "Bot > Emulator",
+				"title": "Open Emulator (Production Endpoint)"
+			},
+			{
 				"command": "botframework-utility.createAppRegistration",
 				"category": "Bot > Deploy",
 				"title": "1. Create App Registration"

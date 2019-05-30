@@ -3,7 +3,7 @@ import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
 import {  setBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, watchEnvFiles, createAzureResources } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, deleteBot, deletePrepareDeployFiles, testNotify, deleteEnvFiles } from './testUtilities';
+import { cleanup, deleteTerminalOutputFile, deleteBot, deletePrepareDeployFiles, testNotify, clearEnvVariables } from './testUtilities';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
 import fs = require('fs');
 const fsP = fs.promises;
@@ -22,7 +22,7 @@ var testEnv: BotVariables = {
 };
 
 suiteSetup(async (): Promise<void> => {
-    await deleteEnvFiles();
+    await clearEnvVariables();
     await setBotVariables(testEnv);
     testNotify(`Resource Suffix: ${ suffix }`);
 });

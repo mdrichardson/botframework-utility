@@ -5,7 +5,9 @@ import { getLocalBotVariables } from './getLocalBotVariables';
 import { getPromptAndValidator } from './getPromptAndValidator';
 import { getVsCodeConfig } from './getVsCodeConfig';
 import { getWorkspaceRoot } from './getWorkspaceRoot';
+import { handleLocalEnvJson } from './handleLocalEnvJson';
 import { inputIsValid } from './inputIsValid';
+import { getEndpointKeyType } from './getEndpointKeyType';
 import { normalizeEnvKeys } from './normalizeEnvKeys';
 import { promptForVariableIfNotExist } from './promptForVariableIfNotExist';
 import { setBotVariables } from './setBotVariables';
@@ -22,7 +24,9 @@ export {
     getPromptAndValidator,
     getVsCodeConfig,
     getWorkspaceRoot,
+    handleLocalEnvJson,
     inputIsValid,
+    getEndpointKeyType,
     normalizeEnvKeys,
     promptForVariableIfNotExist,
     setBotVariables,

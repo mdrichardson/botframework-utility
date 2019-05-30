@@ -20,6 +20,12 @@ const emulatorCommands: Commands = {
         vscode.window.showInformationMessage('Opening Emulator at localhost');
         var command = getEmulatorLaunchCommand('http://localhost:3978/api/messages', { appId, appPassword });
         await executeTerminalCommand(command);
+    },
+    async openEmulatorProduction(): Promise<void> {
+        // get array of production endpoints
+        // if length = 0, prompt
+        // if length = 1, launch
+        // if length > 1, show quickpick > launch
     }
 };
 

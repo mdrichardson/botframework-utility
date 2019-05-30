@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
@@ -5,8 +6,8 @@ import assert = require("assert");
 import fs = require('fs');
 const fsP = fs.promises;
 import mocha = require('mocha');
-import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand } from '../src/utilities';
-import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile } from './testUtilities';
+import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject } from '../src/utilities';
+import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile, clearEnvVariables } from './testUtilities';
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
@@ -37,11 +38,24 @@ require('./deploymentUnit');
 //     ResourceGroupName: 'vmicricEXT',
 //     ServicePlanName: 'vmicricEXT'    
 // };
+
 // suite("Quick Test", function(): void {
-//     test("Should Create Appropriate App Creation Command", async function(): Promise<void> {
-//         this.timeout(99999999);
-//         await setBotVariables(testEnv);
-//         const command = (await getCreateAppRegistrationCommand() as string);
-//         assert.equal(command, `az ad app create --display-name "${ testEnv.BotName }" --password "${ testEnv.MicrosoftAppPassword }" --available-to-other-tenants`);
+//     test("Should Not Normalize Endpoint Keys", async function(): Promise<void> {
+//         const regex = [
+//             // Endpoint Name
+//             /Endpoint/i,
+//             /Endpoint_[\w]*/i,
+//             // Endpoint AppId
+//             /Endpoint_AppId/i,
+//             /Endpoint_[\w]*_AppId/i,
+//             // Endpoint AppPassword
+//             /Endpoint_AppPassword/i,
+//             /Endpoint_[\w]*_AppPassword/i,
+//         ];
+//         regex.map((r): void => {
+//             const key = new RandExp(r).gen();
+//             const newKey = normalizeEnvKeys(key);
+//             assert.equal(newKey, key);
+//         });
 //     });
 // });

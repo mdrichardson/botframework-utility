@@ -6,4 +6,5 @@ export interface BotVariables {
     CodeLanguage: string;
     BotName: string;
     ServicePlanName: string;
+    [EndpointKeys: string]: string | undefined;
 }
