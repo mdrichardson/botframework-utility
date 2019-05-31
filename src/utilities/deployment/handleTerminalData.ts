@@ -21,7 +21,7 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
                 matches = (returnRegex.exec(data) as RegExpExecArray);
                 terminal.dispose();
                 commandComplete = true;
-                result = Object.keys(matches).length > 0 && matches ? matches : true;
+                result = matches;
             } else {
                 matches = await regexToVariables(data);
                 if (commandFailedRegex && commandFailedRegex.test(data)) {
@@ -33,7 +33,7 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
                     vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
                     terminal.dispose();
                     commandComplete = true;
-                    result = Object.keys(matches).length > 0 ? matches : true;
+                    result = matches;
                 }
                 if (isTest) {
                     terminalOutput += data.toString('utf8');
@@ -51,10 +51,6 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
             if (timeout && totalTime >= timeout) {
                 commandComplete = true;
                 result = result ? result : false;
-                if (isTest) {
-                    const root = getWorkspaceRoot();
-                    await fsP.writeFile(`${ root }\\${ constants.testing.TerminalOutput }`, terminalOutput);
-                }
             }
         }
         if (isTest) {

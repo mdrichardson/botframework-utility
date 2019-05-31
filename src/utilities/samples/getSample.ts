@@ -15,7 +15,6 @@ export async function getSample(sample: string): Promise<void> {
         commandCompleteRegex: constants.regex.forDispose.GitClone,
         commandFailedRegex: constants.regex.forDispose.GitCloneFailed,
         commandTitle: 'Get Sample',
-        isTest: true,
         timeout: 10 * 1000,
     };
 

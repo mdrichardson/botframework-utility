@@ -19,8 +19,6 @@ import RandExp = require('randexp');
 import * as regexToVariablesToStub from '../src/utilities/deployment/regexToVariables';
 import { BotVariables, Endpoint } from '../src/interfaces';
 import { EventEmitter } from 'events';
-import * as archiver from 'archiver';
-
 
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
@@ -80,13 +78,12 @@ suite("Quick Test", function(): void {
     teardown((): void => {
         sinon.restore();
     });
-    test("Should Default to Bash for Terminal Command Join", async function(): Promise<void> {
-        const commands = [
-            'first',
-            'second',
-            'third'
-        ];
-        const sh = await joinTerminalCommands(commands, 'notARealTerminalPath');
-        assert.equal(sh, commands.join(constants.terminal.joins.bash));
+    test("Should Default to v0.0.0 if it Can't See AZ CLI Version in Terminal", async function(): Promise<void> {
+        const regexStub = sinon.stub(constants.regex.forVariables.AzCliVersion, 'exec' );
+        regexStub.returns({} as any);
+        
+        const version = await getCurrentAzCliVersion();
+        assert(typeof version === 'string');
+        assert(version === '0.0.0');
     });
 });

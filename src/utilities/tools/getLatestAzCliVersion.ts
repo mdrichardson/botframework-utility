@@ -7,5 +7,5 @@ export async function getLatestAzCliVersion(): Promise<string> {
         return '0.0.0';
     }
     const matches = (constants.regex.forVariables.AzCliCurrentVersion.exec(releasePage.data) as RegExpExecArray);
-    return matches.groups && matches.groups['version'] ? matches.groups['version'] : '0.0.0';
+    return matches && matches.groups && matches.groups['version'] ? matches.groups['version'] : '0.0.0';
 }
