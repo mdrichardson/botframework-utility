@@ -5,7 +5,7 @@
 import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import { getEmulatorLaunchCommand, normalizeEnvKeys, setBotVariables, getLocalBotVariables, getEndpointKeyType, getEndpointObject, syncLocalBotVariablesToEnv, getEndpoints, getEndpointFromQuickPick, modifyEndpointNameIfNecessary, promptForNewEndpoint, getSingleEndpoint } from '../src/utilities/index';
+import { getEmulatorLaunchCommand, normalizeEnvKeys, setBotVariables, getLocalBotVariables, getEndpointKeyType, getEndpointObject, syncLocalBotVariablesToEnv, getEndpoints, getEndpointFromQuickPick, modifyEndpointNameIfNecessary, promptForNewEndpoint, getSingleEndpoint, writeEndpointToEnv, getEnvBotVariables } from '../src/utilities/index';
 import { clearEnvVariables, writeCodeFiles } from './testUtilities';
 import sinon = require('sinon');
 import RandExp = require('randexp');
@@ -350,5 +350,20 @@ suite('Emulator', function(): void {
         assert.equal(endpoint.AppPassword, testEndpoints.Endpoint_Test2_AppPassword);
         assert.equal(endpoint.Host, testEndpoints.Endpoint_Test2);
         assert.equal(endpoint.Name, 'Endpoint_Test2');  
+    });
+    test("Should Write a New Endpoint to Local and Env", async function(): Promise<void> {
+        await clearEnvVariables();
+
+        await writeEndpointToEnv(testEndpoint);
+
+        const localSettings = await getLocalBotVariables();
+        const envSettings = await getEnvBotVariables();
+
+        assert.equal(localSettings[testEndpoint.Name], testEndpoint.Host);
+        assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+        assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
+        assert.equal(envSettings[testEndpoint.Name], testEndpoint.Host);
+        assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+        assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
     });
 });

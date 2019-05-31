@@ -41,6 +41,11 @@
 				"command": "botframework-utility.openEmulatorProduction",
 				"category": "Bot > Emulator",
 				"title": "Open Emulator (Production Endpoint)"
+            },
+            {
+				"command": "botframework-utility.createEndpoint",
+				"category": "Bot > Emulator",
+				"title": "Create Endpoint (saves to appsettings.json/.env)"
 			},
 			{
 				"command": "botframework-utility.createAppRegistration",
@@ -83,17 +88,22 @@
 				{
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
 					"command": "botframework-utility.openEmulatorLocalhost",
-					"group": "@botframework-utility"
+					"group": "@botframework-utility@1"
                 },
 				{
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
 					"command": "botframework-utility.openEmulatorLocalhostWithApp",
-					"group": "@botframework-utility"
+					"group": "@botframework-utility@2"
                 },
                 {
 					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
 					"command": "botframework-utility.openEmulatorProduction",
-					"group": "@botframework-utility"
+					"group": "@botframework-utility@3"
+                },
+                {
+					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
+					"command": "botframework-utility.createEndpoint",
+					"group": "@botframework-utility@4"
 				}
 			]
 		},

@@ -5,6 +5,7 @@ import { promptForNewEndpoint } from './promptForNewEndpoint';
 import { getEndpointFromQuickPick } from './getEndpointFromQuickPick';
 import { modifyEndpointNameIfNecessary } from './modifyEndpointNameIfNecessary';
 import { getSingleEndpoint } from './getSingleEndpoint';
+import { writeEndpointToEnv } from './writeEndpointToEnv';
 
 export {
     modifyEndpointNameIfNecessary,
@@ -14,4 +15,5 @@ export {
     getEndpointObject,
     getSingleEndpoint,
     promptForNewEndpoint,
+    writeEndpointToEnv,
 };

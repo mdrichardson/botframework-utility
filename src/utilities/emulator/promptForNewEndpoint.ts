@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Endpoint } from "../../interfaces";
-import { getEnvBotVariables } from '..';
+import { getEnvBotVariables, writeEndpointToEnv } from '..';
 import { getEndpointObject } from './getEndpointObject';
 import { modifyEndpointNameIfNecessary } from './modifyEndpointNameIfNecessary';
 
@@ -14,8 +14,9 @@ export async function promptForNewEndpoint(): Promise<Endpoint|undefined> {
         name = await modifyEndpointNameIfNecessary(name);
 
         const settings = getEnvBotVariables();
-        return await getEndpointObject(name, settings);
-        // TODO: Save endpoint to env
+        const endpoint = await getEndpointObject(name, settings);
+        await writeEndpointToEnv(endpoint);
+        return endpoint;
     }
     return undefined;
 }

@@ -2,9 +2,12 @@ import * as vscode from 'vscode';
 import * as constants from '../constants';
 
 import { Commands } from '../interfaces';
-import { getEmulatorLaunchCommand, executeTerminalCommand, promptForVariableIfNotExist, log, getSingleEndpoint } from '../utilities';
+import { getEmulatorLaunchCommand, executeTerminalCommand, promptForVariableIfNotExist, log, getSingleEndpoint, promptForNewEndpoint } from '../utilities';
 
 const emulatorCommands: Commands = {
+    async createEndpoint(): Promise<void> {
+        await promptForNewEndpoint();
+    },
     async openEmulatorLocalhost(): Promise<void> {
         vscode.window.showInformationMessage('Opening Emulator at localhost');
         var command = getEmulatorLaunchCommand('http://localhost:3978/api/messages');

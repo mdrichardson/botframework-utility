@@ -7,7 +7,7 @@ import assert = require("assert");
 import fs = require('fs');
 const fsP = fs.promises;
 import mocha = require('mocha');
-import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject, promptForNewEndpoint, modifyEndpointNameIfNecessary, getSingleEndpoint, getEndpointFromQuickPick } from '../src/utilities';
+import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject, promptForNewEndpoint, modifyEndpointNameIfNecessary, getSingleEndpoint, getEndpointFromQuickPick, writeEndpointToEnv } from '../src/utilities';
 import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile, clearEnvVariables } from './testUtilities';
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
@@ -29,7 +29,8 @@ require('./variables');
 require('./tools');
 require('./samples');
 require('./deploymentUnit');
-// require('./deploymentE2E');  -- 5/20: ran out of app registrations
+// require('./deploymentE2E');  // 5/20: ran out of app registrations
+
 // var testEnv: BotVariables = {
 //     BotName: 'vmicricEXT',
 //     CodeLanguage: constants.variables.sdkLanguages.Csharp,
@@ -76,82 +77,19 @@ require('./deploymentUnit');
 //     teardown((): void => {
 //         sinon.restore();
 //     });
-//     test("Should Return an Endpoint Object after Prompting for an Endpoint - No AppId/Pass/Host - Correct Format", async function(): Promise<void> {
+//     test("Should Write a New Endpoint to Local and Env", async function(): Promise<void> {
 //         await clearEnvVariables();
 
-//         this.timeout(99*99*99);
+//         await writeEndpointToEnv(testEndpoint);
 
-//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
-//         promptStub.onCall(0).resolves(testEndpoint.Name);
-//         promptStub.onCall(1).resolves(testEndpoint.AppId);
-//         promptStub.onCall(2).resolves(testEndpoint.AppPassword);
-//         promptStub.onCall(3).resolves(testEndpoint.Host);
+//         const localSettings = await getLocalBotVariables();
+//         const envSettings = await getEnvBotVariables();
 
-//         const endpoint = (await promptForNewEndpoint() as Endpoint);
-
-//         assert.equal(endpoint.AppId, testEndpoint.AppId);
-//         assert.equal(endpoint.AppPassword, testEndpoint.AppPassword);
-//         assert.equal(endpoint.Host, testEndpoint.Host);
-//         assert.equal(endpoint.Name, testEndpoint.Name);
+//         assert.equal(localSettings[testEndpoint.Name], testEndpoint.Host);
+//         assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+//         assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
+//         assert.equal(envSettings[testEndpoint.Name], testEndpoint.Host);
+//         assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+//         assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
 //     });
-//     test("Should Return an Endpoint Object after Prompting for an Endpoint - No AppId/Pass/Host - Incorrect Format", async function(): Promise<void> {
-//         await clearEnvVariables();
-
-//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
-//         promptStub.onCall(0).resolves('Test');
-//         promptStub.onCall(1).resolves(testEndpoint.AppId);
-//         promptStub.onCall(2).resolves(testEndpoint.AppPassword);
-//         promptStub.onCall(3).resolves(testEndpoint.Host);
-
-//         const endpoint = (await promptForNewEndpoint() as Endpoint);
-
-//         assert.equal(endpoint.AppId, testEndpoint.AppId);
-//         assert.equal(endpoint.AppPassword, testEndpoint.AppPassword);
-//         assert.equal(endpoint.Host, testEndpoint.Host);
-//         assert.equal(endpoint.Name, testEndpoint.Name);
-//     });
-//     test("Should Return an Endpoint Object after Prompting for an Endpoint - Existing AppId/Pass/Host", async function(): Promise<void> {
-//         await clearEnvVariables();
-
-//         await setBotVariables({
-//             Endpoint_Test_AppId: testEndpoint.AppId,
-//             Endpoint_Test_AppPassword: testEndpoint.AppPassword,
-//         });
-
-//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
-//         promptStub.onCall(0).resolves(testEndpoint.Name);
-//         promptStub.onCall(1).resolves(testEndpoint.Host);
-
-//         const endpoint = (await promptForNewEndpoint() as Endpoint);
-
-//         assert.equal(endpoint.AppId, testEndpoint.AppId);
-//         assert.equal(endpoint.AppPassword, testEndpoint.AppPassword);
-//         assert.equal(endpoint.Host, testEndpoint.Host);
-//         assert.equal(endpoint.Name, testEndpoint.Name);
-//     });
-//     test("Should Return an Endpoint Object after Prompting for an Endpoint - Using Default AppId/Pass if None Entered", async function(): Promise<void> {
-//         await clearEnvVariables();
-
-//         await setBotVariables({
-//             MicrosoftAppId: testEndpoint.AppId,
-//             MicrosoftAppPassword: testEndpoint.AppPassword,
-//         });
-
-//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
-//         // Extra prompts account for prompt retries
-//         promptStub.onCall(0).resolves(testEndpoint.Name);
-//         promptStub.onCall(1).resolves(undefined);
-//         promptStub.onCall(2).resolves(undefined);
-//         promptStub.onCall(3).resolves(undefined);
-//         promptStub.onCall(4).resolves(undefined);
-//         promptStub.onCall(5).resolves(testEndpoint.Host);
-
-//         const endpoint = (await promptForNewEndpoint() as Endpoint);
-
-//         assert.equal(endpoint.AppId, testEndpoint.AppId);
-//         assert.equal(endpoint.AppPassword, testEndpoint.AppPassword);
-//         assert.equal(endpoint.Host, testEndpoint.Host);
-//         assert.equal(endpoint.Name, testEndpoint.Name);
-//     });
-    
 // });

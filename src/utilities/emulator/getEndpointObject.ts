@@ -3,14 +3,15 @@ import { BotVariables, Endpoint } from "../../interfaces";
 import { promptForVariableIfNotExist } from '../variables';
 
 export async function getEndpointObject(name: string, settings: Partial<BotVariables>): Promise<Endpoint> {
-    const appIdPrompt = `Enter ${ constants.regex.endpointSuffixes.AppId } for ${ name }`;
+    const appIdPrompt = `Enter ${ constants.regex.endpointSuffixes.AppId } for ${ name }. Leave blank to use existing`;
     const appIdValidator = constants.regex.forValidations.GUID;
 
-    const appPassPrompt = `Enter ${ constants.regex.endpointSuffixes.AppPassword } for ${ name }`;
+    const appPassPrompt = `Enter ${ constants.regex.endpointSuffixes.AppPassword } for ${ name }. Leave blank to use existing`;
     const appPassValidator = constants.regex.forValidations.MicrosoftAppPassword;
 
     const hostPrompt = `Enter ${ constants.regex.endpointSuffixes.Host } for ${ name }`;
     const hostValidator = constants.regex.forValidations.Website;
+    const hostPlaceholder = 'https://<yourHost>.azurewebsites.net/api/messages';
 
     const endpoint: Endpoint = {
         AppId: settings[`${ name }_${ constants.regex.endpointSuffixes.AppId }`] || 
@@ -24,7 +25,7 @@ export async function getEndpointObject(name: string, settings: Partial<BotVaria
             settings.MicrosoftAppPassword ||
             '',
         Host: settings[name] || 
-            await promptForVariableIfNotExist(`${ name }`, { placeHolder: 'https://<yourHost>.azurewebsites.net/api/messages', prompt: hostPrompt, regexValidator: hostValidator }),
+            await promptForVariableIfNotExist(`${ name }`, { placeHolder: hostPlaceholder, prompt: hostPrompt, regexValidator: hostValidator, value: hostPlaceholder }),
         Name: name,
     };
     return endpoint;
