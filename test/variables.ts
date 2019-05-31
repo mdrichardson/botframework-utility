@@ -128,7 +128,7 @@ suite("Variables", function(): void {
         try {
             await promptForVariableIfNotExist('BotName');
         } catch (err) {
-            assert.fail();
+            assert.fail(err);
         }
     });
     test("Should not throw when prompting", async function(): Promise<void> {

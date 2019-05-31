@@ -180,8 +180,8 @@ suite("Deployment - Unit", function(): void {
     test("Should Execute Command from User Terminal Path Without Throwing", async function(): Promise<void> {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe');
         try {
-            executeTerminalCommand('az test');
-        } catch { assert.fail(); };
+            await executeTerminalCommand('az test');
+        } catch(err) { assert.fail(err); };
     });
     test("Should Execute Command from OS Default Terminal Path Without Throwing", async function(): Promise<void> {
         try {

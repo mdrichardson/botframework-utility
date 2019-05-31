@@ -85,8 +85,8 @@ suite('Extension Loading Tests', function(): void {
             watchEnvFiles();
             await fsP.writeFile(`${ root }\\${ constants.files.settings.Node }`, data);
             await fsP.writeFile(`${ root }\\${ constants.files.settings.Csharp }`, data);
-        } catch {
-            assert.fail();
+        } catch(err) {
+            assert.fail(err);
         }
     });
 });

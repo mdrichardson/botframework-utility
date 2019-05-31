@@ -129,9 +129,9 @@ suite("Deployment - E2E", function(): void {
         this.timeout(2 * 60 * 1000);
 
         try {
-            createAzureResources(false, false);
+            await createAzureResources(false, false);
         } catch(err) {
-            assert.fail();
+            assert.fail(err);
         }
     });
 
