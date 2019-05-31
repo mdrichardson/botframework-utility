@@ -1,6 +1,12 @@
+.git
 .vscode
+.vscode-test
+coverage
 node_modules
 out/
 src/
 tsconfig.json
 webpack.config.js
+test/
+test folder/
+testEnvironment/
