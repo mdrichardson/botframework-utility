@@ -147,7 +147,7 @@ suite("Variables", function(): void {
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
-            promptForVariableIfNotExist('BotName', undefined, constants.regex.forValidations.WordsOnly, test.token);
+            promptForVariableIfNotExist('BotName', { cancellationToken: test.token, regexValidator: constants.regex.forValidations.WordsOnly });
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             test.cancel();
         } catch(err) {
@@ -162,7 +162,7 @@ suite("Variables", function(): void {
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
             const test = new vscode.CancellationTokenSource();
-            promptForVariableIfNotExist('BotName', undefined, constants.regex.forValidations.WordsOnly, test.token, true);
+            promptForVariableIfNotExist('BotName', { cancellationToken: test.token, isReprompt: true, regexValidator: constants.regex.forValidations.WordsOnly });
             await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             test.cancel();
         } catch(err) {

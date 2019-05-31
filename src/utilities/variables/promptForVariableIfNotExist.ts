@@ -1,29 +1,44 @@
 import * as constants from '../../constants';
 import * as vscode from 'vscode';
 import { getEnvBotVariables, getLanguage, getPromptAndValidator, inputIsValid, setBotVariables } from '..';
+import { PromptOptions } from '../../interfaces';
 
-export async function promptForVariableIfNotExist(variable: string, prompt?: string, validator?: RegExp, cancellationToken?: vscode.CancellationToken, isReprompt?: boolean): Promise<string> {
-    let value;
+export async function promptForVariableIfNotExist(variable: string,
+    options: PromptOptions = {
+        ignoreFocusOut: true,
+    }): Promise<string> {
+    let result;
     let settings = getEnvBotVariables();
     if (variable === constants.variables.botVariables.CodeLanguage && !settings.CodeLanguage) {
-        value = await getLanguage();
+        result = await getLanguage();
     } else {
         if (!settings[variable] || !(settings[variable] as string).trim()) {            
             // If prompt and validator not included, get them from constants. All prompts must have validator of some kind
-            if (!prompt && !validator) {
+            if (!options.prompt && !options.regexValidator) {
                 const promptAndValidator = getPromptAndValidator(variable);
-                prompt = promptAndValidator.prompt;
-                validator = promptAndValidator.validator;
+                options.prompt = promptAndValidator.prompt;
+                options.regexValidator = promptAndValidator.validator;
             }
-            value = await vscode.window.showInputBox({ ignoreFocusOut: true, prompt: prompt }, cancellationToken);
-            if (!isReprompt && /* istanbul ignore next: can't test input */ (!value || (validator && !(inputIsValid(value, validator))))) {
+
+            result = await vscode.window.showInputBox({
+                ignoreFocusOut: options.ignoreFocusOut,
+                password: options.password,
+                placeHolder: options.placeHolder,
+                prompt: options.prompt,
+                validateInput: options.validateInput,
+                value: options.value,
+                valueSelection: options.valueSelection,
+            }, options.cancellationToken);
+
+            if (!options.isReprompt && /* istanbul ignore next: can't test input */ (!result || (options.regexValidator && !(inputIsValid(result, options.regexValidator))))) {
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
-                promptForVariableIfNotExist(variable, prompt, validator, cancellationToken, true);
+                options.isReprompt = true;
+                promptForVariableIfNotExist(variable, options);
                 return '';
             }
         // We already have the variable, so return without setting anything
         } else { return (settings[variable] as string); }
     }
-    await setBotVariables({ [variable]: value });
-    return value;
+    await setBotVariables({ [variable]: result });
+    return result;
 }

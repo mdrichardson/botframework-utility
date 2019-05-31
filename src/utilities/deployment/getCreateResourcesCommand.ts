@@ -12,10 +12,10 @@ export async function getCreateResourcesCommand(newResourceGroup: boolean, newSe
     await promptForVariableIfNotExist(constants.variables.botVariables.ServicePlanName);
 
     const rgPrompt = newResourceGroup ? constants.variables.botVariablePrompts.ResourceGroupNameBeingCreated : constants.variables.botVariablePrompts.ResourceGroupName;
-    await promptForVariableIfNotExist(constants.variables.botVariables.ResourceGroupName, rgPrompt.prompt, rgPrompt.validator);
+    await promptForVariableIfNotExist(constants.variables.botVariables.ResourceGroupName, { prompt: rgPrompt.prompt, regexValidator: rgPrompt.validator });
 
     const planPrompt = newServicePlan ? constants.variables.botVariablePrompts.ServicePlanNameBeingCreated : constants.variables.botVariablePrompts.ServicePlanName;
-    await promptForVariableIfNotExist(constants.variables.botVariables.ServicePlanName, planPrompt.prompt, planPrompt.validator);
+    await promptForVariableIfNotExist(constants.variables.botVariables.ServicePlanName, { prompt: planPrompt.prompt, regexValidator: planPrompt.validator });
 
     const settings = getEnvBotVariables();
 
