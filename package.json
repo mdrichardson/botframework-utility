@@ -19,7 +19,7 @@
 		"workspaceContains:**/appsettings.json",
 		"workspaceContains:**/.env"
 	],
-	"main": "./dist/extension.js",
+	"main": "./out/src/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -174,13 +174,14 @@
 		]
 	},
 	"scripts": {
+        "echo": "echo \"#####   Be sure to change package.json>main to /dist/extension.js    #####\"",
 		"vscode:prepublish": "webpack --mode production",
 		"compile": "webpack --mode none",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "node ./node_modules/vscode/bin/test",
 		"test-compile": "tsc -p ./",
 		"lint": "eslint ./src --ext .ts",
-		"package": "vsce package",
+		"package": "npm run echo && vsce package",
 		"watch": "webpack --mode none --watch"
 	},
 	"devDependencies": {

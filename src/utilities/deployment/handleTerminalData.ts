@@ -24,7 +24,6 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
                 result = Object.keys(matches).length > 0 && matches ? matches : true;
             } else {
                 matches = await regexToVariables(data);
-                /* istanbul ignore next: commands shouldn't fail during tests */
                 if (commandFailedRegex && commandFailedRegex.test(data)) {
                     vscode.window.showErrorMessage(`${ commandTitle } failed.`);
                     // Stop listening as soon as we fail--Ensure we don't accidentally call a success message

@@ -23,7 +23,6 @@ export async function createCodeZip(): Promise<void> {
     return new Promise((resolve, reject): void => {
         output
             .on('error', (err): void => {
-                /* istanbul ignore next: rare */
                 reject(err);
             })
             .on('finish', async (): Promise<void> => {

@@ -30,7 +30,7 @@ export async function promptForVariableIfNotExist(variable: string,
                 valueSelection: options.valueSelection,
             }, options.cancellationToken);
 
-            if (!options.isReprompt && /* istanbul ignore next: can't test input */ (!result || (options.regexValidator && !(inputIsValid(result, options.regexValidator))))) {
+            if (!options.isReprompt && (!result || (options.regexValidator && !(inputIsValid(result, options.regexValidator))))) {
                 vscode.window.showErrorMessage(`Please enter a value for ${ variable }`);
                 options.isReprompt = true;
                 promptForVariableIfNotExist(variable, options);

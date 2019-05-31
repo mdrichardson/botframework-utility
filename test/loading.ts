@@ -2,22 +2,50 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as extension from '../src/extension';
 import * as constants from '../src/constants';
+import * as sinon from 'sinon';
 import { deploymentCommands, emulatorCommands, toolsCommands, samplesCommands } from '../src/commands';
-import { log, watchEnvFiles, getWorkspaceRoot } from '../src/utilities';
+import { log, watchEnvFiles, getWorkspaceRoot, loadCommands } from '../src/utilities';
 import fs = require('fs');
 const fsP = fs.promises;
 
 suite('Extension Loading Tests', function(): void {
-    test('Should deactivate then reactivate extension without throwing', async function(): Promise<void> {
-        // Extension is automatically activated. We have to deactivate first so that it doesn't throw
-        try {
-            // Can't call extension.activate without ExtensionContext. This is a good workaround
-            const ext = (await vscode.extensions.getExtension('mdrichardson.botframework-utility') as vscode.Extension<any>);
-            await extension.deactivate();
-            await ext.activate();
-        } catch(err) {
-            assert.fail(err);
-        }
+    test("Should Properly Activate the Extension", async function(): Promise<void> {
+        const context: vscode.ExtensionContext = {
+            subscriptions: [],
+        } as any;
+        
+        // Prevent throwing for registering already-registered commands
+        sinon.replace(vscode.commands, 'registerCommand',
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (command: string, callback: (...args: any[]) => any, thisArg?: any): vscode.Disposable => {
+                const disposable: vscode.Disposable = {
+                    dispose: (): void => {},
+                };
+                return disposable;
+            });
+
+        await extension.activate(context);
+
+        assert(context.subscriptions.length > 0);
+    });
+    test("Should Load Commands Without Throwing", async function(): Promise<void> {
+        const context: vscode.ExtensionContext = {
+            subscriptions: [],
+        } as any;
+        
+        // Prevent throwing for registering already-registered commands
+        sinon.replace(vscode.commands, 'registerCommand',
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            (command: string, callback: (...args: any[]) => any, thisArg?: any): vscode.Disposable => {
+                const disposable: vscode.Disposable = {
+                    dispose: (): void => {},
+                };
+                return disposable;
+            });
+
+        await loadCommands(context);
+
+        assert(context.subscriptions.length > 0);
     });
     test('Should have properly loaded all commands', async function(): Promise<void> {
         // We can't call loadCommands directly without context, so we'll just check that each command loaded when the extension activated

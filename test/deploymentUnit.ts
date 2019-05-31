@@ -4,8 +4,8 @@ import * as vscode from 'vscode';
 
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
-import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData, getTerminalPath, joinTerminalCommands } from '../src/utilities';
-import { deleteDownloadTemplates, deleteTerminalOutputFile } from './testUtilities';
+import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData, getTerminalPath, joinTerminalCommands, createCodeZip } from '../src/utilities';
+import { deleteDownloadTemplates, deleteTerminalOutputFile, testNotify } from './testUtilities';
 
 import fs = require('fs');
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
@@ -63,6 +63,39 @@ suite("Deployment - Unit", function(): void {
         const location = await getDeploymentTemplate(templateName);
         const root = getWorkspaceRoot();
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
+    });
+    test("Should create zip file", async function(): Promise<void> {
+        const timeout = 10 * 60 * 1000; 
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+        
+        testNotify('Creating Zip File...');
+        await createCodeZip();
+        const file = await vscode.workspace.findFiles(`**/${ constants.files.zip }`);
+        assert(file.length > 0);
+        // Need to wait for the file to unlock
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 2000));
+    });
+    test("Should throw on error when creating zip file", async function(): Promise<void> {
+        const timeout = 10 * 60 * 1000; 
+        this.timeout(timeout);
+        this.slow(timeout * 0.95);
+
+        // Ensure code.zip exists
+        await createCodeZip();
+
+        const root = getWorkspaceRoot();
+
+        // Lock code.zip to force an error
+        let num;
+        const file = `${ root }\\${ constants.files.zip }`;
+        fs.open(file, 'r+', async (err, fd): Promise<void> => {
+            num = fd;
+            await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 3000));
+        });
+
+        await assert.rejects(createCodeZip);
+        await fs.closeSync(num);
     });
     test("Should delete zip file", async function(): Promise<void> {
         const timeout = 10 * 1000;

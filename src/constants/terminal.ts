@@ -30,3 +30,9 @@ export const platformPaths = {
     osx: 'sh',
     windows: 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe',
 };
+
+export const openers = {
+    linux: 'xdg-open',
+    osx: 'open',
+    windows: 'start'
+};

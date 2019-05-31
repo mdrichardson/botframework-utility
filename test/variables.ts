@@ -169,6 +169,18 @@ suite("Variables", function(): void {
             assert.fail(err);
         }
     });
+    test("Should Take Re-prompt Path If User Dismisses Input Box", async function(): Promise<void> {
+        const promptStub = sinon.stub(vscode.window, 'showInputBox');
+        promptStub.resolves(undefined);
+
+        const errorSpy = sinon.spy(vscode.window, 'showErrorMessage');
+        
+        await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
+
+        await promptForVariableIfNotExist('BotName', { isReprompt: false, regexValidator: constants.regex.forValidations.WordsOnly });
+
+        assert.equal(errorSpy.callCount, 1);
+    });
     test("Should prompt for variable if it doesn't exist", async function(): Promise<void> {
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         const promptStub = sinon.stub(vscode.window, 'showInputBox');

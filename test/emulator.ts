@@ -48,14 +48,37 @@ suite('Emulator', function(): void {
         sinon.restore();
     });
     test('Should Create Proper Emulator Start Command', function(): void {
-        const urlLocal = getEmulatorLaunchCommand('http://localhost:3978/api/messages');
-        const urlProduction = getEmulatorLaunchCommand(endpoint, {
+        this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
+        Object.defineProperty(process, 'platform', { value: 'win32' });
+        const urlLocalWin = getEmulatorLaunchCommand('http://localhost:3978/api/messages');
+        const urlProductionWin = getEmulatorLaunchCommand(endpoint, {
             appId: appId,
             appPassword: appPass,
         });
 
-        assert.equal(urlLocal, `start "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
-        assert.equal(urlProduction, `start "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }"`);
+        Object.defineProperty(process, 'platform', { value: 'darwin' });
+        const urlLocalOSX = getEmulatorLaunchCommand('http://localhost:3978/api/messages');
+        const urlProductionOSX = getEmulatorLaunchCommand(endpoint, {
+            appId: appId,
+            appPassword: appPass,
+        });
+
+        Object.defineProperty(process, 'platform', { value: 'anythingElse' });
+        const urlLocalLinux = getEmulatorLaunchCommand('http://localhost:3978/api/messages');
+        const urlProductionLinux = getEmulatorLaunchCommand(endpoint, {
+            appId: appId,
+            appPassword: appPass,
+        });
+
+        Object.defineProperty(process, 'platform', this.originalPlatform);
+
+        assert.equal(urlLocalWin, `${ constants.terminal.openers.windows } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
+        assert.equal(urlProductionWin, `${ constants.terminal.openers.windows } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }"`);
+        assert.equal(urlLocalOSX, `${ constants.terminal.openers.osx } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
+        assert.equal(urlProductionOSX, `${ constants.terminal.openers.osx } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }"`);
+        assert.equal(urlLocalLinux, `${ constants.terminal.openers.linux } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
+        assert.equal(urlProductionLinux, `${ constants.terminal.openers.linux } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }"`);
     });
     test("Should Not Normalize Endpoint Keys", async function(): Promise<void> {
         const regex = [

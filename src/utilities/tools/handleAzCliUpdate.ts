@@ -3,7 +3,6 @@ import * as constants from '../../constants';
 import { getCurrentAzCliVersion, getLatestAzCliVersion, log } from '..';
 import * as semver from 'semver';
 
-/* istanbul ignore next: testing would require uninstalling az cli and watching for web page opening */
 export async function handleAzCliUpdate(excludedMap: object): Promise<void> {
     if (excludedMap['az']) {
         return;

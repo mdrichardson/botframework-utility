@@ -8,6 +8,7 @@ import decache from 'decache';
 import * as fs from 'fs';
 import * as glob from 'glob';
 import * as paths from 'path';
+import { deleteDirectory } from '../src/utilities';
 
 let mocha = new Mocha({
     ui: "tdd",
@@ -102,8 +103,15 @@ class CoverageRunner {
     }
 
     public setupCoverage(): void {
-        // Set up Code Coverage, hooking require so that instrumented code is returned
         let self = this;
+        // Delete current coverage dir
+        let reportingDir = paths.join(self.testsRoot, self.options.relativeCoverageDir);
+        if (fs.existsSync(reportingDir)) {
+            try {
+                deleteDirectory(reportingDir);
+            } catch (err) { }
+        }
+        // Set up Code Coverage, hooking require so that instrumented code is returned
         self.instrumenter = new Instrumenter({ coverageVariable: self.coverageVar });
         let sourceRoot = paths.join(self.testsRoot, self.options.relativeSourcePath);
 

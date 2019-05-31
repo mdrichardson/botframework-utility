@@ -1,3 +1,4 @@
+import * as constants from '../../constants';
 import { EmulatorParams } from '../../interfaces';
 
 export function getEmulatorLaunchCommand(url: string,
@@ -12,16 +13,14 @@ export function getEmulatorLaunchCommand(url: string,
     let opener;
 
     switch (process.platform) {
-        /* istanbul ignore next: won't test on OSX */
         case 'darwin':
-            opener = 'open';
+            opener = constants.terminal.openers.osx;
             break;
         case 'win32':
-            opener = 'start';
+            opener = constants.terminal.openers.windows;
             break;
-        /* istanbul ignore next: won't test on Linux */
         default:
-            opener = 'xdg-open';
+            opener = constants.terminal.openers.linux;
             break;
     }
 
