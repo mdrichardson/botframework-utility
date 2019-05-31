@@ -30,9 +30,7 @@ suite("Deployment - Unit", function(): void {
         await setBotVariables(testEnv);
     });
     test("Should download both deployment templates if missing", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(10 * 1000);
 
         for (const template in constants.deployment.templates) {
             await deleteDownloadTemplates();
@@ -65,9 +63,7 @@ suite("Deployment - Unit", function(): void {
         assert.equal(location, `${ root }\\deploymentTemplates\\template-with-preexisting-rg.json`);
     });
     test("Should create zip file", async function(): Promise<void> {
-        const timeout = 10 * 60 * 1000; 
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(10 * 60 * 1000);
         
         testNotify('Creating Zip File...');
         await createCodeZip();
@@ -77,9 +73,7 @@ suite("Deployment - Unit", function(): void {
         await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 2000));
     });
     test("Should throw on error when creating zip file", async function(): Promise<void> {
-        const timeout = 10 * 60 * 1000; 
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(10 * 60 * 1000);
 
         // Ensure code.zip exists
         await createCodeZip();
@@ -98,9 +92,7 @@ suite("Deployment - Unit", function(): void {
         await fs.closeSync(num);
     });
     test("Should delete zip file", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(10 * 1000);
 
         await deleteCodeZip();
         // Give time for it to delete since it doesn't seem to do so immediately
@@ -130,9 +122,7 @@ suite("Deployment - Unit", function(): void {
         assert.equal(command, undefined);
     });
     test("Should Create Appropriate Resource Creation Command - New RG, New Service", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
@@ -145,9 +135,7 @@ suite("Deployment - Unit", function(): void {
             `groupName="${ testEnv.ResourceGroupName }" groupLocation="${ testEnv.Location }" newAppServicePlanName="${ testEnv.ServicePlanName }" newAppServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, New Service", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
@@ -160,9 +148,7 @@ suite("Deployment - Unit", function(): void {
             `newAppServicePlanName="${ testEnv.ServicePlanName }" appServicePlanLocation="${ testEnv.Location }"`);
     });
     test("Should Create Appropriate Resource Creation Command - Existing RG, Existing Service", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const appId = '37765811-fc7b-4b94-9201-88cf09a1111c';
         await setBotVariables({ [constants.variables.botVariables.MicrosoftAppId]: appId });
@@ -250,9 +236,7 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return regex group matches if given returnRegex", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
@@ -263,9 +247,7 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return false if it detects failure regex", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
@@ -277,9 +259,7 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return true if it detects complete regex", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
@@ -291,9 +271,7 @@ suite("Deployment - Unit", function(): void {
         terminal.dispose();
     });
     test("Terminal should return false if it detects fail regex before complete regex", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
@@ -308,7 +286,6 @@ suite("Deployment - Unit", function(): void {
     test("Should save failed terminal output on test", async function(): Promise<void> {
         const timeout = 5 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         await deleteTerminalOutputFile();
 
@@ -317,7 +294,7 @@ suite("Deployment - Unit", function(): void {
         const result = (await handleTerminalData(terminal, {
             commandFailedRegex: /(?<err>The term 'test' is not)/,
             isTest: true,
-            timeout: 5000,
+            timeout: timeout - 500,
         }) as RegExpMatchArray);
 
         assert.equal(result, false);

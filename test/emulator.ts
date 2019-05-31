@@ -171,9 +171,7 @@ suite('Emulator', function(): void {
         assert.equal(endpointNamed.AppPassword, botVariables.Endpoint_Test_AppPassword);
     });
     test("Should Prompt for Endpoint AppId and Pass if not exist", async function(): Promise<void> {
-        const timeout = 5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(5 * 1000);
 
         const endpoint = 'http://test.com';
         const appId1 = new RandExp(constants.regex.forValidations.GUID).gen();
@@ -220,9 +218,7 @@ suite('Emulator', function(): void {
         assert.equal(endpoints[0], undefined);
     });
     test("Should Appropriately Modify Endpoint Names", async function(): Promise<void> {
-        const timeout = 20 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(20 * 1000);
 
         await clearEnvVariables();
 

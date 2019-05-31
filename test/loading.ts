@@ -9,6 +9,9 @@ import fs = require('fs');
 const fsP = fs.promises;
 
 suite('Extension Loading Tests', function(): void {
+    teardown((): void => {
+        sinon.restore();
+    });
     test("Should Properly Activate the Extension", async function(): Promise<void> {
         const context: vscode.ExtensionContext = {
             subscriptions: [],

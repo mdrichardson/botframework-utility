@@ -16,9 +16,7 @@ suite("Variables", function(): void {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
     });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
-        const timeout = 4 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(4 * 1000);
 
         await clearEnvVariables();
         await deleteCodeFiles();
@@ -29,9 +27,7 @@ suite("Variables", function(): void {
         assert.equal(result[constants.variables.botVariables.BotName], 'test');
     });
     test("Should Load Variables from .env", async function(): Promise<void> {
-        const timeout = 4 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(4 * 1000);
 
         await clearEnvVariables();
         await deleteCodeFiles();
@@ -52,9 +48,7 @@ suite("Variables", function(): void {
         assert.equal(result['testVar'], 'test');
     });
     test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
-        const timeout = 6 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(6 * 1000);
 
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Node);
@@ -72,9 +66,7 @@ suite("Variables", function(): void {
         assert.equal(localResult[constants.variables.botVariables.BotName], testName);
     });
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
-        const timeout = 6 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(6 * 1000);
         
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
@@ -140,9 +132,7 @@ suite("Variables", function(): void {
         }
     });
     test("Should not throw when prompting", async function(): Promise<void> {
-        const timeout = 1.5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(1.5 * 1000);
 
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
@@ -155,9 +145,7 @@ suite("Variables", function(): void {
         }
     });
     test("Should not throw when re-prompting", async function(): Promise<void> {
-        const timeout = 1.5 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(1.5 * 1000);
         
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {

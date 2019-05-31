@@ -53,7 +53,6 @@ suite("Deployment - E2E", function(): void {
     test("Should create a web app", async function(): Promise<void> {
         const timeout = 20 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         const command = (await getCreateAppRegistrationCommand() as string);
         const options: CommandOptions = {
@@ -70,7 +69,6 @@ suite("Deployment - E2E", function(): void {
     test("Should Create Resources - All New", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
         const command = await getCreateResourcesCommand(true, true);
@@ -88,7 +86,6 @@ suite("Deployment - E2E", function(): void {
     test("Should Create Resources - Existing ResourceGroup, New ServicePlan", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
         await deleteBot(testEnv[constants.variables.botVariables.BotName]);
@@ -111,7 +108,6 @@ suite("Deployment - E2E", function(): void {
     test("Should Create Resources - All Existing", async function(): Promise<void> {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         testNotify('Creating resources...');
         const name = `${ testEnv.BotName }new`;
@@ -130,9 +126,7 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Generic CreateAzureResources command should not throw, but will error in console", async function(): Promise<void> {
-        const timeout = 2 * 60 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(2 * 60 * 1000);
 
         try {
             createAzureResources(false, false);
@@ -144,7 +138,6 @@ suite("Deployment - E2E", function(): void {
     test("Should Prepare Deploy", async function(): Promise<void> {
         const timeout = 15 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         testNotify('Preparing deployment...');
         await deletePrepareDeployFiles();
@@ -172,7 +165,6 @@ suite("Deployment - E2E", function(): void {
     test("Should Deploy", async function(): Promise<void> {
         const timeout = 10 * 60 * 1000;
         this.timeout(timeout);
-        this.slow(timeout * 0.95);
 
         testNotify('Zipping...');
         await createCodeZip();

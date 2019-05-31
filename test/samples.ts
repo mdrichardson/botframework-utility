@@ -67,9 +67,7 @@ suite('Samples', function(): void {
         assert.equal(stubEmpty, true);
     });
     test("Should Put a Sample in a New Folder When Dir Not Empty", async function(): Promise<void> {
-        const timeout = 10 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(10 * 1000);
 
         const promptStub = sinon.stub(vscode.window, "showQuickPick");
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
@@ -87,9 +85,7 @@ suite('Samples', function(): void {
         await deleteDirectory(samplePath);
     });
     test("Should Put a Sample in a Root Folder When Dir Is Empty", async function(): Promise<void> {
-        const timeout = 100 * 1000;
-        this.timeout(timeout);
-        this.slow(timeout * 0.95);
+        this.timeout(100 * 1000);
 
         const promptStub = sinon.stub(vscode.window, "showQuickPick");
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
