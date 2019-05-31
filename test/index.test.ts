@@ -25,12 +25,12 @@ import * as archiver from 'archiver';
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
 
-require('./loading');
-require('./emulator');
-require('./variables');
-require('./tools');
-require('./samples');
-require('./deploymentUnit');
+// require('./loading');
+// require('./emulator');
+// require('./variables');
+// require('./tools');
+// require('./samples');
+// require('./deploymentUnit');
 // require('./deploymentE2E');  // 5/20: ran out of app registrations
 
 // var testEnv: BotVariables = {
@@ -76,20 +76,17 @@ require('./deploymentUnit');
 // };
 // import * as semver from 'semver';
 
-// suite("Quick Test", function(): void {
-//     teardown((): void => {
-//         sinon.restore();
-//     });
-//     test("Should Take Re-prompt Path If User Dismisses Input Box", async function(): Promise<void> {
-//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
-//         promptStub.resolves(undefined);
-
-//         const errorSpy = sinon.spy(vscode.window, 'showErrorMessage');
-        
-//         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
-
-//         await promptForVariableIfNotExist('BotName', { isReprompt: false, regexValidator: constants.regex.forValidations.WordsOnly });
-
-//         assert.equal(errorSpy.callCount, 1);
-//     });
-// });
+suite("Quick Test", function(): void {
+    teardown((): void => {
+        sinon.restore();
+    });
+    test("Should Default to Bash for Terminal Command Join", async function(): Promise<void> {
+        const commands = [
+            'first',
+            'second',
+            'third'
+        ];
+        const sh = await joinTerminalCommands(commands, 'notARealTerminalPath');
+        assert.equal(sh, commands.join(constants.terminal.joins.bash));
+    });
+});

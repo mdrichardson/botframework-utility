@@ -31,6 +31,17 @@ suite('Extension Loading Tests', function(): void {
 
         assert(context.subscriptions.length > 0);
     });
+    test('Should deactivate then reactivate extension without throwing', async function(): Promise<void> {
+        // Extension is automatically activated. We have to deactivate first so that it doesn't throw
+        try {
+            // Can't call extension.activate without ExtensionContext. This is a good workaround
+            const ext = (await vscode.extensions.getExtension('mdrichardson.botframework-utility') as vscode.Extension<any>);
+            await extension.deactivate();
+            await ext.activate();
+        } catch(err) {
+            assert.fail(err);
+        }
+    });
     test("Should Load Commands Without Throwing", async function(): Promise<void> {
         const context: vscode.ExtensionContext = {
             subscriptions: [],

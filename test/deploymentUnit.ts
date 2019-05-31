@@ -229,6 +229,15 @@ suite("Deployment - Unit", function(): void {
         const sh = await joinTerminalCommands(commands, constants.terminal.platformPaths.linux);
         assert.equal(sh, commands.join(constants.terminal.joins.bash));
     });
+    test("Should Default to Bash for Terminal Command Join", async function(): Promise<void> {
+        const commands = [
+            'first',
+            'second',
+            'third'
+        ];
+        const sh = await joinTerminalCommands(commands, 'notARealTerminalPath');
+        assert.equal(sh, commands.join(constants.terminal.joins.bash));
+    });
     test("Terminal should return false if no data and nothing checked", async function(): Promise<void> {
         const terminal = vscode.window.createTerminal();
         const result = await handleTerminalData(terminal, {});
