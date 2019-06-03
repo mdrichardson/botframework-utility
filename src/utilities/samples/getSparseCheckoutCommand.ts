@@ -9,5 +9,5 @@ export async function getSparseCheckoutCommand(path: string): Promise<string> {
             return `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding[key] }`;
         }
     }
-    return `echo ${ path }${ constants.terminal.sparseCheckoutEnding.bash }`;
+    return `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.bash }`;
 }

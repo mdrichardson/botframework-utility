@@ -52,7 +52,7 @@ export const forVariables = {
 };
 
 export const terminalPaths = {
-    bash: /^bash|sh$/gi,
+    bash: /^\/?bin\/bash|sh$/gi,
     commandPrompt: /command|cmd/i,
     powershell: /powershell|pwsh/i,
 };

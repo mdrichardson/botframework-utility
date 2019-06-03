@@ -15,7 +15,7 @@ export async function createCodeZip(): Promise<void> {
 
     let dots = 0;
     let updateCount = 0;
-    const skipEveryXUpdates = 30;
+    const skipEveryXUpdates = 100;
     const maxDots = 3;
 
     vscode.window.setStatusBarMessage(`Zipping${ ' '.repeat(maxDots) }`);

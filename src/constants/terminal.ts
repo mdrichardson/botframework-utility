@@ -29,6 +29,7 @@ export const platformPaths = {
     linux: '/bin/bash',
     osx: 'sh',
     windows: 'c:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe',
+    windowsCommandPrompt: 'c:\\Windows\\system32\\cmd.exe'
 };
 
 export const openers = {

@@ -50,7 +50,7 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
             totalTime += 500;
             if (timeout && totalTime >= timeout) {
                 commandComplete = true;
-                result = result ? result : false;
+                result = false;
             }
         }
         if (isTest) {

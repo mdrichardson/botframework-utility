@@ -31,10 +31,37 @@ suite('Samples', function(): void {
         await deleteDirectory(path);
         assert(!fs.existsSync(path));
     });
-    test("Should Get Appropriate Sparse Checkout Command", async function(): Promise<void> {
+    test("Should Not Throw When Deleting Directory", async function(): Promise<void> {
+        const root = getWorkspaceRoot();
+
+        try {
+            await deleteDirectory(`${ root }\\thereIs\\NoWay\\IExist`);
+        } catch(err) {
+            assert.fail(err);
+        }
+    });
+    test("Should Get Appropriate Sparse Checkout Command and Defaults to Bash", async function(): Promise<void> {
+        this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
         const path = 'test';
-        const command = await getSparseCheckoutCommand(path);
-        assert.equal(command, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.powershell }`);
+
+        const commandPowershell = await getSparseCheckoutCommand(path);
+
+        Object.defineProperty(process, 'platform', { value: 'darwin' });
+        const commandBash = await getSparseCheckoutCommand(path);
+
+        const regexStub = sinon.stub(constants.regex.terminalPaths.bash, 'test');
+        regexStub.returns(false);
+
+        Object.defineProperty(process, 'platform', { value: 'linux' });
+        const commandDefault = await getSparseCheckoutCommand(path);
+
+
+        Object.defineProperty(process, 'platform', this.originalPlatform);
+
+        assert.equal(commandPowershell, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.powershell }`);
+        assert.equal(commandBash, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.bash }`);
+        assert.equal(commandDefault, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.bash }`);
     });
     test("Should Prompt User For Samples and Return Path to Sample", async function(): Promise<void> {
         const promptStub = sinon.stub(vscode.window, 'showQuickPick');
@@ -44,6 +71,29 @@ suite('Samples', function(): void {
         promptStub.onCall(1).resolves(sample);
         const path = await promptForSample();
         assert.equal(path, `${ language }/${ sample }`);
+    });
+    test("Should Not Throw if User Prompted for Sample and Dismisses", async function(): Promise<void> {
+        const promptStub = sinon.stub(vscode.window, 'showQuickPick');
+        promptStub.resolves(undefined);
+
+        try {
+            await promptForSample();
+        } catch (err) {
+            assert.fail(err);
+        }
+    });
+    test("Should Not Throw if User Prompted for Sample and Dismisses After Choosing Language", async function(): Promise<void> {
+        const promptStub = sinon.stub(vscode.window, 'showQuickPick');
+        const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
+        promptStub.onCall(0).resolves(language);
+        promptStub.onCall(1).resolves(undefined);
+        promptStub.onCall(2).resolves(undefined);
+
+        try {
+            await promptForSample();
+        } catch (err) {
+            assert.fail(err);
+        }
     });
     test("Should Appropriately Rename Folders", async function(): Promise<void> {
         const root = getWorkspaceRoot();
@@ -56,6 +106,30 @@ suite('Samples', function(): void {
         assert(fs.existsSync(newPath));
 
         await deleteDirectory(newPath);
+    });
+    test("Should Wait for Folder Unlock if Rename Fails, Change Name if Fails Again", async function(): Promise<void> {
+        this.timeout(5000);
+
+        const root = getWorkspaceRoot();
+
+        await deleteDirectory(`${ root }\\TestDir`);
+        await deleteDirectory(`${ root }\\TestDir_NEW`);
+        await deleteDirectory(`${ root }\\TestDir_NEW_unableToRename`);
+
+        const oldPath = await makeNestedTestDir();
+        const newPath = `${ root }\\testDir_NEW`;
+
+        const fsStub = sinon.stub(fs.promises, 'rename');
+        fsStub.onCall(0).throws(new Error('First Throw'));
+        fsStub.onCall(1).throws(new Error('Second Throw'));
+        fsStub.callThrough();
+
+        await renameDirectory(oldPath, newPath);
+
+        assert(!fs.existsSync(oldPath));
+        assert(fs.existsSync(`${ newPath }_unableToRename`));
+
+        await deleteDirectory(`${ newPath }_unableToRename`);
     });
     test("Should Appropriately Return Whether or not Root Dir is Empty", async function(): Promise<void> {
         const empty = await rootFolderIsEmpty();

@@ -19,16 +19,17 @@ import RandExp = require('randexp');
 import * as regexToVariablesToStub from '../src/utilities/deployment/regexToVariables';
 import { BotVariables, Endpoint } from '../src/interfaces';
 import { EventEmitter } from 'events';
+import * as semver from 'semver';
 
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
 
-// require('./loading');
-// require('./emulator');
-// require('./variables');
-// require('./tools');
-// require('./samples');
-// require('./deploymentUnit');
+require('./loading');
+require('./emulator');
+require('./variables');
+require('./tools');
+require('./samples');
+require('./deploymentUnit');
 // require('./deploymentE2E');  // 5/20: ran out of app registrations
 
 // var testEnv: BotVariables = {
@@ -72,18 +73,33 @@ watchEnvFiles();
 //     Endpoint_Test2_AppId: testEndpoint.AppId,
 //     Endpoint_Test2_AppPassword: testEndpoint.AppPassword,
 // };
-// import * as semver from 'semver';
 
-suite("Quick Test", function(): void {
-    teardown((): void => {
-        sinon.restore();
-    });
-    test("Should Default to v0.0.0 if it Can't See AZ CLI Version in Terminal", async function(): Promise<void> {
-        const regexStub = sinon.stub(constants.regex.forVariables.AzCliVersion, 'exec' );
-        regexStub.returns({} as any);
-        
-        const version = await getCurrentAzCliVersion();
-        assert(typeof version === 'string');
-        assert(version === '0.0.0');
-    });
-});
+
+// suite("Quick Test", function(): void {
+//     teardown((): void => {
+//         sinon.restore();
+//     });
+//     test("Should Get Appropriate Sparse Checkout Command and Defaults to Bash", async function(): Promise<void> {
+//         this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+
+//         const path = 'test';
+
+//         const commandPowershell = await getSparseCheckoutCommand(path);
+
+//         Object.defineProperty(process, 'platform', { value: 'darwin' });
+//         const commandBash = await getSparseCheckoutCommand(path);
+
+//         const regexStub = sinon.stub(constants.regex.terminalPaths.bash, 'test');
+//         regexStub.returns(false);
+
+//         Object.defineProperty(process, 'platform', { value: 'linux' });
+//         const commandDefault = await getSparseCheckoutCommand(path);
+
+
+//         Object.defineProperty(process, 'platform', this.originalPlatform);
+
+//         assert.equal(commandPowershell, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.powershell }`);
+//         assert.equal(commandBash, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.bash }`);
+//         assert.equal(commandDefault, `echo "${ path }/*"${ constants.terminal.sparseCheckoutEnding.bash }`);
+//     });
+// });

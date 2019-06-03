@@ -174,7 +174,7 @@
 		]
 	},
 	"scripts": {
-        "echo": "echo \"#####   Be sure to change package.json>main to /dist/extension.js    #####\"",
+		"echo": "echo \"#####   Be sure to change package.json>main to /dist/extension.js    #####\"",
 		"vscode:prepublish": "webpack --mode production",
 		"compile": "webpack --mode none",
 		"postinstall": "node ./node_modules/vscode/bin/install",
