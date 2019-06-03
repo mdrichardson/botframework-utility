@@ -19,7 +19,7 @@ function deleteAppRegistration(id: string): void {
 }
 
 function deleteResourceGroup(name: string): void {
-    const command = `az group delete -n ${ name } -y`;
+    const command = `az group delete -n "${ name }" -y`;
     executeTerminalCommand(command, { isTest: true, timeout: 15000 });
 }
 
@@ -29,12 +29,12 @@ export async function cleanup(appId: string, resourceGroupName: string): Promise
 }
 
 export async function deleteResourceGroupDeployment(name: string): Promise<void> {
-    const command = `az group deployment delete -n ${ name }`;
+    const command = `az group deployment delete -n "${ name }"`;
     executeTerminalCommand(command, { isTest: true, timeout: 15000 });
 }
 
-export async function deleteBot(name: string|undefined): Promise<void> {
-    const command = `az bot delete --name ${ name }`;
+export async function deleteBot(name: string, resourceGroup: string): Promise<void> {
+    const command = `az bot delete --name "${ name }" --resource-group "${ resourceGroup }"`;
     executeTerminalCommand(command, { isTest: true, timeout: 5000 });
 }
 

@@ -33,7 +33,7 @@ export async function handleTerminalData(terminal: vscode.Terminal, options: Com
                     vscode.window.showInformationMessage(`${ commandTitle } finished successfully. Terminal Closed`);
                     terminal.dispose();
                     commandComplete = true;
-                    result = matches;
+                    result = Object.keys(matches).length ? matches : true;
                 }
                 if (isTest) {
                     terminalOutput += data.toString('utf8');

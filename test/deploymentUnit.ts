@@ -267,7 +267,7 @@ suite("Deployment - Unit", function(): void {
         assert.equal(result, false);
         terminal.dispose();
     });
-    test("Terminal should return matches result if it detects complete regex", async function(): Promise<void> {
+    test("Terminal should return true if it detects complete regex and no matches", async function(): Promise<void> {
         this.timeout(5 * 1000);
 
         const terminal = vscode.window.createTerminal();
@@ -276,7 +276,7 @@ suite("Deployment - Unit", function(): void {
             commandCompleteRegex: /(?<err>The term 'test' is not)/,
             timeout: 5000,
         }) as RegExpMatchArray);
-        assert(typeof result === 'object');
+        assert.equal(result, true);
         terminal.dispose();
     });
     test("Terminal should return false if it detects fail regex before complete regex", async function(): Promise<void> {

@@ -21,18 +21,18 @@ var testEnv: BotVariables = {
     ServicePlanName: name    
 };
 
-suiteSetup(async (): Promise<void> => {
-    await clearEnvVariables();
-    await setBotVariables(testEnv);
-    testNotify(`Resource Suffix: ${ suffix }`);
-});
-
-suiteTeardown(async (): Promise<void> => {
-    await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
-});
-
 // Note: Each of these relies on the each previous test being successful
 suite("Deployment - E2E", function(): void {
+    suiteSetup(async (): Promise<void> => {
+        await clearEnvVariables();
+        await setBotVariables(testEnv);
+        testNotify(`Resource Suffix: ${ suffix }`);
+    });
+    
+    suiteTeardown(async (): Promise<void> => {
+        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
+    });
+    
     setup(async (): Promise<void> => {
         watchEnvFiles();
         await setBotVariables(testEnv);
@@ -67,7 +67,7 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Should Create Resources - All New", async function(): Promise<void> {
-        const timeout = 2 * 60 * 1000;
+        const timeout = 3 * 60 * 1000;
         this.timeout(timeout);
 
         testNotify('Creating resources...');
@@ -88,7 +88,7 @@ suite("Deployment - E2E", function(): void {
         this.timeout(timeout);
 
         testNotify('Creating resources...');
-        await deleteBot(testEnv[constants.variables.botVariables.BotName]);
+        await deleteBot(testEnv.BotName, testEnv.ResourceGroupName);
 
         const name = `${ testEnv.ServicePlanName }new`;
         await setBotVariables({ [constants.variables.botVariables.ServicePlanName]: name });
@@ -109,9 +109,11 @@ suite("Deployment - E2E", function(): void {
         const timeout = 2 * 60 * 1000;
         this.timeout(timeout);
 
+        await deleteBot(testEnv.BotName, testEnv.ResourceGroupName);
+
         testNotify('Creating resources...');
         const name = `${ testEnv.BotName }new`;
-        await setBotVariables({ [constants.variables.botVariables.BotName]: name });
+        await setBotVariables({ BotName: name });
 
         const command = await getCreateResourcesCommand(false, true);
         const options: CommandOptions = {
