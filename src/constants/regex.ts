@@ -11,7 +11,7 @@ export const forDispose = {
     GitClone: /\[new branch\]\s*master\s*->\s*origin\/master/gim,
     GitCloneFailed: /error:\s*Sparse\s*checkout\s*/gim,
     // Prep Pub: There's no success message, so we need to handle success and failure
-    PrepareDeploy: />\[0K\[89G|\[\?25h/g,
+    PrepareDeploy: /true/g,
     PrepareDeployFailed: /(?:found in)/g,
     UpdateCliTools: /updated \d packages in/g,
     UpdateCliToolsFailed: /404 Not Found - GET https:\/\/registry.npmjs.com\//g,
