@@ -3,6 +3,7 @@ import { deleteDirectory } from './deleteDirectory';
 import { getSample } from './getSample';
 import { getSparseCheckoutCommand } from './getSparseCheckoutCommand';
 import { moveFilesFromClonedSample } from './moveFilesFromClonedSample';
+import { openSample } from './openSample';
 import { promptForSample } from './promptForSample';
 import { renameDirectory } from './renameDirectory';
 import { rootFolderIsEmpty } from './rootFolderIsEmpty';
@@ -13,6 +14,7 @@ export {
     getSample,
     getSparseCheckoutCommand,
     moveFilesFromClonedSample,
+    openSample,
     promptForSample,
     renameDirectory,
     rootFolderIsEmpty

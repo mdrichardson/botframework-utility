@@ -81,7 +81,12 @@
 			{
 				"command": "botframework-utility.getSample",
 				"category": "Bot > Samples",
-				"title": "Get/Download Sample"
+				"title": "Download Sample"
+			},
+			{
+				"command": "botframework-utility.openSample",
+				"category": "Bot > Samples",
+				"title": "Open Sample in Browser"
 			}
 		],
 		"menus": {
