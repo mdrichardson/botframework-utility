@@ -1,0 +1,53 @@
+{
+    "Memory Storage": {
+        "prefix": "memory",
+        "description": "Instantiate a Memory Storage Object",
+        "body": [
+            "const ${1:storage} = new MemoryStorage();"
+        ]
+    },
+    "Azure Blob Storage": {
+        "prefix": "blob",
+        "description": "Instantiate an Azure Blob Storage Object",
+        "body": [
+            "const ${1:storage} = new BlobStorage({",
+                "\tcontainerName: process.env.${2:BLOB_NAME},",
+                "\tstorageAccountOrConnectionString: process.env.${0:BLOB_STRING}",
+            "});"
+        ]
+    },
+    "Cosmos Storage": {
+        "prefix": "cosmos",
+        "description": "Instantiate a Cosmos Storage Object",
+        "body": [
+            "const ${1:storage} = new CosmosDbStorage({",
+                "\tserviceEndpoint: process.env.${2:DB_SERVICE_ENDPOINT},",
+                "\tauthKey: process.env.${3:AUTH_KEY},",
+                "\tdatabaseId: process.env.${4:DATABASE},",
+                "\tcollectionId: process.env.${0:COLLECTION}",
+            "});"
+        ]
+    },
+    "activityHandler": {
+        "prefix": "activityHandler",
+        "description": "Generate Activity Handlers",
+        "body": [
+            "this.${1|onConversationUpdate,onDialog,onEvent,onMembersAdded,onMembersRemoved,onMessage,onTokenResponseEvent,onUnrecognizedActivityType|}(async (context, next): Promise<void> => {",
+                "\t$0",
+                "\tawait next();",
+            "});"
+        ]
+    },
+    "welcomeMessage": {
+        "prefix": "welcomeMessage",
+        "description": "Code block for Welcome Messages (place inside this.onMembersAdded)",
+        "body": [
+            "const membersAdded = context.activity.membersAdded;",
+            "membersAdded.forEach(async (member): Promise<void> => {",
+                "\tif (member.id !== context.activity.recipient.id) {",
+                    "\t\tawait context.sendActivity(`${0:Welcome!}`);",
+                "\t}",
+            "});"
+        ]
+    }
+}

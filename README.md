@@ -19,6 +19,14 @@
 ![Samples](https://github.com/mdrichardson/botframework-utility/blob/master/resources/samples.jpg?raw=true)
 * Update all Bot Framework CLI tools. Open Command Palette (`ctrl` + `shift` + `p`) and type "Update".
 ![Update CLI Tools](https://github.com/mdrichardson/botframework-utility/raw/master/resources/cli-tool-update.jpg?raw=true)
+* Code Snippets for:
+  * Storage:
+    * Memory - `memoryStorage`
+    * Azure Blob - `blobStorage`
+    * Cosmos - `cosmosStorage`
+  * Activity Handlers - `activityHandler`
+  * Welcome Message - `welcomeMessage`
+![Snippet Recording](https://github.com/mdrichardson/botframework-utility/raw/master/resources/snippet-recording.gif?raw=true)
 * 100% Code Coverage!
 
 ### Future

@@ -1,0 +1,57 @@
+{
+    "Memory Storage": {
+        "prefix": "memoryStorage",
+        "description": "Instantiate a Memory Storage Object",
+        "body": [
+            "private static readonly MemoryStorage ${0:_myStorage} = new MemoryStorage();"
+        ]
+    },
+    "Azure Blob Storage": {
+        "prefix": "blobStorage",
+        "description": "Instantiate an Azure Blob Storage Object",
+        "body": [
+            "private static readonly AzureBlobStorage ${1:_myStorage} = new AzureBlobStorage(\"${2:<your-blob-storage-account-string>}\", \"${0:<your-blob-storage-container-name>}\");"
+        ]
+    },
+    "Cosmos Storage": {
+        "prefix": "cosmosStorage",
+        "description": "Instantiate a Cosmos Storage Object",
+        "body": [
+            "private const string CosmosServiceEndpoint = \"${1:<your-cosmos-db-URI>}\";",
+            "private const string CosmosDBKey = \"${2:<your-cosmos-db-account-key>}\";",
+            "private const string CosmosDBDatabaseName = \"${3:bot-cosmos-sql-db}\";",
+            "private const string CosmosDBCollectionName = \"${4:bot-storage}\";",
+            "",
+            "private static readonly CosmosDbStorage ${0:_myStorage} = new CosmosDbStorage(new CosmosDbStorageOptions",
+            "{",
+                "\tAuthKey = CosmosDBKey,",
+                "\tCollectionId = CosmosDBCollectionName,",
+                "\tCosmosDBEndpoint = new Uri(CosmosServiceEndpoint),",
+                "\tDatabaseId = CosmosDBDatabaseName,",
+            "});"
+        ]
+    },
+    "activityHandler": {
+        "prefix": "activityHandler",
+        "description": "Generate Activity Handlers",
+        "body": [
+            "protected override async Task ${1|OnConversationUpdateActivityAsync(ITurnContext<IConversationUpdateActivity> context\\, CancellationToken cancellationToken),OnEventActivityAsync(ITurnContext<IEventActivity> context\\, CancellationToken cancellationToken),OnEventAsync(ITurnContext<IEventActivity> context\\, CancellationToken cancellationToken),OnMembersAddedAsync(IList<ChannelAccount> membersAdded\\, ITurnContext<IConversationUpdateActivity> context\\, CancellationToken cancellationToken),OnMembersRemovedAsync(IList<ChannelAccount> membersRemoved\\, ITurnContext<IConversationUpdateActivity> context\\, CancellationToken cancellationToken),OnMessageActivityAsync(ITurnContext<IMessageActivity> context\\, CancellationToken cancellationToken),OnTokenResponseEventAsync(ITurnContext<IEventActivity> context\\, CancellationToken cancellationToken),OnTurnAsync(ITurnContext context\\, CancellationToken cancellationToken),OnUnrecognizedActivityTypeAsync(ITurnContext context\\, CancellationToken cancellationToken)|}",
+            "{",
+                "\t${0}",
+            "}"
+        ]
+    },
+    "welcomeMessage": {
+        "prefix": "welcomeMessage",
+        "description": "Code block for Welcome Messages (place inside this.onMembersAdded)",
+        "body": [
+            "foreach (var member in membersAdded)",
+            "{",
+                "\tif (member.Id != turnContext.Activity.Recipient.Id)",
+                "\t{",
+                    "\t\tawait turnContext.SendActivityAsync(\"${0:Welcome!}\", cancellationToken);",
+                "\t}",
+            "}"
+        ]
+    }
+}
