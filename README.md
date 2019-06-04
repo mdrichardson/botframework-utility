@@ -7,9 +7,9 @@
 * Right-click `.env` or `appsettings.json` files to open endpoints in Bot Framework Emulator
   * You can also use the keybinding, `ctrl` + `alt` + `shift` + `e` (for localhost)
   * `appsettings.json`/`.env` use the following format for endpoints:
-    * Endpoint_<Name>: <Host>,
-    * Endpoint_<Name>_AppId: <MicrosoftAppId>,
-    * Endpoint_<Name>_AppPassword: <MicrosoftAppPassword>
+    * `Endpoint_<Name>: <Host>`,
+    * `Endpoint_<Name>_AppId: <MicrosoftAppId>`,
+    * `Endpoint_<Name>_AppPassword: <MicrosoftAppPassword>`
 * Execute all deployment commands. Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy".
 ![Deployment Options](https://github.com/mdrichardson/botframework-utility/blob/master/resources/deployment-options.jpg?raw=true)
   * Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
