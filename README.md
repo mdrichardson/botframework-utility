@@ -4,32 +4,37 @@
 
 ### Current
 
-#### Right-click `.env` or `appsettings.json` files to open endpoints in Bot Framework Emulator
+#### Open Endpoints in Bot Framework Emulator
 
+* Right-click `.env` or `appsettings.json` files to open endpoints in Bot Framework Emulator
 * You can also use the keybinding, `ctrl` + `alt` + `shift` + `e` (for localhost)
 * `appsettings.json`/`.env` use the following format for endpoints:
   * `Endpoint_<Name>: <Host>`,
   * `Endpoint_<Name>_AppId: <MicrosoftAppId>`,
   * `Endpoint_<Name>_AppPassword: <MicrosoftAppPassword>`
 
-#### Execute all deployment commands. Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy".
+#### Execute all deployment commands
+
+* Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy"
+* Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
 
 ![Deployment Options](https://github.com/mdrichardson/botframework-utility/blob/master/resources/deployment-options.jpg?raw=true)
 
-* Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
+#### Download individual samples
 
-#### Download individual samples. Open Command Palette (`ctrl` + `shift` + `p`) and type "Sample".
-
+* Open Command Palette (`ctrl` + `shift` + `p`) and type "Sample"
 * Thanks @stevkan for the suggestion!
 
 ![Sample Languages](https://github.com/mdrichardson/botframework-utility/blob/master/resources/samples-languages.jpg?raw=true)
 ![Samples](https://github.com/mdrichardson/botframework-utility/blob/master/resources/samples.jpg?raw=true)
 
-#### Update all Bot Framework CLI tools. Open Command Palette (`ctrl` + `shift` + `p`) and type "Update".
+#### Update all Bot Framework CLI tools
+
+* Open Command Palette (`ctrl` + `shift` + `p`) and type "Update"
 
 ![Update CLI Tools](https://github.com/mdrichardson/botframework-utility/raw/master/resources/cli-tool-update.jpg?raw=true)
 
-#### Code Snippets for:
+#### Code Snippets
 
 * Storage:
   * Memory - `memoryStorage`
@@ -69,7 +74,7 @@ Since this isn't currently in public release, you'll have to build it yourself.
 
 1. `npm i -g vsce`
 2. Clone the repo
-3. Ensure `package.json` `"main"` key has a value of `"./dist/extension.js"` (it's set to `./out/src/extension.js` to enable test coverage).
+3. Ensure `package.json` `"main"` key has a value of `"./dist/extension.js"` (it's set to `"./out/src/extension.js"` to enable test coverage).
 4. From the root of the cloned repo: `vsce package`
 5. In VS Code, Extensions > Install from VSIX > Select the VSIX generated from the `vsce package` command.
 
