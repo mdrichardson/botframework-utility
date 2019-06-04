@@ -59,7 +59,7 @@
 
 ## Install
 
-Download the `.vsix` file. In VS Code, go to Extensions, click the ellipses menu in the top-right, click Install from VSIX and choose the downloaded `.vsix` file.
+[Download the `.vsix` file](https://github.com/mdrichardson/botframework-utility/releases). In VS Code, go to Extensions, click the ellipses menu in the top-right, click Install from VSIX and choose the downloaded `.vsix` file.
 
 *Note: This is currently the only way to install this extension as I haven't published to the Marketplace.**
 

@@ -12,6 +12,7 @@
 		"vscode": "^1.33.0"
 	},
 	"categories": [
+        "Snippets",
 		"Other"
 	],
 	"activationEvents": [
@@ -19,7 +20,7 @@
 		"workspaceContains:**/appsettings.json",
 		"workspaceContains:**/.env"
 	],
-	"main": "./out/src/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -171,7 +172,21 @@
 				"mac": "cmd+alt+shift+e",
 				"when": "debugType != xyz"
 			}
-		]
+        ],
+        "snippets": [
+            {
+                "language": "javascript",
+                "path": "./src/snippets/javascript.json"
+            },
+            {
+                "language": "typescript",
+                "path": "./src/snippets/typescript.json"
+            },
+            {
+                "language": "csharp",
+                "path": "./src/snippets/csharp.json"
+            }
+        ]
 	},
 	"scripts": {
 		"echo": "echo \"#####   Be sure to change package.json>main to ./dist/extension.js    #####\"",
