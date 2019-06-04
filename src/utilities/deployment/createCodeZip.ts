@@ -18,7 +18,7 @@ export async function createCodeZip(): Promise<void> {
     const skipEveryXUpdates = 100;
     const maxDots = 3;
 
-    vscode.window.setStatusBarMessage(`Zipping${ ' '.repeat(maxDots) }`);
+    vscode.window.setStatusBarMessage(`Zipping${ ' '.repeat(maxDots) }`, 500);
 
     return new Promise((resolve, reject): void => {
         output
@@ -27,14 +27,13 @@ export async function createCodeZip(): Promise<void> {
             })
             .on('finish', async (): Promise<void> => {
                 vscode.window.showInformationMessage('Done Creating Zip File');
-                vscode.window.setStatusBarMessage('');
                 resolve();
             });
         archive.pipe(output);
         archive
             .on('progress', (): void => {
                 if (updateCount % skipEveryXUpdates === 0) {
-                    vscode.window.setStatusBarMessage(`Zipping${ '.'.repeat(dots) }${ ' '.repeat(maxDots - dots) }`);
+                    vscode.window.setStatusBarMessage(`Zipping${ '.'.repeat(dots) }${ ' '.repeat(maxDots - dots) }`, 500);
                     dots = dots < maxDots ? dots + 1 : 0;
                 }
                 updateCount++;

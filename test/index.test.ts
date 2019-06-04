@@ -29,7 +29,7 @@ watchEnvFiles();
 // require('./variables');
 // require('./tools');
 // require('./samples');
-// require('./deploymentUnit');
+require('./deploymentUnit');
 // require('./deploymentE2E');  // 5/20: ran out of app registrations
 
 // var testEnv: BotVariables = {
@@ -74,48 +74,48 @@ watchEnvFiles();
 //     Endpoint_Test2_AppPassword: testEndpoint.AppPassword,
 // };
 
-const suffix = Math.floor(Math.random() * 1000);
-const name = `vmicricExtTest${ suffix }`;
+// const suffix = Math.floor(Math.random() * 1000);
+// const name = `vmicricExtTest${ suffix }`;
 
-var testEnv: BotVariables = {
-    BotName: name,
-    CodeLanguage: constants.variables.sdkLanguages.Csharp,
-    Location: 'westus',
-    MicrosoftAppId: '',
-    MicrosoftAppPassword: 'AtLeast16Characters____0',
-    ResourceGroupName: name,
-    ServicePlanName: name    
-};
+// var testEnv: BotVariables = {
+//     BotName: name,
+//     CodeLanguage: constants.variables.sdkLanguages.Csharp,
+//     Location: 'westus',
+//     MicrosoftAppId: '',
+//     MicrosoftAppPassword: 'AtLeast16Characters____0',
+//     ResourceGroupName: name,
+//     ServicePlanName: name    
+// };
 
 
-suite("Quick Test", function(): void {
-    teardown((): void => {
-        sinon.restore();
-    });
-    test("Should Prepare Deploy", async function(): Promise<void> {
-        const timeout = 15 * 1000;
-        this.timeout(timeout);
+// suite("Quick Test", function(): void {
+//     teardown((): void => {
+//         sinon.restore();
+//     });
+//     test("Should Prepare Deploy", async function(): Promise<void> {
+//         const timeout = 15 * 1000;
+//         this.timeout(timeout);
 
-        testNotify('Preparing deployment...');
-        await deletePrepareDeployFiles();
+//         testNotify('Preparing deployment...');
+//         await deletePrepareDeployFiles();
 
-        const command = await getPrepareDeployCommand();
-        const options: CommandOptions = {
-            commandCompleteRegex: constants.regex.forDispose.PrepareDeploy,
-            commandFailedRegex: constants.regex.forDispose.PrepareDeployFailed,
-            commandTitle: 'Test - Prepare Deployment',
-            isTest: true,
-            timeout: timeout - 500,
-        };
-        const result = await executeTerminalCommand(command, options);
-        assert.equal(result, true);
+//         const command = await getPrepareDeployCommand();
+//         const options: CommandOptions = {
+//             commandCompleteRegex: constants.regex.forDispose.PrepareDeploy,
+//             commandFailedRegex: constants.regex.forDispose.PrepareDeployFailed,
+//             commandTitle: 'Test - Prepare Deployment',
+//             isTest: true,
+//             timeout: timeout - 500,
+//         };
+//         const result = await executeTerminalCommand(command, options);
+//         assert.equal(result, true);
 
-        let file;
-        if (testEnv.CodeLanguage == constants.variables.sdkLanguages.Csharp) {
-            file = await vscode.workspace.findFiles('**/.deployment');
-        } else {
-            file = await vscode.workspace.findFiles('**/web.config');
-        }
-        assert(file.length > 0);
-    });
-});
+//         let file;
+//         if (testEnv.CodeLanguage == constants.variables.sdkLanguages.Csharp) {
+//             file = await vscode.workspace.findFiles('**/.deployment');
+//         } else {
+//             file = await vscode.workspace.findFiles('**/web.config');
+//         }
+//         assert(file.length > 0);
+//     });
+// });
