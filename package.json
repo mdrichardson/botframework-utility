@@ -230,7 +230,7 @@
 		"typescript": "^3.4.5",
 		"vscode": "^1.1.34",
 		"webpack": "^4.32.2",
-		"webpack-cli": "^3.3.2"
+		"webpack-cli": "^3.3.5"
 	},
 	"dependencies": {
 		"@types/semver": "^6.0.0",
