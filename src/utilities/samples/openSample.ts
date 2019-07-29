@@ -1,7 +1,7 @@
-import * as constants from '../../constants';
 import * as vscode from 'vscode';
+import { getSampleUrl } from './getSampleUrl';
+import { Sample } from '../../interfaces';
 
-export async function openSample(sample: string): Promise<void> {
-    const url = `${ constants.samples.repoRoot }/tree/master/samples/${ sample }`;
-    vscode.env.openExternal(vscode.Uri.parse(url));
+export async function openSample(sample: Sample): Promise<void> {
+    await vscode.env.openExternal(getSampleUrl(sample));
 }

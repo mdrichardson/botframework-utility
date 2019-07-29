@@ -1,15 +1,15 @@
 import * as constants from '../../constants';
-import { CommandOptions } from '../../interfaces';
+import { CommandOptions, Sample } from '../../interfaces';
 import { getSparseCheckoutCommand, executeTerminalCommand, deleteDirectory } from '..';
 import { moveFilesFromClonedSample } from './moveFilesFromClonedSample';
 import { rootFolderIsEmpty } from './rootFolderIsEmpty';
 import { createTempDir } from './createTempDir';
 
-export async function getSample(sample: string): Promise<void> {
+export async function getSample(sample: Sample): Promise<void> {
     // Check if directory is empty before we start adding files to it
     const empty = await rootFolderIsEmpty();
 
-    const tempDir = await createTempDir((sample.split('/').pop() as string));
+    const tempDir = await createTempDir(sample.name);
         
     const options: CommandOptions = {
         commandCompleteRegex: constants.regex.forDispose.GitClone,
@@ -18,7 +18,7 @@ export async function getSample(sample: string): Promise<void> {
         timeout: 10 * 1000,
     };
 
-    const sparseCheckoutCommand = await getSparseCheckoutCommand(`samples/${ sample }`);
+    const sparseCheckoutCommand = await getSparseCheckoutCommand(`samples/${ sample.path }`);
 
     let commands = await [
         `cd "${ tempDir }"`,

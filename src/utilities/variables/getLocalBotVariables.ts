@@ -7,6 +7,7 @@ import fs = require('fs');
 const fsP = fs.promises;
 
 export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
+    // TODO: Use fs.exists
     const dotenvFile = await vscode.workspace.findFiles(`**/*${ constants.files.settings.Node }`, null, 1);
     const appsettingsJsonFile = await vscode.workspace.findFiles(`**/${ constants.files.settings.Csharp }`, null, 1);
     let botSettings: Partial<BotVariables> = {};

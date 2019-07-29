@@ -6,6 +6,7 @@ import { EmulatorParams } from './EmulatorParams';
 import { Endpoint } from './Endpoint';
 import { PromptAndValidator } from './PromptAndValidator';
 import { PromptOptions } from './PromptOptions';
+import { Sample, SampleLanguage } from './Sample';
 
 export {
     BotVariables,
@@ -15,5 +16,7 @@ export {
     EmulatorParams,
     Endpoint,
     PromptAndValidator,
-    PromptOptions
+    PromptOptions,
+    Sample,
+    SampleLanguage
 };

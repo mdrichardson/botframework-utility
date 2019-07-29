@@ -7,7 +7,7 @@ import assert = require("assert");
 import * as fs from 'fs';
 const fsP = fs.promises;
 import mocha = require('mocha');
-import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject, promptForNewEndpoint, modifyEndpointNameIfNecessary, getSingleEndpoint, getEndpointFromQuickPick, writeEndpointToEnv, getEmulatorLaunchCommand, loadCommands, handleAzCliUpdate, getPrepareDeployCommand } from '../src/utilities';
+import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject, promptForNewEndpoint, modifyEndpointNameIfNecessary, getSingleEndpoint, getEndpointFromQuickPick, writeEndpointToEnv, getEmulatorLaunchCommand, loadCommands, handleAzCliUpdate, getPrepareDeployCommand, openSample } from '../src/utilities';
 import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile, clearEnvVariables, deletePrepareDeployFiles } from './testUtilities';
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
@@ -17,20 +17,21 @@ import sinon = require('sinon');
 import RandExp = require('randexp');
 
 import * as regexToVariablesToStub from '../src/utilities/deployment/regexToVariables';
-import { BotVariables, Endpoint } from '../src/interfaces';
+import { BotVariables, Endpoint, Sample, SampleLanguage } from '../src/interfaces';
 import { EventEmitter } from 'events';
 import * as semver from 'semver';
+import { getSampleUrl } from '../src/utilities/samples/getSampleUrl';
 
 // Mocha.Setup doesn't seem to work consistently, so we'll force .env and appsettings.json to be watched for changes
 watchEnvFiles();
 
-// require('./loading');
-// require('./emulator');
-// require('./variables');
-// require('./tools');
-// require('./samples');
+require('./loading');
+require('./emulator');
+require('./variables');
+require('./tools');
+require('./samples');
 require('./deploymentUnit');
-// require('./deploymentE2E');  // 5/20: ran out of app registrations
+require('./deploymentE2E');
 
 // var testEnv: BotVariables = {
 //     BotName: 'vmicricEXT',
@@ -92,30 +93,31 @@ require('./deploymentUnit');
 //     teardown((): void => {
 //         sinon.restore();
 //     });
-//     test("Should Prepare Deploy", async function(): Promise<void> {
-//         const timeout = 15 * 1000;
-//         this.timeout(timeout);
+//     test("Should Appropriately Return Whether or not Root Dir is Empty", async function(): Promise<void> {
+//         const empty = await rootFolderIsEmpty();
+//         assert.equal(empty, false);
 
-//         testNotify('Preparing deployment...');
-//         await deletePrepareDeployFiles();
+//         const getRootStub = sinon.stub(fsP, 'readdir');
+//         getRootStub.resolves([]);
+//         const stubEmpty = await rootFolderIsEmpty();
+//         assert.equal(stubEmpty, true);
+//     });
+//     test("Should Put a Sample in a New Folder When Dir Not Empty", async function(): Promise<void> {
+//         this.timeout(10 * 1000);
 
-//         const command = await getPrepareDeployCommand();
-//         const options: CommandOptions = {
-//             commandCompleteRegex: constants.regex.forDispose.PrepareDeploy,
-//             commandFailedRegex: constants.regex.forDispose.PrepareDeployFailed,
-//             commandTitle: 'Test - Prepare Deployment',
-//             isTest: true,
-//             timeout: timeout - 500,
-//         };
-//         const result = await executeTerminalCommand(command, options);
-//         assert.equal(result, true);
+//         const promptStub = sinon.stub(vscode.window, "showQuickPick");
+//         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
+//         const name = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
+//         promptStub.onCall(0).resolves(language);
+//         promptStub.onCall(1).resolves(name);
+//         const sample = (await promptForSample() as Sample);
 
-//         let file;
-//         if (testEnv.CodeLanguage == constants.variables.sdkLanguages.Csharp) {
-//             file = await vscode.workspace.findFiles('**/.deployment');
-//         } else {
-//             file = await vscode.workspace.findFiles('**/web.config');
-//         }
-//         assert(file.length > 0);
+//         await getSample(sample);
+
+//         const root = getWorkspaceRoot();
+//         const samplePath = `${ root }\\${ sample.name }`;
+//         assert(fs.existsSync(samplePath));
+
+//         await deleteDirectory(samplePath);
 //     });
 // });

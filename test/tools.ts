@@ -98,7 +98,7 @@ suite('Tools', function(): void {
     });
     test("Should default to v0.0.0 if it Can't regex.exec Version from Page", async function(): Promise<void> {
         const getStub = sinon.stub(Axios, 'get');
-        getStub.resolves({ status: 200, data: undefined });
+        getStub.resolves({ data: undefined, status: 200 });
 
         const version = await getLatestAzCliVersion();
         assert(typeof version === 'string');

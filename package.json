@@ -20,7 +20,7 @@
 		"workspaceContains:**/appsettings.json",
 		"workspaceContains:**/.env"
 	],
-	"main": "./dist/extension.js",
+	"main": "./out/src/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -54,22 +54,22 @@
 				"title": "1. Create App Registration"
 			},
 			{
-				"command": "botframework-utility.deploymentCreateResourcesNewResourceGroup",
+				"command": "botframework-utility.createAzureResourcesNewResourceGroup",
 				"category": "Bot > Deploy",
 				"title": "2A. Create AZ Resources (new Res. Group)"
 			},
 			{
-				"command": "botframework-utility.deploymentCreateResourcesExistingResourceGroupExistingServicePlan",
+				"command": "botframework-utility.createAzureResourcesExistingResourceGroupExistingServicePlan",
 				"category": "Bot > Deploy",
 				"title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
 			},
 			{
-				"command": "botframework-utility.deploymentCreateResourcesExistingResourceGroupNewServicePlan",
+				"command": "botframework-utility.createAzureResourcesExistingResourceGroupNewServicePlan",
 				"category": "Bot > Deploy",
 				"title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
 			},
 			{
-				"command": "botframework-utility.deploymentPublish",
+				"command": "botframework-utility.deploymentDeploy",
 				"category": "Bot > Deploy",
 				"title": "3. Deploy/Publish"
 			},

@@ -13,7 +13,7 @@ export async function handleAzCliUpdate(excludedMap: object): Promise<void> {
     if (semver.gte(latestVersion, currentVersion)) {
         log(`Your version of AZ CLI is ${ currentVersion }, but ${ latestVersion } is available.`);
         vscode.window.showInformationMessage(`You must download AZ CLI updates manually.`);
-        vscode.env.openExternal(vscode.Uri.parse(constants.urls.azCliDownload));
+        await vscode.env.openExternal(vscode.Uri.parse(constants.urls.azCliDownload));
     } else {
         log(`AZ CLI is up to date`);
     }

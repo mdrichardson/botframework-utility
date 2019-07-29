@@ -3,10 +3,12 @@
 import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
-import { createTempDir, deleteDirectory, getSparseCheckoutCommand, promptForSample, getWorkspaceRoot, renameDirectory, rootFolderIsEmpty, getSample } from '../src/utilities';
+import { createTempDir, deleteDirectory, getSparseCheckoutCommand, promptForSample, getWorkspaceRoot, renameDirectory, rootFolderIsEmpty, getSample, openSample } from '../src/utilities';
 import { makeNestedTestDir } from './testUtilities';
 import sinon = require('sinon');
 import fs = require('fs');
+import { Sample, SampleLanguage } from '../src/interfaces';
+import { getSampleUrl } from '../src/utilities/samples/getSampleUrl';
 const fsP = fs.promises;
 
 suite('Samples', function(): void {
@@ -66,11 +68,12 @@ suite('Samples', function(): void {
     test("Should Prompt User For Samples and Return Path to Sample", async function(): Promise<void> {
         const promptStub = sinon.stub(vscode.window, 'showQuickPick');
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
-        const sample = (constants.samples.cSharpSamples['01.console-echo'] as unknown as vscode.QuickPickItem);
+        const name = (constants.samples.cSharpSamples['01.console-echo'] as unknown as vscode.QuickPickItem);
         promptStub.onCall(0).resolves(language);
-        promptStub.onCall(1).resolves(sample);
-        const path = await promptForSample();
-        assert.equal(path, `${ language }/${ sample }`);
+        promptStub.onCall(1).resolves(name);
+        const sample = (await promptForSample() as Sample);
+        assert.equal(sample.language, language);
+        assert.equal(sample.name, name);
     });
     test("Should Not Throw if User Prompted for Sample and Dismisses", async function(): Promise<void> {
         const promptStub = sinon.stub(vscode.window, 'showQuickPick');
@@ -141,19 +144,20 @@ suite('Samples', function(): void {
         assert.equal(stubEmpty, true);
     });
     test("Should Put a Sample in a New Folder When Dir Not Empty", async function(): Promise<void> {
-        this.timeout(10 * 1000);
+        this.timeout(10 * 1000 * 99);
+        // TODO: Remove extra time
 
         const promptStub = sinon.stub(vscode.window, "showQuickPick");
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
-        const sample = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
+        const name = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
         promptStub.onCall(0).resolves(language);
-        promptStub.onCall(1).resolves(sample);
-        const path = (await promptForSample() as string);
+        promptStub.onCall(1).resolves(name);
+        const sample = (await promptForSample() as Sample);
 
-        await getSample(path);
+        await getSample(sample);
 
         const root = getWorkspaceRoot();
-        const samplePath = `${ root }\\${ sample }`;
+        const samplePath = `${ root }\\${ sample.name }`;
         assert(fs.existsSync(samplePath));
 
         await deleteDirectory(samplePath);
@@ -163,10 +167,10 @@ suite('Samples', function(): void {
 
         const promptStub = sinon.stub(vscode.window, "showQuickPick");
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
-        const sample = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
+        const name = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
         promptStub.onCall(0).resolves(language);
-        promptStub.onCall(1).resolves(sample);
-        const path = (await promptForSample() as string);
+        promptStub.onCall(1).resolves(name);
+        const sample = (await promptForSample() as Sample);
 
         const root = getWorkspaceRoot();
         const fakeEmpty = `${ root }\\fakeEmpty`;
@@ -183,10 +187,26 @@ suite('Samples', function(): void {
         };
         sinon.replaceGetter(vscode.workspace, 'workspaceFolders', (): vscode.WorkspaceFolder[] => [fakeEmptyFolder]);
 
-        await getSample(path);
+        await getSample(sample);
 
         assert(fs.existsSync(`${ fakeEmpty }\\EchoBot.cs`));
 
         await deleteDirectory(fakeEmpty);
+    });
+    test("Should Get an Appropriate Sample URL", async function(): Promise<void> {
+        const sample = new Sample('csharp_dotnetcore', 'testName');
+        const sampleUrl = getSampleUrl(sample);
+        const fakeBranchSampleUrl = getSampleUrl(sample, 'fakeBranch');
+        assert.equal(sampleUrl.path, vscode.Uri.parse(`${ constants.samples.repoRoot }/tree/master/samples/${ sample.path }`).path);
+        assert.equal(fakeBranchSampleUrl.path, vscode.Uri.parse(`${ constants.samples.repoRoot }/tree/fakeBranch/samples/${ sample.path }`).path);
+    });
+    test("Should Open a Sample in Browser without Throwing", async function(): Promise<void> {
+        const sample = new Sample('csharp_dotnetcore', 'testName');
+
+        try {
+            openSample(sample);
+        } catch (err) {
+            assert.fail(err);
+        }
     });
 });

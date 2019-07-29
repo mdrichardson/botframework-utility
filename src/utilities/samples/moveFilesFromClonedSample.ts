@@ -1,15 +1,13 @@
 import { getWorkspaceRoot, renameDirectory } from '..';
 import fs = require('fs');
+import { Sample } from '../../interfaces';
 const fsP = fs.promises;
 
-export async function moveFilesFromClonedSample(sample: string, tempDir: string, empty: boolean): Promise<void> {
+export async function moveFilesFromClonedSample(sample: Sample, tempDir: string, empty: boolean): Promise<void> {
     const root = getWorkspaceRoot();
 
-    const sampleName = sample.split('/').pop();
-    const language = sample.split('/')[0];
-
-    const oldDir = `${ tempDir }/samples/${ language }/${ sampleName }`;
-    let newDir = `${ root }/${ sampleName }`;
+    const oldDir = `${ tempDir }/samples/${ sample.path }`;
+    let newDir = `${ root }/${ sample.name }`;
     if (empty) {
         newDir = root;
         const files = await fsP.readdir(oldDir);

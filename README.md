@@ -13,17 +13,17 @@
   * `Endpoint_<Name>_AppId: <MicrosoftAppId>`,
   * `Endpoint_<Name>_AppPassword: <MicrosoftAppPassword>`
 
-#### Execute all deployment commands
+#### Execute All Deployment Commands
 
 * Open Command Palette (`ctrl` + `shift` + `p`) and type "Deploy"
 * Writes all new deployment variables to `appsettings.json`/`.env` for faster future execution
 
 ![Deployment Options](https://github.com/mdrichardson/botframework-utility/blob/master/resources/deployment-options.jpg?raw=true)
 
-#### Download individual samples
+#### Download Individual Samples or Open in Browser
 
 * Open Command Palette (`ctrl` + `shift` + `p`) and type "Sample"
-* Thanks @stevkan for the suggestion!
+* Thanks [*@stevkan*](https://github.com/stevkan) for the suggestion!
 
 ![Sample Languages](https://github.com/mdrichardson/botframework-utility/blob/master/resources/samples-languages.jpg?raw=true)
 ![Samples](https://github.com/mdrichardson/botframework-utility/blob/master/resources/samples.jpg?raw=true)
