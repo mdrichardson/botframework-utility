@@ -31,7 +31,7 @@ require('./variables');
 require('./tools');
 require('./samples');
 require('./deploymentUnit');
-require('./deploymentE2E');
+// require('./deploymentE2E');
 
 // var testEnv: BotVariables = {
 //     BotName: 'vmicricEXT',
@@ -93,31 +93,75 @@ require('./deploymentE2E');
 //     teardown((): void => {
 //         sinon.restore();
 //     });
-//     test("Should Appropriately Return Whether or not Root Dir is Empty", async function(): Promise<void> {
-//         const empty = await rootFolderIsEmpty();
-//         assert.equal(empty, false);
+//     test("Should Return undefined if User Prompted for Name and Dismissed", async function(): Promise<void> {
+//         await clearEnvVariables();
 
-//         const getRootStub = sinon.stub(fsP, 'readdir');
-//         getRootStub.resolves([]);
-//         const stubEmpty = await rootFolderIsEmpty();
-//         assert.equal(stubEmpty, true);
+//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
+//         promptStub.resolves(undefined);
+
+//         const endpoint = await promptForNewEndpoint();
+//         assert.equal(endpoint, undefined);      
 //     });
-//     test("Should Put a Sample in a New Folder When Dir Not Empty", async function(): Promise<void> {
-//         this.timeout(10 * 1000);
+//     test("Should Return an Endpoint Object after Prompting for an Endpoint - No AppId/Pass/Host - Correct Format", async function(): Promise<void> {
+//         this.timeout(5 * 1000);
+//         await clearEnvVariables();
 
-//         const promptStub = sinon.stub(vscode.window, "showQuickPick");
-//         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);
-//         const name = (constants.samples.cSharpSamples["01.console-echo"] as unknown as vscode.QuickPickItem);
-//         promptStub.onCall(0).resolves(language);
-//         promptStub.onCall(1).resolves(name);
-//         const sample = (await promptForSample() as Sample);
+//         const promptStub = sinon.stub(vscode.window, 'showInputBox');
+//         promptStub.onCall(0).resolves(testEndpoint.Name);
+//         promptStub.onCall(1).resolves(testEndpoint.AppId);
+//         promptStub.onCall(2).resolves(testEndpoint.AppPassword);
+//         promptStub.onCall(3).resolves(testEndpoint.Host);
 
-//         await getSample(sample);
+//         const endpoint = (await promptForNewEndpoint() as Endpoint);
 
-//         const root = getWorkspaceRoot();
-//         const samplePath = `${ root }\\${ sample.name }`;
-//         assert(fs.existsSync(samplePath));
+//         assert.equal(endpoint.AppId, testEndpoint.AppId);
+//         assert.equal(endpoint.AppPassword, testEndpoint.AppPassword);
+//         assert.equal(endpoint.Host, testEndpoint.Host);
+//         assert.equal(endpoint.Name, testEndpoint.Name);
+//     });
+//     test("Should Return Appropriate Endpoint from QuickPick", async function(): Promise<void> {
+//         await clearEnvVariables();
 
-//         await deleteDirectory(samplePath);
+//         const promptStub = sinon.stub(vscode.window, 'showQuickPick');
+//         promptStub.resolves(('Endpoint_Test2' as unknown as vscode.QuickPickItem));
+
+//         await setBotVariables(testEndpoints);
+
+//         const endpoint = (await getEndpointFromQuickPick(await getEndpoints()) as Endpoint);
+//         assert.equal(endpoint.AppId, testEndpoints.Endpoint_Test2_AppId);
+//         assert.equal(endpoint.AppPassword, testEndpoints.Endpoint_Test2_AppPassword);
+//         assert.equal(endpoint.Host, testEndpoints.Endpoint_Test2);
+//         assert.equal(endpoint.Name, 'Endpoint_Test2');  
+//     });
+//     test("Should Write a New Endpoint to Local and Env", async function(): Promise<void> {
+//         this.timeout(99 *1000);
+//         await clearEnvVariables();
+
+//         await writeEndpointToEnv(testEndpoint);
+
+//         const localSettings = await getLocalBotVariables();
+//         const envSettings = await getEnvBotVariables();
+
+//         assert.equal(localSettings[testEndpoint.Name], testEndpoint.Host);
+//         assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+//         assert.equal(localSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
+//         assert.equal(envSettings[testEndpoint.Name], testEndpoint.Host);
+//         assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppId }`], testEndpoint.AppId);
+//         assert.equal(envSettings[`${ testEndpoint.Name }_${ constants.regex.endpointSuffixes.AppPassword }`], testEndpoint.AppPassword);
+//     });
+//     test("Should get the latest version of AZ CLI", async function(): Promise<void> {
+//         this.timeout(5 * 1000);
+
+//         const version = await getLatestAzCliVersion();
+//         assert(typeof version === 'string');
+//         assert.notEqual(version, '0.0.0');
+//     });
+//     test('Should Get Appropriate Tools Update Command - No Exclusions', async function(): Promise<void> {
+//         this.timeout(20 * 1000);
+
+//         await setVsCodeConfig(constants.vsCodeConfig.names.excludeCliToolsFromUpdate, []);
+//         const command = await getToolsUpdateCommand();
+//         const toUpdate = constants.terminal.cliTools.slice(1);
+//         assert.equal(command, `npm install -g ${ toUpdate.join(' ') }`);
 //     });
 // });

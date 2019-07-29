@@ -7,11 +7,17 @@ import * as vscode from 'vscode';
 import { getToolsUpdateCommand, setVsCodeConfig, getCurrentAzCliVersion, getLatestAzCliVersion, handleAzCliUpdate } from '../src/utilities/index';
 import Axios, { AxiosResponse } from 'axios';
 import sinon = require('sinon');
+import { disposeAllTerminals } from './testUtilities';
 
 suite('Tools', function(): void {
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     teardown((): void => {
         sinon.restore();
     });
+    
     test("All Website Constants Should Return 200 Status", async function(): Promise<void> {
         this.timeout(10 * 1000);
 
@@ -86,7 +92,7 @@ suite('Tools', function(): void {
 
         const version = await getLatestAzCliVersion();
         assert(typeof version === 'string');
-        assert(version !== '0.0.0');
+        assert.notEqual(version, '0.0.0');
     });
     test("Should default to v0.0.0 if it Can't Get URL", async function(): Promise<void> {
         const getStub = sinon.stub(Axios, 'get');

@@ -2,14 +2,19 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import RandExp = require('randexp');
-import { clearEnvVariables, deleteCodeFiles, writeCodeFiles } from './testUtilities';
+import { clearEnvVariables, deleteCodeFiles, writeCodeFiles, disposeAllTerminals } from './testUtilities';
 import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnvKeys, getLanguage, promptForVariableIfNotExist, inputIsValid, arrayToRegex, setLocalBotVariables, syncLocalBotVariablesToEnv, setVsCodeConfig, getVsCodeConfig } from '../src/utilities';
 import sinon = require('sinon');
 
 suite("Variables", function(): void {
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     teardown((): void => {
         sinon.restore();
     });
+    
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, 'test');
         assert.equal(await getVsCodeConfig(constants.vsCodeConfig.names.customTerminal), 'test');

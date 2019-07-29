@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import RandExp = require('randexp');
 import { BotVariables } from '../src/interfaces';
 import { setBotVariables, downloadTemplate, getDeploymentTemplate, getWorkspaceRoot, deleteCodeZip, regexToVariables, getEnvBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, getDeployCommand, executeTerminalCommand, handleTerminalData, getTerminalPath, joinTerminalCommands, createCodeZip } from '../src/utilities';
-import { deleteDownloadTemplates, deleteTerminalOutputFile, testNotify } from './testUtilities';
+import { deleteDownloadTemplates, deleteTerminalOutputFile, testNotify, disposeAllTerminals } from './testUtilities';
 
 import fs = require('fs');
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
@@ -21,14 +21,19 @@ var testEnv: BotVariables = {
     ServicePlanName: 'vmicricEXT'    
 };
 
-suiteSetup(async (): Promise<void> => {
-    await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
-});
-
 suite("Deployment - Unit", function(): void {
+    suiteSetup(async (): Promise<void> => {
+        await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
+    });
+
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     setup(async (): Promise<void> => {
         await setBotVariables(testEnv);
     });
+    
     test("Should download both deployment templates if missing", async function(): Promise<void> {
         this.timeout(10 * 1000);
 

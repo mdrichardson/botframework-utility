@@ -59,7 +59,9 @@ export async function clearEnvVariables(): Promise<void> {
     ];
     await Promise.all(files.map(async (file): Promise<void> => {
         try {
-            await fsP.unlink(file);
+            if (fs.existsSync(file)) {
+                await fsP.unlink(file);
+            }
         } catch (err) { }
     }));
     process.env['BOTFRAMEWORK_UTILITY'] = '';
@@ -136,4 +138,11 @@ export async function makeNestedTestDir(): Promise<string> {
     await fsP.writeFile(`${ nestedDir }\\nestedFile.txt`, 'test');
 
     return testDir;
+}
+
+export async function disposeAllTerminals(): Promise<void> {
+    const terminals = vscode.window.terminals;
+    await Promise.all(terminals.map(async (terminal): Promise<void> => {
+        await terminal.dispose();
+    }));
 }

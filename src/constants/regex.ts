@@ -44,7 +44,7 @@ export const endpointKeys = {
 
 // We .slice() to remove the ^ and $ to make RegEx global match work
 export const forVariables = {
-    AzCliCurrentVersion: /The current version of the CLI is <strong>(?<version>[\d.]*)<\/strong>./,
+    AzCliCurrentVersion: /The current version of the (?:Azure)? CLI is <strong>(?<version>[\d.]*)<\/strong>./,
     AzCliVersion: /azure-cli\s*(?<version>[\d.]*)/,
     MicrosoftAppId: new RegExp(`"appId":.*"(?<MicrosoftAppId>${ forValidations.GUID.source.slice(1, -1) })"`, 'g'),
     // There might be other special characters, but I think that's all of them

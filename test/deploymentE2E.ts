@@ -3,7 +3,7 @@ import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { BotVariables } from '../src/interfaces';
 import {  setBotVariables, getCreateAppRegistrationCommand, getCreateResourcesCommand, getPrepareDeployCommand, createCodeZip, getDeployCommand, getWorkspaceRoot, executeTerminalCommand, watchEnvFiles, createAzureResources } from '../src/utilities';
-import { cleanup, deleteTerminalOutputFile, deleteBot, deletePrepareDeployFiles, testNotify, clearEnvVariables } from './testUtilities';
+import { cleanup, deleteTerminalOutputFile, deleteBot, deletePrepareDeployFiles, testNotify, clearEnvVariables, disposeAllTerminals } from './testUtilities';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
 import fs = require('fs');
 const fsP = fs.promises;
@@ -31,6 +31,7 @@ suite("Deployment - E2E", function(): void {
     
     suiteTeardown(async (): Promise<void> => {
         await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
+        await disposeAllTerminals();        
     });
     
     setup(async (): Promise<void> => {

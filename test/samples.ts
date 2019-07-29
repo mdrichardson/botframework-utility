@@ -4,7 +4,7 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { createTempDir, deleteDirectory, getSparseCheckoutCommand, promptForSample, getWorkspaceRoot, renameDirectory, rootFolderIsEmpty, getSample, openSample } from '../src/utilities';
-import { makeNestedTestDir } from './testUtilities';
+import { makeNestedTestDir, disposeAllTerminals } from './testUtilities';
 import sinon = require('sinon');
 import fs = require('fs');
 import { Sample, SampleLanguage } from '../src/interfaces';
@@ -12,9 +12,14 @@ import { getSampleUrl } from '../src/utilities/samples/getSampleUrl';
 const fsP = fs.promises;
 
 suite('Samples', function(): void {
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     teardown((): void => {
         sinon.restore();
     });
+    
     test("Should Create an Appropriate Temporary Directory", async function(): Promise<void> {
         const tempDir = await createTempDir('test');
 
@@ -145,7 +150,6 @@ suite('Samples', function(): void {
     });
     test("Should Put a Sample in a New Folder When Dir Not Empty", async function(): Promise<void> {
         this.timeout(10 * 1000 * 99);
-        // TODO: Remove extra time
 
         const promptStub = sinon.stub(vscode.window, "showQuickPick");
         const language = (constants.samples.cSharpDir as unknown as vscode.QuickPickItem);

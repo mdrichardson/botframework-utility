@@ -6,7 +6,7 @@ import * as assert from 'assert';
 import * as constants from '../src/constants';
 import * as vscode from 'vscode';
 import { getEmulatorLaunchCommand, normalizeEnvKeys, setBotVariables, getLocalBotVariables, getEndpointKeyType, getEndpointObject, syncLocalBotVariablesToEnv, getEndpoints, getEndpointFromQuickPick, modifyEndpointNameIfNecessary, promptForNewEndpoint, getSingleEndpoint, writeEndpointToEnv, getEnvBotVariables } from '../src/utilities/index';
-import { clearEnvVariables, writeCodeFiles } from './testUtilities';
+import { clearEnvVariables, writeCodeFiles, disposeAllTerminals } from './testUtilities';
 import sinon = require('sinon');
 import RandExp = require('randexp');
 import { Endpoint } from '../src/interfaces';
@@ -44,9 +44,14 @@ const testEndpoints = {
 };
 
 suite('Emulator', function(): void {
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     teardown((): void => {
         sinon.restore();
     });
+    
     test('Should Create Proper Emulator Start Command', function(): void {
         this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
 
@@ -254,7 +259,7 @@ suite('Emulator', function(): void {
         assert.equal(reformatted, 'Endpoint_ABC');
         assert.equal(numbered, 'Endpoint_Test3');       
     });
-    test("Should Return no undefined if User Prompted for Name and Dismissed", async function(): Promise<void> {
+    test("Should Return undefined if User Prompted for Name and Dismissed", async function(): Promise<void> {
         await clearEnvVariables();
 
         const promptStub = sinon.stub(vscode.window, 'showInputBox');
@@ -393,20 +398,6 @@ suite('Emulator', function(): void {
 
         const endpoint = await getEndpointFromQuickPick(await getEndpoints());
         assert.equal(endpoint, undefined);
-    });
-    test("Should Return Appropriate Endpoint from QuickPick", async function(): Promise<void> {
-        await clearEnvVariables();
-
-        const promptStub = sinon.stub(vscode.window, 'showQuickPick');
-        promptStub.resolves(('Endpoint_Test2' as unknown as vscode.QuickPickItem));
-
-        await setBotVariables(testEndpoints);
-
-        const endpoint = (await getEndpointFromQuickPick(await getEndpoints()) as Endpoint);
-        assert.equal(endpoint.AppId, testEndpoints.Endpoint_Test2_AppId);
-        assert.equal(endpoint.AppPassword, testEndpoints.Endpoint_Test2_AppPassword);
-        assert.equal(endpoint.Host, testEndpoints.Endpoint_Test2);
-        assert.equal(endpoint.Name, 'Endpoint_Test2');  
     });
     test("Should Return Appropriate Endpoint from QuickPick", async function(): Promise<void> {
         await clearEnvVariables();

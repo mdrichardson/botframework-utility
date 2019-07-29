@@ -6,12 +6,18 @@ import * as sinon from 'sinon';
 import { deploymentCommands, emulatorCommands, toolsCommands, samplesCommands } from '../src/commands';
 import { log, watchEnvFiles, getWorkspaceRoot, loadCommands } from '../src/utilities';
 import fs = require('fs');
+import { disposeAllTerminals } from './testUtilities';
 const fsP = fs.promises;
 
 suite('Extension Loading Tests', function(): void {
+    suiteTeardown(async (): Promise<void> => {
+        await disposeAllTerminals();
+    });
+
     teardown((): void => {
         sinon.restore();
     });
+    
     test("Should Properly Activate the Extension", async function(): Promise<void> {
         const context: vscode.ExtensionContext = {
             subscriptions: [],
