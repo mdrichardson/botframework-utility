@@ -12,7 +12,7 @@
 		"vscode": "^1.33.0"
 	},
 	"categories": [
-        "Snippets",
+		"Snippets",
 		"Other"
 	],
 	"activationEvents": [
@@ -120,7 +120,8 @@
 				"botframework-utility.customTerminal": {
 					"type": "string",
 					"default": "",
-					"description": "Path to custom terminal for commands"
+					"description": "Path to custom terminal for commands",
+					"scope": "machine"
 				},
 				"botframework-utility.excludeCliToolsFromUpdate": {
 					"type": "array",
@@ -166,7 +167,8 @@
 						"dialoglint",
 						"msbot"
 					],
-					"description": "Select which tools to exclude when updating all tools"
+					"description": "Select which tools to exclude when updating all tools",
+					"scope": "machine"
 				}
 			}
 		},
@@ -177,21 +179,21 @@
 				"mac": "cmd+alt+shift+e",
 				"when": "debugType != xyz"
 			}
-        ],
-        "snippets": [
-            {
-                "language": "javascript",
-                "path": "./src/snippets/javascript.json"
-            },
-            {
-                "language": "typescript",
-                "path": "./src/snippets/typescript.json"
-            },
-            {
-                "language": "csharp",
-                "path": "./src/snippets/csharp.json"
-            }
-        ]
+		],
+		"snippets": [
+			{
+				"language": "javascript",
+				"path": "./src/snippets/javascript.json"
+			},
+			{
+				"language": "typescript",
+				"path": "./src/snippets/typescript.json"
+			},
+			{
+				"language": "csharp",
+				"path": "./src/snippets/csharp.json"
+			}
+		]
 	},
 	"scripts": {
 		"echo": "echo \"#####   Be sure to change package.json>main to ./dist/extension.js    #####\"",
@@ -208,36 +210,36 @@
 		"@types/archiver": "^3.0.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^2.2.48",
-		"@types/node": "^10.14.7",
-		"@types/sinon": "^7.0.11",
-		"@typescript-eslint/eslint-plugin": "^1.7.0",
-		"@typescript-eslint/parser": "^1.7.0",
+		"@types/node": "^10.14.13",
+		"@types/sinon": "^7.0.13",
+		"@typescript-eslint/eslint-plugin": "^1.13.0",
+		"@typescript-eslint/parser": "^1.13.0",
 		"decache": "^4.5.1",
 		"eslint": "^5.16.0",
 		"eslint-config-standard": "^12.0.0",
-		"eslint-plugin-import": "^2.17.2",
+		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-node": "^8.0.1",
-		"eslint-plugin-promise": "^4.1.1",
+		"eslint-plugin-promise": "^4.2.1",
 		"eslint-plugin-standard": "^4.0.0",
 		"glob": "^7.1.4",
 		"istanbul": "^0.4.5",
-		"mocha": "^6.1.4",
+		"mocha": "^6.2.0",
 		"randexp": "^0.5.3",
 		"remap-istanbul": "^0.13.0",
 		"sinon": "^7.3.2",
 		"ts-loader": "^5.4.5",
-		"tslint": "^5.16.0",
-		"typescript": "^3.4.5",
-		"vscode": "^1.1.34",
-		"webpack": "^4.32.2",
-		"webpack-cli": "^3.3.2"
+		"tslint": "^5.18.0",
+		"typescript": "^3.5.3",
+		"vscode": "^1.1.35",
+		"webpack": "^4.38.0",
+		"webpack-cli": "^3.3.6"
 	},
 	"dependencies": {
-		"@types/semver": "^6.0.0",
-		"archiver": "^3.0.0",
+		"@types/semver": "^6.0.1",
+		"archiver": "^3.0.3",
 		"axios": "^0.19.0",
 		"dotenv": "^7.0.0",
 		"fuzzy-matching": "^0.4.3",
-		"semver": "^6.0.0"
+		"semver": "^6.3.0"
 	}
 }
