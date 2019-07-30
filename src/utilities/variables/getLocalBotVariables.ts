@@ -16,7 +16,7 @@ export async function getLocalBotVariables(): Promise<Partial<BotVariables>> {
         botSettings = handleLocalEnvJson(json, botSettings);
     } 
     if (appsettingsJsonFile[0] && fs.existsSync(appsettingsJsonFile[0].fsPath)) {
-        const raw = String(await fsP.readFile(appsettingsJsonFile[0].fsPath));
+        const raw = (await fsP.readFile(appsettingsJsonFile[0].fsPath)).toString();
         const json = JSON.parse(raw);
         botSettings = handleLocalEnvJson(json, botSettings);
     }

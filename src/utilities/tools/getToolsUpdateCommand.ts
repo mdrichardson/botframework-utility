@@ -1,5 +1,4 @@
 import * as constants from '../../constants';
-import * as vscode from 'vscode';
 import { getVsCodeConfig } from "../variables/getVsCodeConfig";
 import { handleAzCliUpdate } from '..';
 

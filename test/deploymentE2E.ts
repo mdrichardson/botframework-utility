@@ -107,10 +107,13 @@ suite("Deployment - E2E", function(): void {
     });
 
     test("Should Create Resources - All Existing", async function(): Promise<void> {
-        const timeout = 2 * 60 * 1000;
+        const timeout = 3 * 60 * 1000;
         this.timeout(timeout);
 
         await deleteBot(testEnv.BotName, testEnv.ResourceGroupName);
+
+        // Give bot time to delete
+        await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 10000));
 
         testNotify('Creating resources...');
         const name = `${ testEnv.BotName }new`;

@@ -246,19 +246,19 @@ suite("Deployment - Unit", function(): void {
     test("Terminal should return false if no data and nothing checked", async function(): Promise<void> {
         const terminal = vscode.window.createTerminal();
         const result = await handleTerminalData(terminal, {});
-        assert.equal(result, false);
         terminal.dispose();
+        assert.equal(result, false);
     });
     test("Terminal should return regex group matches if given returnRegex", async function(): Promise<void> {
-        this.timeout(5 * 1000);
+        this.timeout(8 * 1000);
 
         const terminal = vscode.window.createTerminal();
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
             returnRegex: /(?<err>The term 'test' is not)/
         }) as RegExpMatchArray);
-        assert.equal((result.groups as object)['err'], "The term 'test' is not");
         terminal.dispose();
+        assert.equal((result.groups as object)['err'], "The term 'test' is not");
     });
     test("Terminal should return false if it detects failure regex", async function(): Promise<void> {
         this.timeout(5 * 1000);
@@ -269,8 +269,8 @@ suite("Deployment - Unit", function(): void {
             commandFailedRegex: /(?<err>The term 'test' is not)/,
             timeout: 5000,
         }) as RegExpMatchArray);
-        assert.equal(result, false);
         terminal.dispose();
+        assert.equal(result, false);
     });
     test("Terminal should return true if it detects complete regex and no matches", async function(): Promise<void> {
         this.timeout(5 * 1000);
@@ -281,8 +281,8 @@ suite("Deployment - Unit", function(): void {
             commandCompleteRegex: /(?<err>The term 'test' is not)/,
             timeout: 5000,
         }) as RegExpMatchArray);
-        assert.equal(result, true);
         terminal.dispose();
+        assert.equal(result, true);
     });
     test("Terminal should return false if it detects fail regex before complete regex", async function(): Promise<void> {
         this.timeout(5 * 1000);
@@ -294,8 +294,8 @@ suite("Deployment - Unit", function(): void {
             commandFailedRegex: /(?<err>The term 'test' is not)/,
             timeout: 5000,
         }) as RegExpMatchArray);
-        assert.equal(result, false);
         terminal.dispose();
+        assert.equal(result, false);
     });
     test("Should save failed terminal output on test", async function(): Promise<void> {
         const timeout = 5 * 1000;
@@ -310,6 +310,7 @@ suite("Deployment - Unit", function(): void {
             isTest: true,
             timeout: timeout - 500,
         }) as RegExpMatchArray);
+        terminal.dispose();
 
         assert.equal(result, false);
 
@@ -317,7 +318,6 @@ suite("Deployment - Unit", function(): void {
         assert(outputFile.length);
 
         await deleteTerminalOutputFile();
-        terminal.dispose();
     });
     test("Timeouts in handleTerminalData should work and return false", async function(): Promise<void> {
         const timeout = 5 * 1000;
