@@ -26,13 +26,13 @@ export function getEmulatorLaunchCommand(url: string,
 
     let command = `${ opener } "bfemulator://${ domain }.${ action }?botUrl=${ url }`;
     if (appId) {
-        command += `&msaAppId=${ appId }`;
+        command += `&msaAppId=${ encodeURIComponent(appId) }`;
     }
     if (appPassword) {
-        command += `&msaPassword=${ appPassword }`;
+        command += `&msaAppPassword=${ encodeURIComponent(appPassword) }`;
     }
     if (botFileSecret) {
-        command += `&secret=${ botFileSecret }`;
+        command += `&secret=${ encodeURIComponent(botFileSecret) }`;
     }
 
     command += '"';
