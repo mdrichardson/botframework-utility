@@ -84,11 +84,11 @@ suite('Emulator', function(): void {
         Object.defineProperty(process, 'platform', this.originalPlatform);
 
         assert.equal(urlLocalWin, `${ constants.terminal.openers.windows } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
-        assert.equal(urlProductionWin, `${ constants.terminal.openers.windows } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }&secret=${ botSecret }"`);
+        assert.equal(urlProductionWin, `${ constants.terminal.openers.windows } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ encodeURIComponent(appId) }&msaAppPassword=${ encodeURIComponent(appPass) }&secret=${ encodeURIComponent(botSecret) }"`);
         assert.equal(urlLocalOSX, `${ constants.terminal.openers.osx } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
-        assert.equal(urlProductionOSX, `${ constants.terminal.openers.osx } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }&secret=${ botSecret }"`);
+        assert.equal(urlProductionOSX, `${ constants.terminal.openers.osx } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ encodeURIComponent(appId) }&msaAppPassword=${ encodeURIComponent(appPass) }&secret=${ encodeURIComponent(botSecret) }"`);
         assert.equal(urlLocalLinux, `${ constants.terminal.openers.linux } "bfemulator://livechat.open?botUrl=${ encodeURIComponent('http://localhost:3978/api/messages') }"`);
-        assert.equal(urlProductionLinux, `${ constants.terminal.openers.linux } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ appId }&msaPassword=${ appPass }&secret=${ botSecret }"`);
+        assert.equal(urlProductionLinux, `${ constants.terminal.openers.linux } "bfemulator://livechat.open?botUrl=${ encodeURIComponent(endpoint) }&msaAppId=${ encodeURIComponent(appId) }&msaAppPassword=${ encodeURIComponent(appPass) }&secret=${ encodeURIComponent(botSecret) }"`);
     });
     test("Should Not Normalize Endpoint Keys", async function(): Promise<void> {
         const regex = [
