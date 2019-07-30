@@ -7,7 +7,7 @@ import { createTempDir, deleteDirectory, getSparseCheckoutCommand, promptForSamp
 import { makeNestedTestDir, disposeAllTerminals } from './testUtilities';
 import sinon = require('sinon');
 import fs = require('fs');
-import { Sample, SampleLanguage } from '../src/interfaces';
+import { Sample } from '../src/interfaces';
 import { getSampleUrl } from '../src/utilities/samples/getSampleUrl';
 const fsP = fs.promises;
 

@@ -21,7 +21,7 @@ suite("Variables", function(): void {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
     });
     test("Should Load Variables from Appsettings.json", async function(): Promise<void> {
-        this.timeout(4 * 1000);
+        this.timeout(6 * 1000);
 
         await clearEnvVariables();
         await deleteCodeFiles();
@@ -53,7 +53,7 @@ suite("Variables", function(): void {
         assert.equal(result['testVar'], 'test');
     });
     test("Should set variables locally and to process.env - Node", async function(): Promise<void> {
-        this.timeout(6 * 1000);
+        this.timeout(8 * 1000);
 
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Node);
@@ -71,7 +71,7 @@ suite("Variables", function(): void {
         assert.equal(localResult[constants.variables.botVariables.BotName], testName);
     });
     test("Should set variables locally and to process.env - CSharp", async function(): Promise<void> {
-        this.timeout(6 * 1000);
+        this.timeout(8 * 1000);
         
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
@@ -107,16 +107,22 @@ suite("Variables", function(): void {
         }
     });
     test("Should properly get Csharp language", async function(): Promise<void> {
+        this.timeout(5 * 1000);
+
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         assert.equal(await getLanguage(), constants.variables.sdkLanguages.Csharp);
     });
     test("Should properly get Node language", async function(): Promise<void> {
+        this.timeout(5 * 1000);
+
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Node);
         assert.equal(await getLanguage(), constants.variables.sdkLanguages.Node);
     });
     test("Should properly get Typescript language", async function(): Promise<void> {
+        this.timeout(5 * 1000);
+
         await deleteCodeFiles();
         await writeCodeFiles(constants.variables.sdkLanguages.Typescript);
         assert.equal(await getLanguage(), constants.variables.sdkLanguages.Typescript);
@@ -137,7 +143,7 @@ suite("Variables", function(): void {
         }
     });
     test("Should not throw when prompting", async function(): Promise<void> {
-        this.timeout(1.5 * 1000);
+        this.timeout(3 * 1000);
 
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         try {
@@ -175,6 +181,8 @@ suite("Variables", function(): void {
         assert.equal(errorSpy.callCount, 1);
     });
     test("Should prompt for variable if it doesn't exist", async function(): Promise<void> {
+        this.timeout(5 * 1000);
+        
         await setBotVariables({ [constants.variables.botVariables.BotName]: undefined });
         const promptStub = sinon.stub(vscode.window, 'showInputBox');
         promptStub.resolves('testBotName');

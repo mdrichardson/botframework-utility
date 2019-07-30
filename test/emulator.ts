@@ -109,6 +109,7 @@ suite('Emulator', function(): void {
         });
     });
     test("Should Get Endpoint Variables - Node", async function(): Promise<void> {
+        this.timeout(5 * 1000);
         await clearEnvVariables();
         await writeCodeFiles(constants.variables.sdkLanguages.Node);
         await setBotVariables(botVariables);
@@ -123,6 +124,7 @@ suite('Emulator', function(): void {
         assert.equal(localVariables['Endpoint_Test_AppPassword'], appPass);
     });
     test("Should Get Endpoint Variables - C#", async function(): Promise<void> {
+        this.timeout(5 * 1000);
         await clearEnvVariables();
         await writeCodeFiles(constants.variables.sdkLanguages.Csharp);
         await setBotVariables(botVariables);
@@ -203,7 +205,7 @@ suite('Emulator', function(): void {
         assert.equal(endpointNamed.AppPassword, botVariables.Endpoint_Test_AppPassword);
     });
     test("Should Prompt for Endpoint AppId and Pass if not exist", async function(): Promise<void> {
-        this.timeout(5 * 1000);
+        this.timeout(8 * 1000);
 
         const missingVars = {
             Endpoint: botVariables.Endpoint,

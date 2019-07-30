@@ -61,6 +61,7 @@ export async function clearEnvVariables(): Promise<void> {
         try {
             if (fs.existsSync(file)) {
                 await fsP.unlink(file);
+                await new Promise((resolve): NodeJS.Timeout => setTimeout(resolve, 500));
             }
         } catch (err) { }
     }));
