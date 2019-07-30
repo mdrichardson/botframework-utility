@@ -16,9 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"workspaceContains:**/*.bot",
-		"workspaceContains:**/appsettings.json",
-		"workspaceContains:**/.env"
+		"*"
 	],
 	"main": "./out/src/extension.js",
 	"contributes": {
