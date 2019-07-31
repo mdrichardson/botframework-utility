@@ -8,7 +8,7 @@ All notable changes to the "botframework-utility" extension will be documented i
 
 ## [Unreleased]
 
-- Features TBA
+- Added code snippet for Adaptive Card construction
 
 ## [0.0.3] - 2019-07-31
 

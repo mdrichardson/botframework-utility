@@ -53,5 +53,19 @@
                 "\t}",
             "}"
         ]
+    },
+    "Adaptive Card": {
+        "prefix": "adaptiveCard",
+        "description": "Code block for importing Adaptive Card `.json`",
+        "body": [
+            "var cardPath = Path.Combine(\"./\", \"${0:adaptiveCard.json}\");",
+            "var cardJson = File.ReadAllText(cardPath);",
+            "var cardAttachment = new Attachment()",
+            "{",
+                "\tContentType = \"application/vnd.microsoft.card.adaptive\",",
+                "\tContent = JsonConvert.DeserializeObject(cardJson),",
+            "};",
+            "var cardActivity = MessageFactory.Attachment(cardAttachment);"
+        ]
     }
 }

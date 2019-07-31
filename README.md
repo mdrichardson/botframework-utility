@@ -42,6 +42,7 @@
   * Cosmos - `cosmosStorage`
 * Activity Handlers - `activityHandler`
 * Welcome Message - `welcomeMessage`
+* Adaptive Cards - `adaptiveCard`
 
 ![Snippet Recording](https://github.com/mdrichardson/botframework-utility/raw/master/resources/snippet-recording.gif?raw=true)
 
@@ -84,8 +85,4 @@ None, currently
 
 ## Release Notes
 
-Not currently in public release
-
-### 0.0.1
-
-Beta release for internal testing
+See [Changelog](CHANGELOG.md)

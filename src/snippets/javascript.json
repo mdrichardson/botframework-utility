@@ -49,5 +49,14 @@
                 "\t}",
             "});"
         ]
+    },
+    "Adaptive Card": {
+        "prefix": "adaptiveCard",
+        "description": "Code block for importing Adaptive Card `.json`",
+        "body": [
+            "const cardJson = require('${0:./adaptiveCard.json}');",
+            "const card = CardFactory.adaptiveCard(cardJson);",
+            "const cardActivity = { attachments: [card] };"
+        ]
     }
 }
