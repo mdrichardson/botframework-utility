@@ -9,6 +9,6 @@ export async function getCurrentAzCliVersion(isTest?: boolean): Promise<string> 
         returnRegex: constants.regex.forVariables.AzCliVersion,
         timeout: 10000,
     };
-    const matches = (await executeTerminalCommand('az -v', options) as RegExpExecArray);
+    const matches = (await executeTerminalCommand('az -v', options, { runInBackground: true }) as RegExpExecArray);
     return matches.groups && matches.groups['version'] ? matches['groups']['version'] : '0.0.0';
 }

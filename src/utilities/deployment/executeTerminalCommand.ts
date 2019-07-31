@@ -6,21 +6,22 @@ import { joinTerminalCommands } from './joinTerminalCommands';
 
 export async function executeTerminalCommand(
     command: string|string[],
-    options: CommandOptions = {
+    commandOptions: CommandOptions = {
         commandTitle: 'Command',
         isTest: false,
-    }): Promise<boolean|RegExpExecArray|Partial<BotVariables>> {
+    },
+    terminalOptions: vscode.TerminalOptions = {}): Promise<boolean|RegExpExecArray|Partial<BotVariables>> {
     
-    const terminalPath = await getTerminalPath();
+    terminalOptions.shellPath = terminalOptions.shellPath ? terminalOptions.shellPath : await getTerminalPath();
 
     if (Array.isArray(command)) {
-        command = joinTerminalCommands(command, terminalPath);
+        command = joinTerminalCommands(command, terminalOptions.shellPath);
     }
 
-    const terminal = await vscode.window.createTerminal(undefined, terminalPath);
-    terminal.show(true);
+    const terminal = await vscode.window.createTerminal(terminalOptions);
+    // terminal.show(true);
 
     terminal.sendText(command, true);
 
-    return await handleTerminalData(terminal, options);
+    return await handleTerminalData(terminal, commandOptions);
 }

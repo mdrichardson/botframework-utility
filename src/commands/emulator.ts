@@ -13,7 +13,7 @@ const emulatorCommands: Commands = {
         var command = getEmulatorLaunchCommand('http://localhost:3978/api/messages');
         // Note: We have to open the bfemulator:// links through a terminal. vscode.env.openExternal decodes the / in URL, which doesn't work with emulator
         // Waiting on this issue to be fixed so we can auto-close the terminal: https://github.com/Microsoft/BotFramework-Emulator/issues/1136
-        await executeTerminalCommand(command);
+        await executeTerminalCommand(command, undefined, { runInBackground: true });
         // await executeTerminalCommand(command, constants.regex.forDispose.Emulator, 'Emulator Launch');
     },
     async openEmulatorLocalhostWithApp(): Promise<void> {
@@ -22,7 +22,7 @@ const emulatorCommands: Commands = {
         
         vscode.window.showInformationMessage('Opening Emulator at localhost');
         const command = getEmulatorLaunchCommand('http://localhost:3978/api/messages', { appId, appPassword });
-        await executeTerminalCommand(command);
+        await executeTerminalCommand(command, undefined, { runInBackground: true });
     },
     async openEmulatorProduction(): Promise<void> {
         const endpoint = await getSingleEndpoint();
@@ -33,7 +33,7 @@ const emulatorCommands: Commands = {
                 appId: endpoint.AppId, 
                 appPassword: endpoint.AppPassword,
             });
-            await executeTerminalCommand(command);
+            await executeTerminalCommand(command, undefined, { runInBackground: true });
         } else { log('No Endpoint Found'); }
     }
 };
