@@ -10,7 +10,8 @@
 		"rootDir": ".",
         "strict": true,   /* enable all strict type-checking options */
         "suppressImplicitAnyIndexErrors": true,
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "resolveJsonModule": true
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */

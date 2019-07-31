@@ -1,245 +1,246 @@
 {
-	"name": "botframework-utility",
-	"displayName": "BotFramework Utility",
-	"description": "Helper utilities to assist in a more efficient bot development life cycle",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/mdrichardson/botframework-utility"
-	},
-	"publisher": "mdrichardson",
-	"version": "0.0.3",
-	"engines": {
-		"vscode": "^1.33.0"
-	},
-	"categories": [
-		"Snippets",
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./out/src/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "botframework-utility.openEmulatorLocalhost",
-				"category": "Bot > Emulator",
-				"title": "Open Emulator (localhost)"
-			},
-			{
-				"command": "botframework-utility.openEmulatorLocalhostWithApp",
-				"category": "Bot > Emulator",
-				"title": "Open Emulator (localhost w/ AppId/AppPass)"
-			},
-			{
-				"command": "botframework-utility.openEmulatorProduction",
-				"category": "Bot > Emulator",
-				"title": "Open Emulator (Production Endpoint(s))"
-			},
-			{
-				"command": "botframework-utility.openEmulatorProduction",
-				"category": "Bot > Emulator",
-				"title": "Open Emulator (Production Endpoint)"
-			},
-			{
-				"command": "botframework-utility.createEndpoint",
-				"category": "Bot > Emulator",
-				"title": "Create Endpoint (saves to appsettings.json/.env)"
-			},
-			{
-				"command": "botframework-utility.createAppRegistration",
-				"category": "Bot > Deploy",
-				"title": "1. Create App Registration"
-			},
-			{
-				"command": "botframework-utility.createAzureResourcesNewResourceGroup",
-				"category": "Bot > Deploy",
-				"title": "2A. Create AZ Resources (new Res. Group)"
-			},
-			{
-				"command": "botframework-utility.createAzureResourcesExistingResourceGroupExistingServicePlan",
-				"category": "Bot > Deploy",
-				"title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
-			},
-			{
-				"command": "botframework-utility.createAzureResourcesExistingResourceGroupNewServicePlan",
-				"category": "Bot > Deploy",
-				"title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
-			},
-			{
-				"command": "botframework-utility.deploymentDeploy",
-				"category": "Bot > Deploy",
-				"title": "3. Deploy/Publish"
-			},
-			{
-				"command": "botframework-utility.updateCliTools",
-				"category": "Bot > CLI Tools",
-				"title": "Update All"
-			},
-			{
-				"command": "botframework-utility.getSample",
-				"category": "Bot > Samples",
-				"title": "Download Sample"
-			},
-			{
-				"command": "botframework-utility.openSample",
-				"category": "Bot > Samples",
-				"title": "Open Sample in Browser"
-			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
-					"command": "botframework-utility.openEmulatorLocalhost",
-					"group": "@botframework-utility@1"
-				},
-				{
-					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
-					"command": "botframework-utility.openEmulatorLocalhostWithApp",
-					"group": "@botframework-utility@2"
-				},
-				{
-					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
-					"command": "botframework-utility.openEmulatorProduction",
-					"group": "@botframework-utility@3"
-				},
-				{
-					"when": "resourceFilename =~ /(.env|appsettings.json)/i",
-					"command": "botframework-utility.createEndpoint",
-					"group": "@botframework-utility@4"
-				}
-			]
-		},
-		"configuration": {
-			"type": "object",
-			"title": "Botframework Utility",
-			"properties": {
-				"botframework-utility.customTerminal": {
-					"type": "string",
-					"default": "",
-					"description": "Path to custom terminal for commands",
-					"scope": "machine"
-				},
-				"botframework-utility.excludeCliToolsFromUpdate": {
-					"type": "array",
-					"uniqueItems": true,
-					"items": [
-						{
-							"type": "string",
-							"enum": [
-								"az",
-								"botdispatch",
-								"botskills",
-								"chatdown",
-								"dialoglint",
-								"dialogschema",
-								"dialogtracker",
-								"ludown",
-								"luis-apis",
-								"luisgen",
-								"msbot",
-								"qnamaker"
-							]
-						}
-					],
-					"examples": [
-						[
-							"az",
-							"botdispatch",
-							"botskills",
-							"chatdown",
-							"dialoglint",
-							"dialogschema",
-							"dialogtracker",
-							"ludown",
-							"luis-apis",
-							"luisgen",
-							"msbot",
-							"qnamaker"
-						]
-					],
-					"default": [
-						"dialogtracker",
-						"dialogschema",
-						"dialoglint",
-						"msbot"
-					],
-					"description": "Select which tools to exclude when updating all tools",
-					"scope": "machine"
-				}
-			}
-		},
-		"keybindings": [
-			{
-				"command": "botframework-utility.openEmulatorLocalhost",
-				"key": "ctrl+alt+shift+e",
-				"mac": "cmd+alt+shift+e",
-				"when": "debugType != xyz"
-			}
-		],
-		"snippets": [
-			{
-				"language": "javascript",
-				"path": "./src/snippets/javascript.json"
-			},
-			{
-				"language": "typescript",
-				"path": "./src/snippets/typescript.json"
-			},
-			{
-				"language": "csharp",
-				"path": "./src/snippets/csharp.json"
-			}
-		]
+    "name": "botframework-utility",
+    "displayName": "BotFramework Utility",
+    "description": "Helper utilities to assist in a more efficient bot development life cycle",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mdrichardson/botframework-utility"
+    },
+    "publisher": "mdrichardson",
+    "version": "0.0.3",
+    "engines": {
+        "vscode": "^1.33.0"
+    },
+    "categories": [
+        "Snippets",
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./out/src/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "botframework-utility.openEmulatorLocalhost",
+                "category": "Bot > Emulator",
+                "title": "Open Emulator (localhost)"
+            },
+            {
+                "command": "botframework-utility.openEmulatorLocalhostWithApp",
+                "category": "Bot > Emulator",
+                "title": "Open Emulator (localhost w/ AppId/AppPass)"
+            },
+            {
+                "command": "botframework-utility.openEmulatorProduction",
+                "category": "Bot > Emulator",
+                "title": "Open Emulator (Production Endpoint(s))"
+            },
+            {
+                "command": "botframework-utility.openEmulatorProduction",
+                "category": "Bot > Emulator",
+                "title": "Open Emulator (Production Endpoint)"
+            },
+            {
+                "command": "botframework-utility.createEndpoint",
+                "category": "Bot > Emulator",
+                "title": "Create Endpoint (saves to appsettings.json/.env)"
+            },
+            {
+                "command": "botframework-utility.createAppRegistration",
+                "category": "Bot > Deploy",
+                "title": "1. Create App Registration"
+            },
+            {
+                "command": "botframework-utility.createAzureResourcesNewResourceGroup",
+                "category": "Bot > Deploy",
+                "title": "2A. Create AZ Resources (new Res. Group)"
+            },
+            {
+                "command": "botframework-utility.createAzureResourcesExistingResourceGroupExistingServicePlan",
+                "category": "Bot > Deploy",
+                "title": "2B. Create AZ Resources (existing Res. Group/existing Service Plan)"
+            },
+            {
+                "command": "botframework-utility.createAzureResourcesExistingResourceGroupNewServicePlan",
+                "category": "Bot > Deploy",
+                "title": "2C. Create AZ Resources (existing Res. Group/new Service Plan)"
+            },
+            {
+                "command": "botframework-utility.deploymentDeploy",
+                "category": "Bot > Deploy",
+                "title": "3. Deploy/Publish"
+            },
+            {
+                "command": "botframework-utility.updateCliTools",
+                "category": "Bot > CLI Tools",
+                "title": "Update All"
+            },
+            {
+                "command": "botframework-utility.getSample",
+                "category": "Bot > Samples",
+                "title": "Download Sample"
+            },
+            {
+                "command": "botframework-utility.openSample",
+                "category": "Bot > Samples",
+                "title": "Open Sample in Browser"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "when": "resourceFilename =~ /(.env|appsettings.json)/i",
+                    "command": "botframework-utility.openEmulatorLocalhost",
+                    "group": "@botframework-utility@1"
+                },
+                {
+                    "when": "resourceFilename =~ /(.env|appsettings.json)/i",
+                    "command": "botframework-utility.openEmulatorLocalhostWithApp",
+                    "group": "@botframework-utility@2"
+                },
+                {
+                    "when": "resourceFilename =~ /(.env|appsettings.json)/i",
+                    "command": "botframework-utility.openEmulatorProduction",
+                    "group": "@botframework-utility@3"
+                },
+                {
+                    "when": "resourceFilename =~ /(.env|appsettings.json)/i",
+                    "command": "botframework-utility.createEndpoint",
+                    "group": "@botframework-utility@4"
+                }
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "Botframework Utility",
+            "properties": {
+                "botframework-utility.customTerminal": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to custom terminal for commands",
+                    "scope": "machine"
+                },
+                "botframework-utility.excludeCliToolsFromUpdate": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": [
+                        {
+                            "type": "string",
+                            "enum": [
+                                "az",
+                                "botdispatch",
+                                "botskills",
+                                "chatdown",
+                                "dialoglint",
+                                "dialogschema",
+                                "dialogtracker",
+                                "ludown",
+                                "luis-apis",
+                                "luisgen",
+                                "msbot",
+                                "qnamaker"
+                            ]
+                        }
+                    ],
+                    "examples": [
+                        [
+                            "az",
+                            "botdispatch",
+                            "botskills",
+                            "chatdown",
+                            "dialoglint",
+                            "dialogschema",
+                            "dialogtracker",
+                            "ludown",
+                            "luis-apis",
+                            "luisgen",
+                            "msbot",
+                            "qnamaker"
+                        ]
+                    ],
+                    "default": [
+                        "dialogtracker",
+                        "dialogschema",
+                        "dialoglint",
+                        "msbot"
+                    ],
+                    "description": "Select which tools to exclude when updating all tools",
+                    "scope": "machine"
+                }
+            }
+        },
+        "keybindings": [
+            {
+                "command": "botframework-utility.openEmulatorLocalhost",
+                "key": "ctrl+alt+shift+e",
+                "mac": "cmd+alt+shift+e",
+                "when": "debugType != xyz"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "javascript",
+                "path": "./src/snippets/javascript.json"
+            },
+            {
+                "language": "typescript",
+                "path": "./src/snippets/typescript.json"
+            },
+            {
+                "language": "csharp",
+                "path": "./src/snippets/csharp.json"
+            }
+        ]
     },
     "enableProposedApi": true,
-	"scripts": {
+    "scripts": {
         "build": "tsc",
-		"echo": "echo \"#####   Be sure to change package.json>main to ./dist/extension.js    #####\"",
-		"vscode:prepublish": "webpack --mode production",
-		"compile": "webpack --mode none",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "node ./node_modules/vscode/bin/test",
-		"test-compile": "tsc -p ./",
-		"lint": "eslint ./src --ext .ts",
-		"package": "npm run echo && vsce package",
-		"watch": "webpack --mode none --watch"
-	},
-	"devDependencies": {
-		"@types/archiver": "^3.0.0",
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^2.2.48",
-		"@types/node": "^10.14.13",
-		"@types/sinon": "^7.0.13",
-		"@typescript-eslint/eslint-plugin": "^1.13.0",
-		"@typescript-eslint/parser": "^1.13.0",
-		"decache": "^4.5.1",
-		"eslint": "^5.16.0",
-		"eslint-config-standard": "^12.0.0",
-		"eslint-plugin-import": "^2.18.2",
-		"eslint-plugin-node": "^8.0.1",
-		"eslint-plugin-promise": "^4.2.1",
-		"eslint-plugin-standard": "^4.0.0",
-		"glob": "^7.1.4",
-		"istanbul": "^0.4.5",
-		"mocha": "^6.2.0",
-		"randexp": "^0.5.3",
-		"remap-istanbul": "^0.13.0",
-		"sinon": "^7.3.2",
-		"ts-loader": "^5.4.5",
-		"tslint": "^5.18.0",
-		"typescript": "^3.5.3",
-		"vscode": "^1.1.35",
-		"webpack": "^4.38.0",
-		"webpack-cli": "^3.3.6"
-	},
-	"dependencies": {
-		"@types/semver": "^6.0.1",
-		"archiver": "^3.0.3",
-		"axios": "^0.19.0",
-		"dotenv": "^7.0.0",
-		"fuzzy-matching": "^0.4.3",
-		"semver": "^6.3.0"
-	}
+        "vscode:prepublish": "webpack --mode production",
+        "compile": "webpack --mode none",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test",
+        "test-compile": "tsc -p ./",
+        "lint": "eslint ./src --ext .ts",
+        "prepackage": "node setPackageJsonMain.js \"./dist/extension.js\"",
+        "package": "npm run prepackage && vsce package && npm run postpackage",
+        "postpackage": "node setPackageJsonMain.js \"./out/src/extension.js\"",
+        "watch": "webpack --mode none --watch"
+    },
+    "devDependencies": {
+        "@types/archiver": "^3.0.0",
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^2.2.48",
+        "@types/node": "^10.14.13",
+        "@types/sinon": "^7.0.13",
+        "@typescript-eslint/eslint-plugin": "^1.13.0",
+        "@typescript-eslint/parser": "^1.13.0",
+        "decache": "^4.5.1",
+        "eslint": "^5.16.0",
+        "eslint-config-standard": "^12.0.0",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-node": "^8.0.1",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.0",
+        "glob": "^7.1.4",
+        "istanbul": "^0.4.5",
+        "mocha": "^6.2.0",
+        "randexp": "^0.5.3",
+        "remap-istanbul": "^0.13.0",
+        "sinon": "^7.3.2",
+        "ts-loader": "^5.4.5",
+        "tslint": "^5.18.0",
+        "typescript": "^3.5.3",
+        "vscode": "^1.1.35",
+        "webpack": "^4.38.0",
+        "webpack-cli": "^3.3.6"
+    },
+    "dependencies": {
+        "@types/semver": "^6.0.1",
+        "archiver": "^3.0.3",
+        "axios": "^0.19.0",
+        "dotenv": "^7.0.0",
+        "fuzzy-matching": "^0.4.3",
+        "semver": "^6.3.0"
+    }
 }
