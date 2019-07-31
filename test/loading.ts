@@ -10,12 +10,10 @@ import { disposeAllTerminals } from './testUtilities';
 const fsP = fs.promises;
 
 suite('Extension Loading Tests', function(): void {
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
 
-    teardown((): void => {
+    teardown(async (): Promise<void> => {
         sinon.restore();
+        await disposeAllTerminals();
     });
     
     test("Should Properly Activate the Extension", async function(): Promise<void> {

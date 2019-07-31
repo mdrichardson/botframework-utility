@@ -26,12 +26,12 @@ suite("Deployment - Unit", function(): void {
         await setVsCodeConfig(constants.vsCodeConfig.names.customTerminal, undefined);
     });
 
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
-
     setup(async (): Promise<void> => {
         await setBotVariables(testEnv);
+    });
+
+    teardown(async (): Promise<void> => {
+        await disposeAllTerminals();
     });
     
     test("Should download both deployment templates if missing", async function(): Promise<void> {
@@ -267,7 +267,7 @@ suite("Deployment - Unit", function(): void {
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
             commandFailedRegex: /(?<err>The term 'test' is not)/,
-            timeout: 5000,
+            timeout: 4500,
         }) as RegExpMatchArray);
         terminal.dispose();
         assert.equal(result, false);
@@ -279,7 +279,7 @@ suite("Deployment - Unit", function(): void {
         terminal.sendText('test');
         const result = (await handleTerminalData(terminal, {
             commandCompleteRegex: /(?<err>The term 'test' is not)/,
-            timeout: 5000,
+            timeout: 4500,
         }) as RegExpMatchArray);
         terminal.dispose();
         assert.equal(result, true);
@@ -292,7 +292,7 @@ suite("Deployment - Unit", function(): void {
         const result = (await handleTerminalData(terminal, {
             commandCompleteRegex: /(?<err>The term 'test' is not)/,
             commandFailedRegex: /(?<err>The term 'test' is not)/,
-            timeout: 5000,
+            timeout: 4500,
         }) as RegExpMatchArray);
         terminal.dispose();
         assert.equal(result, false);

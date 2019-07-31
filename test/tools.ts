@@ -10,12 +10,9 @@ import sinon = require('sinon');
 import { disposeAllTerminals } from './testUtilities';
 
 suite('Tools', function(): void {
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
-
-    teardown((): void => {
+    teardown(async (): Promise<void> => {
         sinon.restore();
+        await disposeAllTerminals();
     });
     
     test("All Website Constants Should Return 200 Status", async function(): Promise<void> {

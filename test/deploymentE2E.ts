@@ -30,8 +30,7 @@ suite("Deployment - E2E", function(): void {
     });
     
     suiteTeardown(async (): Promise<void> => {
-        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);
-        await disposeAllTerminals();        
+        await cleanup(testEnv.MicrosoftAppId, testEnv.ResourceGroupName);      
     });
     
     setup(async (): Promise<void> => {
@@ -49,6 +48,7 @@ suite("Deployment - E2E", function(): void {
                 testNotify(`Saved terminal error to: ${ saveLocation }`);
             } catch (err) { }
         }
+        await disposeAllTerminals();
     });
     
     test("Should create a web app", async function(): Promise<void> {

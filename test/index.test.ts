@@ -8,7 +8,7 @@ import * as fs from 'fs';
 const fsP = fs.promises;
 import mocha = require('mocha');
 import { getWorkspaceRoot, setBotVariables, promptForVariableIfNotExist, getEnvBotVariables, watchEnvFiles, getDeploymentTemplate, executeTerminalCommand, getLocalBotVariables, log, getToolsUpdateCommand, getCurrentAzCliVersion, getLatestAzCliVersion, deleteDirectory, createTempDir, getSparseCheckoutCommand, promptForSample, rootFolderIsEmpty, renameDirectory, getSample, createCodeZip, deleteCodeZip, setLocalBotVariables, syncLocalBotVariablesToEnv, getTerminalPath, joinTerminalCommands, handleTerminalData, regexToVariables, getCreateAppRegistrationCommand, normalizeEnvKeys, getEndpointKeyType, getEndpoints, getEndpointObject, promptForNewEndpoint, modifyEndpointNameIfNecessary, getSingleEndpoint, getEndpointFromQuickPick, writeEndpointToEnv, getEmulatorLaunchCommand, loadCommands, handleAzCliUpdate, getPrepareDeployCommand, openSample } from '../src/utilities';
-import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile, clearEnvVariables, deletePrepareDeployFiles } from './testUtilities';
+import { testNotify, deleteDownloadTemplates, makeNestedTestDir, deleteCodeFiles, writeCodeFiles, deleteTerminalOutputFile, clearEnvVariables, deletePrepareDeployFiles, disposeAllTerminals } from './testUtilities';
 import { setVsCodeConfig } from '../src/utilities/variables/setVsCodeConfig';
 import { getVsCodeConfig } from '../src/utilities/variables/getVsCodeConfig';
 import { CommandOptions } from '../src/interfaces/CommandOptions';
@@ -31,7 +31,7 @@ require('./variables');
 require('./tools');
 require('./samples');
 require('./deploymentUnit');
-require('./deploymentE2E');
+// require('./deploymentE2E');
 
 var testEnv: BotVariables = {
     BotName: 'vmicricEXT',
@@ -90,22 +90,20 @@ var testEnv: BotVariables = {
 
 
 // suite("Quick Test", function(): void {
-//     teardown((): void => {
+//     teardown(async (): Promise<void> => {
 //         sinon.restore();
+//         await disposeAllTerminals();
 //     });
-//     test("Should Get Endpoint Variables - Node", async function(): Promise<void> {
+//     test("Terminal should return true if it detects complete regex and no matches", async function(): Promise<void> {
 //         this.timeout(5 * 1000);
-//         await clearEnvVariables();
-//         await writeCodeFiles(constants.variables.sdkLanguages.Node);
-//         await setBotVariables(botVariables);
 
-//         const localVariables = await getLocalBotVariables();
-
-//         assert.equal(localVariables['Endpoint'], endpoint);
-//         assert.equal(localVariables['Endpoint_AppId'], appId);
-//         assert.equal(localVariables['Endpoint_AppPassword'], appPass);
-//         assert.equal(localVariables['Endpoint_Test'], endpoint);
-//         assert.equal(localVariables['Endpoint_Test_AppId'], appId);
-//         assert.equal(localVariables['Endpoint_Test_AppPassword'], appPass);
+//         const terminal = vscode.window.createTerminal();
+//         terminal.sendText('test');
+//         const result = (await handleTerminalData(terminal, {
+//             commandCompleteRegex: /(?<err>The term 'test' is not)/,
+//             timeout: 5000,
+//         }) as RegExpMatchArray);
+//         terminal.dispose();
+//         assert.equal(result, true);
 //     });
 // });

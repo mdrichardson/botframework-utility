@@ -12,12 +12,9 @@ import { getSampleUrl } from '../src/utilities/samples/getSampleUrl';
 const fsP = fs.promises;
 
 suite('Samples', function(): void {
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
-
-    teardown((): void => {
+    teardown(async (): Promise<void> => {
         sinon.restore();
+        await disposeAllTerminals();
     });
     
     test("Should Create an Appropriate Temporary Directory", async function(): Promise<void> {

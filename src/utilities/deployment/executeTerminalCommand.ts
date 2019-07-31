@@ -19,7 +19,9 @@ export async function executeTerminalCommand(
     }
 
     const terminal = await vscode.window.createTerminal(terminalOptions);
-    // terminal.show(true);
+    if (!terminalOptions.runInBackground) {
+        terminal.show(true);
+    }
 
     terminal.sendText(command, true);
 

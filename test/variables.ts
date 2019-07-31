@@ -7,12 +7,9 @@ import { getLocalBotVariables, getEnvBotVariables, setBotVariables, normalizeEnv
 import sinon = require('sinon');
 
 suite("Variables", function(): void {
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
-
-    teardown((): void => {
+    teardown(async (): Promise<void> => {
         sinon.restore();
+        await disposeAllTerminals();
     });
     
     test("Should Get and Set VSCode Configs", async function(): Promise<void> {

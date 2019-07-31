@@ -44,12 +44,10 @@ const testEndpoints = {
 };
 
 suite('Emulator', function(): void {
-    suiteTeardown(async (): Promise<void> => {
-        await disposeAllTerminals();
-    });
 
-    teardown((): void => {
+    teardown(async (): Promise<void> => {
         sinon.restore();
+        await disposeAllTerminals();
     });
     
     test('Should Create Proper Emulator Start Command', function(): void {
