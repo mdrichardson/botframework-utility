@@ -192,7 +192,8 @@
 				"path": "./src/snippets/csharp.json"
 			}
 		]
-	},
+    },
+    "enableProposedApi": true,
 	"scripts": {
         "build": "tsc",
 		"echo": "echo \"#####   Be sure to change package.json>main to ./dist/extension.js    #####\"",
